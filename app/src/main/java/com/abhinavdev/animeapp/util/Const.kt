@@ -3,6 +3,7 @@ package com.abhinavdev.animeapp.util
 object Const {
     interface TimeOut{
         companion object{
+            const val BANNER_SWIPE_DELAY = 300L
             const val CONNECTION_TIMEOUT = 200L
             const val WRITE_TIMEOUT = 200L
             const val READ_TIMEOUT = 200L
