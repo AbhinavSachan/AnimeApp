@@ -3,7 +3,16 @@ package com.abhinavdev.animeapp.util.extension
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.Selection
@@ -15,17 +24,13 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Size
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
@@ -34,6 +39,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
 
 
@@ -51,6 +57,30 @@ fun Context.applyDrawable(@DrawableRes resId: Int): Drawable? {
 
 fun Fragment.applyDrawable(@DrawableRes resId: Int): Drawable? {
     return ResourcesCompat.getDrawable(resources, resId, null)
+}
+
+fun Bitmap.getCircularBitmap(): Bitmap {
+    val output = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+    val paint = Paint()
+    val rect = Rect(0, 0, this.width, this.height)
+    val centerX = this.width / 2f
+    val centerY = this.height / 2f
+    val radius = Math.min(centerX, centerY)
+    paint.isAntiAlias = true
+    canvas.drawARGB(0, 0, 0, 0)
+    paint.color = Color.WHITE
+    canvas.drawCircle(centerX, centerY, radius, paint)
+    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(this, rect, rect, paint)
+    return output
+}
+
+fun Bitmap.compressBitmap(quality: Int): Bitmap {
+    val outputStream = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+    val byteArray = outputStream.toByteArray()
+    return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 }
 
 fun View.hide() {
@@ -205,6 +235,7 @@ fun AppCompatTextView.addRedAsterisk() {
     // Set the modified text to the TextView
     text = spannableString
 }
+
 fun TextView.addRedAsterisk() {
     val name = text
 
@@ -239,15 +270,37 @@ fun View?.getSizeOfView(onSizeReady: (Size) -> Unit) {
     }
 }
 
-fun inflateLayoutAsync(
+fun Context.inflateLayoutAsync(
     @LayoutRes layoutRes: Int,
-    inflater: LayoutInflater,
     container: ViewGroup?,
     onLayoutInflated: (View) -> Unit
 ) {
-    val asyncLayoutInflater = AsyncLayoutInflater(inflater.context)
+    val asyncLayoutInflater = AsyncLayoutInflater(this)
 
     asyncLayoutInflater.inflate(layoutRes, container) { view, _, _ ->
         onLayoutInflated(view)
     }
+}
+
+fun Drawable.toUnscaledBitmap(): Bitmap? {
+    if (this is BitmapDrawable) {
+        return this.bitmap
+    }
+
+    val bitmap = Bitmap.createBitmap(
+        intrinsicWidth,
+        intrinsicHeight,
+        Bitmap.Config.RGB_565
+    )
+
+    val canvas = Canvas(bitmap)
+    setBounds(0, 0, canvas.width, canvas.height)
+    draw(canvas)
+
+    return bitmap
+}
+
+fun pxToDp(resources: Resources, px: Int): Float {
+    val density = resources.displayMetrics.density
+    return px / density
 }

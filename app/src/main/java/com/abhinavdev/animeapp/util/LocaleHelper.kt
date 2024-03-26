@@ -34,7 +34,7 @@ object LocaleHelper {
     private fun getPersistedData(context: Context, defaultLanguage: String): String {
         var lang = PrefUtils.getStringWithContext(context, Const.SharedPrefs.SELECTED_LANGUAGE_CODE)
         if (lang == null || lang == "")
-            lang = Const.Other.ENGLISH_LANG_CODE
+            lang = Const.Language.ENGLISH_LANG_CODE
         return lang
     }
 

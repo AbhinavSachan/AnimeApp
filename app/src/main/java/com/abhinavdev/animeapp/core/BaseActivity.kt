@@ -16,7 +16,7 @@ abstract class BaseActivity : AppCompatActivity() {
         PrefUtils.getStringWithContext(base, Const.SharedPrefs.SELECTED_LANGUAGE_CODE)?.let {
             lang = it
         }
-        if (lang.isEmpty()) lang = Const.Other.ENGLISH_LANG_CODE
+        if (lang.isEmpty()) lang = Const.Language.ENGLISH_LANG_CODE
         super.attachBaseContext(LocaleHelper.onAttach(base, lang))
     }
 

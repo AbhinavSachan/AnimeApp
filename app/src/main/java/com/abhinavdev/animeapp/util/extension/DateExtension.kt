@@ -1,6 +1,7 @@
 package com.abhinavdev.animeapp.util.extension
 
 import android.content.Context
+import com.abhinavdev.animeapp.util.Const
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -121,14 +122,27 @@ fun Date.addMinutes(minutes: Int): Date {
 fun Date.addSeconds(seconds: Int): Date {
     return add(Calendar.SECOND, seconds)
 }
-/*
-fun getFormattedDate(date: String): String {
-    var sdf = SimpleDateFormat(Const.Other.API_RESPONSE_FORMAT, Locale.ENGLISH)
-    val newDate: Date = sdf.parse(date) as Date
-    sdf = SimpleDateFormat(Const.Other.START_DATE_FORMAT, Locale.ENGLISH)
-    return "${sdf.format(newDate)}"
+
+fun getFormattedDateOrNull(
+    date: String?,
+    inFormat: String = Const.DateFormats.SERVER_FORMAT_DATE,
+    outFormat: String = Const.DateFormats.IN_APP_SHOW_FORMAT_DATE
+): String? {
+    return if (date.isNullOrBlank()) {
+        null
+    } else {
+        var sdf = SimpleDateFormat(inFormat, Locale.ENGLISH)
+        val newDate: Date = try {
+            sdf.parse(date) as Date
+        } catch (e: Exception) {
+            return null
+        }
+        sdf = SimpleDateFormat(outFormat, Locale.ENGLISH)
+        sdf.format(newDate)
+    }
 }
 
+/*
 fun getServerFormatDate(date: String): String {
     var sdf = SimpleDateFormat(Const.Other.START_DATE_FORMAT, Locale.ENGLISH)
     val newDate: Date = sdf.parse(date) as Date

@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-android")
+    id("kotlin-parcelize")
+//    id("com.google.devtools.ksp") version "1.9.22-1.0.17"
 }
 
 android {
@@ -15,6 +17,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
 
     }
 
@@ -49,13 +52,18 @@ android {
     buildFeatures{
         viewBinding = true
     }
+    packaging {
+        resources {
+            excludes.apply {
+                add("META-INF/INDEX.LIST")
+                add("META-INF/io.netty.versions.properties")
+            }
+        }
+    }
 }
 
 dependencies {
-    val ktorVersion = "1.3.2"
     val okhttpVersion = "4.12.0"
-    val coroutineVersion = "1.8.0"
-
     val lifecycleVersion = "2.7.0"
     val navigationVersion = "2.7.7"
     val dimensionVersion = "1.1.0"
@@ -63,17 +71,13 @@ dependencies {
     val retrofitVersion = "2.9.0"
 
     implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    //Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutineVersion")
-
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
 
     //retrofit
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
@@ -126,7 +130,6 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.3.0")
     //Glide
     implementation("com.github.bumptech.glide:glide:$glideVersion")
-    //noinspection KaptUsageInsteadOfKsp
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
     //image loading library
@@ -208,12 +211,7 @@ dependencies {
     //sliding button
 //    implementation("com.ncorti:slidetoact:0.11.0")
 
-    //ios style wheel date picker
-//    implementation("sh.tyy:wheelpicker:0.4.0")
-
     //image loading library
 //    implementation("com.squareup.picasso:picasso:2.71828")
     implementation("com.localebro:okhttpprofiler:1.0.8")
-
-
 }

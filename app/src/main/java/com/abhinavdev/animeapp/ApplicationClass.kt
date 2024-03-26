@@ -2,7 +2,7 @@ package com.abhinavdev.animeapp
 
 import android.app.Application
 import android.content.Context
-import com.abhinavdev.animeapp.remote.connection.JikanClient
+import com.abhinavdev.animeapp.remote.kit.ApiClient
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.LocaleHelper
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -11,14 +11,9 @@ class ApplicationClass : Application() {
 
 	companion object {
 		private lateinit var sInstance: ApplicationClass
-		private const val showPinLocation = false
 
 		fun getInstance(): ApplicationClass {
 			return sInstance
-		}
-
-		fun getShowPinLocation(): Boolean {
-			return showPinLocation
 		}
 	}
 
@@ -26,7 +21,7 @@ class ApplicationClass : Application() {
 		super.onCreate()
 		sInstance = this
 
-		JikanClient.init()
+		ApiClient.init()
 //        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
 
 //		Branch.getAutoInstance(this)// Branch object initialization
@@ -94,7 +89,7 @@ class ApplicationClass : Application() {
 	override fun attachBaseContext(base: Context) {
 		var lang = PrefUtils.getStringWithContext(base, Const.SharedPrefs.SELECTED_LANGUAGE_CODE)
 		if (lang == null || lang == "")
-			lang = Const.Other.ENGLISH_LANG_CODE
+			lang = Const.Language.ENGLISH_LANG_CODE
 		super.attachBaseContext(LocaleHelper.onAttach(base, lang))
 	}
 }

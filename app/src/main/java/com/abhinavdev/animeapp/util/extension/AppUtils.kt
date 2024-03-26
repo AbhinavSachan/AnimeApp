@@ -17,13 +17,17 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.abhinavdev.animeapp.R
+import com.abhinavdev.animeapp.util.AppTheme
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.PrefUtils
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -34,11 +38,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.Serializable
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
 import java.time.YearMonth
-import java.time.format.TextStyle
 import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
@@ -283,7 +284,11 @@ inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = whe
 }
 
 inline fun <reified T : Serializable> Intent.serializable(key: String): T? = when {
-    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(
+        key,
+        T::class.java
+    )
+
     else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }
 
@@ -293,6 +298,72 @@ fun getNonNullNumValue(value: String?): String {
     } else {
         value
     }
+}
+
+fun Window.setTheme(theme: AppTheme) {
+    this.setWindowAnimations(R.style.FadeAnimationDark)
+    when (theme) {
+        AppTheme.DARK -> {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            setSystemBarColor(this, theme)
+        }
+
+        AppTheme.LIGHT -> {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            setSystemBarColor(this, theme)
+        }
+
+        AppTheme.DEFAULT -> {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
+}
+
+private fun setSystemBarColor(window: Window, theme: AppTheme) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val controller = try {
+            window.insetsController
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+        controller?.apply {
+            when (theme) {
+                AppTheme.DARK -> {
+                    setSystemBarsAppearance(
+                        0,
+                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    )
+                    setSystemBarsAppearance(
+                        0,
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                    )
+                }
+
+                AppTheme.LIGHT -> {
+                    setSystemBarsAppearance(
+                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                        WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    )
+                    setSystemBarsAppearance(
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                    )
+                }
+
+                AppTheme.DEFAULT -> {}
+            }
+        }
+    } else {
+        when (theme) {
+            AppTheme.DARK -> window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
+            AppTheme.LIGHT -> window.clearFlags(window.decorView.systemUiVisibility)
+            AppTheme.DEFAULT -> {}
+        }
+    }
+
 }
 
 fun String.removeSpace() = trim().replace("\\s+".toRegex(), replacement = "")
