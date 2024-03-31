@@ -3,13 +3,12 @@ package com.abhinavdev.animeapp.util.extension
 import androidx.appcompat.widget.AppCompatImageView
 import com.abhinavdev.animeapp.util.glide.GlideApp
 import com.abhinavdev.animeapp.util.glide.ImageModel
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 
 fun AppCompatImageView.loadImage(url: Any?, placeHolder: Int = 0) {
-    Glide.with(this)
+    GlideApp.with(this)
         .load(url)
         .placeholder(placeHolder)
         .error(placeHolder)

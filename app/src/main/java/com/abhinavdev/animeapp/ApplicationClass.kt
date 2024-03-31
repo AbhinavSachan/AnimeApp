@@ -6,6 +6,8 @@ import com.abhinavdev.animeapp.remote.kit.ApiClient
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.LocaleHelper
 import com.abhinavdev.animeapp.util.PrefUtils
+import com.google.firebase.crashlytics.BuildConfig
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 class ApplicationClass : Application() {
 
@@ -22,7 +24,7 @@ class ApplicationClass : Application() {
 		sInstance = this
 
 		ApiClient.init()
-//        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
 
 //		Branch.getAutoInstance(this)// Branch object initialization
 		//Branch.enableTestMode() // Branch logging for debugging

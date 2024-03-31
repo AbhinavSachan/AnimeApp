@@ -34,15 +34,12 @@ import com.abhinavdev.animeapp.remote.model.common.ReviewsResponse
 import com.abhinavdev.animeapp.remote.model.common.StatisticsResponse
 import com.abhinavdev.animeapp.remote.model.enums.AgeRating
 import com.abhinavdev.animeapp.remote.model.enums.AnimeFilter
-import com.abhinavdev.animeapp.remote.model.enums.AnimeOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.model.enums.AnimeType
 import com.abhinavdev.animeapp.remote.model.enums.CharacterOrderBy
 import com.abhinavdev.animeapp.remote.model.enums.ClubCategory
 import com.abhinavdev.animeapp.remote.model.enums.ClubOrderBy
 import com.abhinavdev.animeapp.remote.model.enums.ClubType
 import com.abhinavdev.animeapp.remote.model.enums.DayOfWeek
-import com.abhinavdev.animeapp.remote.model.enums.ForumTopicType
 import com.abhinavdev.animeapp.remote.model.enums.GenreType
 import com.abhinavdev.animeapp.remote.model.enums.MagazineOrderBy
 import com.abhinavdev.animeapp.remote.model.enums.MangaFilter
@@ -56,6 +53,7 @@ import com.abhinavdev.animeapp.remote.model.manga.MangaPicturesResponse
 import com.abhinavdev.animeapp.remote.model.manga.MangaResponse
 import com.abhinavdev.animeapp.remote.model.manga.MangaSearchResponse
 import com.abhinavdev.animeapp.util.Const
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -80,72 +78,72 @@ interface ApiService {
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.FULL)
     suspend fun getFullAnimeById(
         @Path("id") animeId: Int,
-    ): AnimeFullResponse
+    ): Response<AnimeFullResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}")
     suspend fun getAnimeById(
         @Path("id") animeId: Int,
-    ): AnimeFullResponse
+    ): Response<AnimeFullResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.STAFF)
     suspend fun getAnimeStaff(
         @Path("id") animeId: Int,
-    ): StaffResponse
+    ): Response<StaffResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.EPISODES)
     suspend fun getAnimeEpisodes(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
-    ): EpisodesResponse
+    ): Response<EpisodesResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.EPISODES + "/{episode}")
     suspend fun getAnimeEpisodeById(
         @Path("id") animeId: Int,
         @Path("episode") episodeId: Int,
-    ): EpisodeResponse
+    ): Response<EpisodeResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.NEWS)
     suspend fun getAnimeNews(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
-    ): EpisodesResponse
+    ): Response<EpisodesResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.FORUM)
     suspend fun getAnimeForums(
         @Path("id") animeId: Int,
-        @Query("filter") filter: String,
-    ): ForumResponse
+        @Query("filter") forumFilterType: String,
+    ): Response<ForumResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.VIDEOS)
     suspend fun getAnimeVideos(
         @Path("id") animeId: Int,
-    ): VideosResponse
+    ): Response<VideosResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.VIDEOS + "/" + Const.ApiKeywords.EPISODES)
     suspend fun getAnimeVideoEpisodes(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
-    ): VideoEpisodesResponse
+    ): Response<VideoEpisodesResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.PICTURES)
     suspend fun getAnimeImages(
         @Path("id") animeId: Int,
-    ): ImagesResponse
+    ): Response<ImagesResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.STATISTICS)
     suspend fun getAnimeStatistics(
         @Path("id") animeId: Int,
-    ): StatisticsResponse
+    ): Response<StatisticsResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.MORE_INFO)
     suspend fun getAnimeMoreInfo(
         @Path("id") animeId: Int,
-    ): MoreInfoResponse
+    ): Response<MoreInfoResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.RECOMMENDATIONS)
     suspend fun getAnimeRecommendations(
         @Path("id") animeId: Int,
-    ): RecommendationsResponse
+    ): Response<RecommendationsResponse>
 
     /**
      * @param preliminary Any reviews left during an ongoing anime/manga, those reviews are tagged as preliminary. NOTE: Preliminary reviews are not returned by default so if the entry is airing/publishing you need to add this otherwise you will get an empty list
@@ -157,27 +155,27 @@ interface ApiService {
         @Query("page") pageNo: Int,
         @Query("preliminary") preliminary: Boolean,
         @Query("spoiler") spoiler: Boolean,
-    ): ReviewsResponse
+    ): Response<ReviewsResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.RELATIONS)
     suspend fun getAnimeRelations(
         @Path("id") animeId: Int,
-    ): RelationsResponse
+    ): Response<RelationsResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.THEMES)
     suspend fun getAnimeOpEdThemes(
         @Path("id") animeId: Int,
-    ): OpEdThemesResponse
+    ): Response<OpEdThemesResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.EXTERNAL)
     suspend fun getAnimeExternal(
         @Path("id") animeId: Int,
-    ): ExternalResponse
+    ): Response<ExternalResponse>
 
     @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.STREAMING)
     suspend fun getAnimeStreaming(
         @Path("id") animeId: Int,
-    ): StreamingResponse
+    ): Response<StreamingResponse>
 
     /**
      * @param sfw
@@ -189,7 +187,7 @@ interface ApiService {
      * @param page Which page
      * @param limit Item limit per page
      * @param q Query
-     * @param type
+     * @param animeType
      * Enum: "tv" "movie" "ova" "special" "ona" "music" "cm" "pv" "tv_special"
      * Available AnimeTypes
      *
@@ -200,11 +198,11 @@ interface ApiService {
      * @param maxScore
      * Set a maximum score for results
      *
-     * @param status
+     * @param animeStatus
      * Enum: "airing" "complete" "upcoming"
      * Available Anime statuses
      *
-     * @param rating
+     * @param ageRating
      * Enum: "g" "pg" "pg13" "r17" "r" "rx"
      * Available Anime audience ratings
      *
@@ -222,11 +220,11 @@ interface ApiService {
      * @param genresExclude
      * Exclude genre(s) IDs. Can pass multiple with a comma as a delimiter. e.g 1,2,3
      *
-     * @param orderBy
+     * @param animeOrderBy
      * Enum: "mal_id" "title" "start_date" "end_date" "episodes" "score" "scored_by" "rank" "popularity" "members" "favorites"
      * Available Anime order_by properties
      *
-     * @param sort
+     * @param sortOrder
      * Enum: "desc" "asc"
      * Search query sort direction
      *
@@ -245,21 +243,21 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("q") q: String,
-        @Query("type") type: AnimeType,
+        @Query("type") animeType: String,
         @Query("score") score: Int,
         @Query("min_score") minScore: Int,
         @Query("max_score") maxScore: Int,
-        @Query("status") status: AnimeStatus,
-        @Query("rating") rating: AgeRating,
+        @Query("status") animeStatus: String,
+        @Query("rating") ageRating: String,
         @Query("genres") genres: String,
         @Query("genres_exclude") genresExclude: String,
-        @Query("order_by") orderBy: AnimeOrderBy,
-        @Query("sort") sort: SortOrder,
+        @Query("order_by") animeOrderBy: String,
+        @Query("sort") sortOrder: String,
         @Query("letter") letter: String,
         @Query("producers") producers: String,
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String,
-    ): AnimeSearchResponse
+    ): Response<AnimeSearchResponse>
 
     //endregion
 
@@ -271,32 +269,32 @@ interface ApiService {
     @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.FULL)
     suspend fun getCharacterFullById(
         @Path("id") characterId: Int,
-    ): CharacterFullResponse
+    ): Response<CharacterFullResponse>
 
     @GET(Const.ApiKeywords.CHARACTERS + "/{id}")
     suspend fun getCharacterById(
         @Path("id") characterId: Int,
-    ): CharacterFullResponse
+    ): Response<CharacterFullResponse>
 
     @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.ANIME)
     suspend fun getCharacterAnime(
         @Path("id") characterId: Int,
-    ): CharacterAnimeResponse
+    ): Response<CharacterAnimeResponse>
 
     @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.MANGA)
     suspend fun getCharacterManga(
         @Path("id") characterId: Int,
-    ): CharacterMangaResponse
+    ): Response<CharacterMangaResponse>
 
     @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.VOICES)
     suspend fun getCharacterVoiceActors(
         @Path("id") characterId: Int,
-    ): CharacterVoiceActorsResponse
+    ): Response<CharacterVoiceActorsResponse>
 
     @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.PICTURES)
     suspend fun getCharacterPictures(
         @Path("id") characterId: Int,
-    ): CharacterPicturesResponse
+    ): Response<CharacterPicturesResponse>
 
     /**
      * @param page Page number
@@ -321,7 +319,7 @@ interface ApiService {
         @Query("order_by") orderBy: CharacterOrderBy,
         @Query("sort") sort: SortOrder,
         @Query("letter") letter: String,
-    ): CharacterSearchResponse
+    ): Response<CharacterSearchResponse>
 
     //endregion
 
@@ -330,23 +328,23 @@ interface ApiService {
     @GET(Const.ApiKeywords.CLUBS + "/{id}")
     suspend fun getClubsById(
         @Path("id") clubId: Int,
-    ): ClubResponse
+    ): Response<ClubResponse>
 
     @GET(Const.ApiKeywords.CLUBS + "/{id}/" + Const.ApiKeywords.MEMBERS)
     suspend fun getClubMembers(
         @Path("id") clubId: Int,
         @Query("page") page: Int,
-    ): ClubMembersResponse
+    ): Response<ClubMembersResponse>
 
     @GET(Const.ApiKeywords.CLUBS + "/{id}/" + Const.ApiKeywords.STAFF)
     suspend fun getClubStaff(
         @Path("id") clubId: Int,
-    ): ClubStaffResponse
+    ): Response<ClubStaffResponse>
 
     @GET(Const.ApiKeywords.CLUBS + "/{id}/" + Const.ApiKeywords.RELATIONS)
     suspend fun getClubRelations(
         @Path("id") clubId: Int,
-    ): ClubRelationsResponse
+    ): Response<ClubRelationsResponse>
 
     /**
      * @param page page number]
@@ -381,7 +379,7 @@ interface ApiService {
         @Query("order_by") orderBy: ClubOrderBy,
         @Query("sort") sort: SortOrder,
         @Query("letter") letter: String,
-    ): ClubSearchResponse
+    ): Response<ClubSearchResponse>
 
     //endregion
 
@@ -390,12 +388,12 @@ interface ApiService {
     @GET(Const.ApiKeywords.GENRES + "/" + Const.ApiKeywords.ANIME)
     suspend fun getAnimeGenres(
         @Query("filter") filter: GenreType,
-    ): ClubMembersResponse
+    ): Response<ClubMembersResponse>
 
     @GET(Const.ApiKeywords.GENRES + "/" + Const.ApiKeywords.MANGA)
     suspend fun getMangaGenres(
         @Query("filter") filter: GenreType,
-    ): ClubMembersResponse
+    ): Response<ClubMembersResponse>
 
     //endregion
 
@@ -423,7 +421,7 @@ interface ApiService {
         @Query("order_by") orderBy: MagazineOrderBy,
         @Query("sort") sort: SortOrder,
         @Query("letter") letter: String,
-    ): MagazinesResponse
+    ): Response<MagazinesResponse>
 
     //endregion
 
@@ -436,49 +434,49 @@ interface ApiService {
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.FULL)
     suspend fun getMangaFullById(
         @Path("id") mangaId: Int,
-    ): MangaResponse
+    ): Response<MangaResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}")
     suspend fun getMangaById(
         @Path("id") mangaId: Int,
-    ): MangaResponse
+    ): Response<MangaResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.CHARACTERS)
     suspend fun getMangaCharacterById(
         @Path("id") mangaId: Int,
-    ): MangaCharacterResponse
+    ): Response<MangaCharacterResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.NEWS)
     suspend fun getMangaNews(
         @Path("id") mangaId: Int,
         @Query("page") page: Int,
-    ): NewsResponse
+    ): Response<NewsResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.FORUM)
     suspend fun getMangaTopics(
         @Path("id") mangaId: Int,
-        @Query("filter") filter: ForumTopicType,
-    ): ForumResponse
+        @Query("filter") forumFilterType: String,
+    ): Response<ForumResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.PICTURES)
     suspend fun getMangaPictures(
         @Path("id") mangaId: Int,
-    ): MangaPicturesResponse
+    ): Response<MangaPicturesResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.STATISTICS)
     suspend fun getMangaStatistics(
         @Path("id") mangaId: Int,
-    ): StatisticsResponse
+    ): Response<StatisticsResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.MORE_INFO)
     suspend fun getMangaMoreInfo(
         @Path("id") mangaId: Int,
-    ): MoreInfoResponse
+    ): Response<MoreInfoResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.RECOMMENDATIONS)
     suspend fun getMangaRecommendations(
         @Path("id") mangaId: Int,
-    ): RecommendationsResponse
+    ): Response<RecommendationsResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.REVIEWS)
     suspend fun getMangaReviews(
@@ -486,12 +484,12 @@ interface ApiService {
         @Query("page") pageNo: Int,
         @Query("preliminary") preliminary: Boolean,
         @Query("spoiler") spoiler: Boolean,
-    ): ReviewsResponse
+    ): Response<ReviewsResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.RECOMMENDATIONS)
     suspend fun getMangaRelations(
         @Path("id") mangaId: Int,
-    ): RelationsResponse
+    ): Response<RelationsResponse>
 
     /**
      *
@@ -565,20 +563,20 @@ interface ApiService {
         @Path("magazines") magazines: Int,
         @Path("start_date") startDate: Int,
         @Path("end_date") endDate: Int,
-    ): MangaSearchResponse
+    ): Response<MangaSearchResponse>
 
     //endregion
 
     //region Random
 
-    @GET(Const.ApiKeywords.RANDOM +"/" + Const.ApiKeywords.ANIME)
-    suspend fun getRandomAnime(): AnimeFullResponse
+    @GET(Const.ApiKeywords.RANDOM + "/" + Const.ApiKeywords.ANIME)
+    suspend fun getRandomAnime(): Response<AnimeFullResponse>
 
     @GET(Const.ApiKeywords.RANDOM + "/" + Const.ApiKeywords.MANGA)
-    suspend fun getRandomManga(): MangaResponse
+    suspend fun getRandomManga(): Response<MangaResponse>
 
     @GET(Const.ApiKeywords.RANDOM + "/" + Const.ApiKeywords.CHARACTERS)
-    suspend fun getRandomCharacters(): CharacterResponse
+    suspend fun getRandomCharacters(): Response<CharacterResponse>
 
     //endregion
 
@@ -587,12 +585,12 @@ interface ApiService {
     @GET(Const.ApiKeywords.RECOMMENDATIONS + "/" + Const.ApiKeywords.ANIME)
     suspend fun getRecentAnimeRecommendations(
         @Query("page") page: Int,
-    ): RecentAnimeRecommendationsResponse
+    ): Response<RecentAnimeRecommendationsResponse>
 
     @GET(Const.ApiKeywords.RECOMMENDATIONS + "/" + Const.ApiKeywords.MANGA)
     suspend fun getRecentMangaRecommendations(
         @Query("page") page: Int,
-    ): RecentAnimeRecommendationsResponse
+    ): Response<RecentAnimeRecommendationsResponse>
 
     //endregion
 
@@ -623,7 +621,7 @@ interface ApiService {
         @Query("unapproved") unapproved: Boolean,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-    ): SchedulesResponse
+    ): Response<SchedulesResponse>
 
     //region Top
 
@@ -662,7 +660,7 @@ interface ApiService {
         @Query("sfw") sfw: Boolean,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-    ): AnimeSearchResponse
+    ): Response<AnimeSearchResponse>
 
     /**
      * @param type
@@ -697,7 +695,7 @@ interface ApiService {
         @Query("filter") filter: MangaFilter,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-    ): MangaSearchResponse
+    ): Response<MangaSearchResponse>
 
     //endregion
 

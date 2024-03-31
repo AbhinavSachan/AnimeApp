@@ -44,6 +44,7 @@ suspend fun <T> MutableLiveData<Event<Resource<T>>>.fetchData(
             this@fetchData.postValue(Event(Resource.Error(noInternetMsg)))
         }
     } catch (t: Throwable) {
+        t.printStackTrace()
         when (t) {
             is IOException -> {
                 this@fetchData.postValue(Event(Resource.Error(networkErrorMsg)))

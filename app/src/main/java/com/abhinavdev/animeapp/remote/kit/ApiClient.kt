@@ -8,7 +8,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -43,7 +42,7 @@ object ApiClient {
             .setLenient()
             .create()
         retrofit = retrofitBuilder
-            .client(okHttpClient).addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
@@ -52,7 +51,7 @@ object ApiClient {
 
     fun getApiService(): ApiService {
         if (!::apiService.isInitialized) {
-            throw IllegalStateException("JikanClient not initialized. Call init() first.")
+            throw IllegalStateException("ApiClient not initialized. Call init() first.")
         }
         return apiService
     }
@@ -65,7 +64,7 @@ object ApiClient {
             //See: https://jikan.docs.apiary.io/#introduction/http-response
             if (!response.isSuccessful && response.code == 429) {
                 try {
-                    log { "You are being rate limited or Jikan is being rate limited by MyAnimeList, retrying in 4 seconds..." }
+                    log { "You are being rate limited or Api is being rate limited by MyAnimeList, retrying in 4 seconds..." }
                     Thread.sleep(4000L)
                 } catch (e: InterruptedException) {
                 }

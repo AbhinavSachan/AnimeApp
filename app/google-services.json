@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "120298559440",
+    "project_id": "anime-app-28139",
+    "storage_bucket": "anime-app-28139.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120298559440:android:363fba1697a7ab7a334bd5",
+        "android_client_info": {
+          "package_name": "com.abhinavdev.animeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7UHwgRA47n42P7nBgjY0oEZeMx-q-yCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

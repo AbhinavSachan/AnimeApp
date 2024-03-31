@@ -8,5 +8,5 @@ data class TrailerData(
     @SerializedName("youtube_id") val youtubeId: String?,
     @SerializedName("url") val url: String?,
     @SerializedName("embed_url") val embedUrl: String?,
-    @SerializedName("images") val images: List<ImagesData>?,
+    @SerializedName("images") val images: ImageData?,
 ) : BaseModel()

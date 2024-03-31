@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 enum class AnimeStatus(
     /** Used in the search queries.  */
-    val search: String?,
+    val search: String,
 ) {
     @SerializedName("Airing", alternate = ["Currently Airing"])
     AIRING("airing"),

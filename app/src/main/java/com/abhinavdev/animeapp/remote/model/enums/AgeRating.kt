@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 enum class AgeRating(
     /** Used in the search queries.  */
-    val search: String?,
+    val search: String,
 ) {
     @SerializedName("G", alternate = ["G - All Ages"])
     G("g"),

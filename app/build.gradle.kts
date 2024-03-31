@@ -4,10 +4,18 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-android")
     id("kotlin-parcelize")
-//    id("com.google.devtools.ksp") version "1.9.22-1.0.17"
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storePassword = "Abhinav786"
+            keyAlias = "AnimeApp"
+            keyPassword = "Abhinav786"
+        }
+    }
     namespace = "com.abhinavdev.animeapp"
     compileSdk = 34
 
@@ -23,6 +31,7 @@ android {
 
     buildTypes {
         debug {
+            isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
@@ -31,6 +40,7 @@ android {
             )
         }
         release {
+            isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -49,7 +59,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
     packaging {
@@ -60,31 +70,31 @@ android {
             }
         }
     }
+    lint {
+        checkReleaseBuilds = false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+//        abortOnError false
+    }
 }
 
 dependencies {
     val okhttpVersion = "4.12.0"
     val lifecycleVersion = "2.7.0"
     val navigationVersion = "2.7.7"
-    val dimensionVersion = "1.1.0"
+    val dimensionVersion = "1.1.1"
     val glideVersion = "4.16.0"
-    val retrofitVersion = "2.9.0"
+    val retrofitVersion = "2.11.0"
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-
-    //okhttp
-    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
-
-    //retrofit
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion") {
-        exclude(module = "okhttp")
-    }
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
     //Life Cycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -93,68 +103,46 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+
     //Gson
     implementation("com.google.code.gson:gson:2.10.1")
-
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-
-    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     //okhttp and logging interceptor
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
-//    implementation("io.reactivex.rxjava2:rxjava:2.2.20")
-//    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion")
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion") {
         exclude(module = "okhttp")
     }
-
-    //Life Cycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 
     //Dimension
     implementation("com.intuit.sdp:sdp-android:$dimensionVersion")
     implementation("com.intuit.ssp:ssp-android:$dimensionVersion")
 
     //json loader
-    implementation("com.airbnb.android:lottie:6.3.0")
+    implementation("com.airbnb.android:lottie:6.4.0")
+
     //Glide
     implementation("com.github.bumptech.glide:glide:$glideVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
-
-    //image loading library
-//    implementation("com.squareup.picasso:picasso:2.71828")
-
 
     //calendar de-sugaring library
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
 
     //firebase libs
-//    implementation platform("com.google.firebase:firebase-bom:28.1.0")
+     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 //    implementation ("com.google.firebase:firebase-messaging-ktx")
-//    implementation ("com.google.firebase:firebase-installations-ktx:17.0.0")
-    /*implementation ("com.google.firebase:firebase-messaging:23.2.1")
-    implementation ("com.google.firebase:firebase-core:21.1.1")
-    implementation ("com.google.firebase:firebase-auth:22.1.2")
-    implementation ("com.google.firebase:firebase-crashlytics:18.4.3")*/
+//    implementation ("com.google.firebase:firebase-installations-ktx")
+//    implementation ("com.google.firebase:firebase-messaging")
+//    implementation ("com.google.firebase:firebase-core")
+//    implementation ("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
 
     //page indicator
-    implementation("com.tbuonomo:dotsindicator:4.3")
-
-    //branch io
-//    implementation ("io.branch.sdk.android:library:3.2.0")
+    implementation("com.tbuonomo:dotsindicator:5.0")
 
     //play video
 //    implementation ("com.google.android.exoplayer:exoplayer:2.18.7")
@@ -162,17 +150,8 @@ dependencies {
     //flexbox
 //    implementation ("com.google.android.flexbox:flexbox:3.0.0")
 
-    //multidex
-//    implementation("com.android.support:multidex:1.0.3")
-
-    //expandable layout
-//    implementation ("net.cachapa.expandablelayout:expandablelayout:2.9.2")
-
     //recyclerview with indicator
 //    implementation ("ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.3")
-
-    //play video
-//    implementation ("com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.2")
 
     //Force Update Google Play Store
 //    implementation ("com.google.android.play:core:1.10.3")
@@ -211,7 +190,6 @@ dependencies {
     //sliding button
 //    implementation("com.ncorti:slidetoact:0.11.0")
 
-    //image loading library
-//    implementation("com.squareup.picasso:picasso:2.71828")
     implementation("com.localebro:okhttpprofiler:1.0.8")
+    implementation("com.daimajia.androidanimations:library:2.4@aar")
 }
