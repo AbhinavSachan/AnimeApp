@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 enum class AnimeFilter(
     /** Used in the search queries.  */
-    val search: String?,
+    val search: String,
 ) {
     @SerializedName("airing")
     AIRING("airing"),

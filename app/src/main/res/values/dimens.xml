@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--Text Sizes -->
+    <dimen name="text_size_7">@dimen/_6ssp</dimen>          <!--8px-->
+    <dimen name="text_size_8">@dimen/_6ssp</dimen>          <!--8px-->
+    <dimen name="text_size_9">@dimen/_7ssp</dimen>          <!--9px-->
+    <dimen name="text_size_10">@dimen/_8ssp</dimen>         <!--10px-->
+    <dimen name="text_size_11">@dimen/_8ssp</dimen>         <!--11px-->
+    <dimen name="text_size_12">@dimen/_9ssp</dimen>         <!--12px-->
+    <dimen name="text_size_13">@dimen/_10ssp</dimen>        <!--13px-->
+    <dimen name="text_size_14">@dimen/_11ssp</dimen>        <!--14px-->
+    <dimen name="text_size_15">@dimen/_12ssp</dimen>        <!--15px-->
+    <dimen name="text_size_16">@dimen/_13ssp</dimen>        <!--15px-->
+    <dimen name="text_size_17">@dimen/_13ssp</dimen>
+    <dimen name="text_size_18">@dimen/_14ssp</dimen>
+    <dimen name="text_size_19">@dimen/_15ssp</dimen>
+    <dimen name="text_size_20">@dimen/_15ssp</dimen>
+    <dimen name="text_size_22">@dimen/_17ssp</dimen>
+    <dimen name="text_size_24">@dimen/_18ssp</dimen>
+    <dimen name="text_size_25">@dimen/_19ssp</dimen>
+    <dimen name="text_size_28">@dimen/_22ssp</dimen>
+    <dimen name="text_size_30">@dimen/_23ssp</dimen>
+    <dimen name="text_size_31">@dimen/_24ssp</dimen>
+    <dimen name="text_size_34">@dimen/_26ssp</dimen>
+    <dimen name="text_size_36">@dimen/_28ssp</dimen>
+    <dimen name="text_size_50">@dimen/_38ssp</dimen>
+    <dimen name="text_size_80">@dimen/_60ssp</dimen>
+    <dimen name="text_size_xlarge">@dimen/_22ssp</dimen>
+
+
+
+</resources>

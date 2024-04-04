@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.abhinavdev.animeapp.core.BaseActivity
 import com.abhinavdev.animeapp.databinding.ActivityMainBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
-import com.abhinavdev.animeapp.ui.viewmodels.HomeViewModel
-import com.abhinavdev.animeapp.util.extension.loadImage
+import com.abhinavdev.animeapp.ui.home.viewmodel.HomeViewModel
+import com.abhinavdev.animeapp.util.ViewModelFactory
 import com.abhinavdev.animeapp.util.extension.toast
 
 class MainActivity : BaseActivity() {
@@ -31,8 +31,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initComponents() {
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        viewModel.getAnimeFull(250)
+        val factory = ViewModelFactory { HomeViewModel(application) }
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+
     }
 
     private fun setAdapters() {
@@ -40,10 +41,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setListeners() {
-        binding.swipeRefresh.setOnRefreshListener {
-            viewModel.getAnimeFull(250)
-            binding.swipeRefresh.isRefreshing = false
-        }
 
     }
 
@@ -53,7 +50,7 @@ class MainActivity : BaseActivity() {
                 when (response) {
                     is Resource.Success -> {
                         response.data?.data?.let {
-                            binding.image.loadImage(it.images?.jpg?.largeImageUrl)
+
                         }
                         isLoaderVisible(true)
                     }

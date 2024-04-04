@@ -9,7 +9,7 @@ enum class ClubCategory(
     /**
      * Used in the search queries.
      */
-    val search: String?,
+    val search: String
 ) {
     @SerializedName("anime")
     ANIME("anime"),

@@ -26,7 +26,6 @@ fun <T> Response<T>.handleResponse(application: Application): Event<Resource<T>>
     return Event(Resource.Error(errorMessage, this.body(), code))
 }
 
-
 suspend fun <T> MutableLiveData<Event<Resource<T>>>.fetchData(
     application: Application, apiCall: suspend () -> Response<T>
 ) {

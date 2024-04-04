@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName
  */
 enum class MangaType(
     /** Used in the search queries.  */
-    val search: String?
+    val search: String
 ) {
     @SerializedName("All")
-    ALL(null),
+    ALL(""),
 
     @SerializedName("Manga")
     MANGA("manga"),

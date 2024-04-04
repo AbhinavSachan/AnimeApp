@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.abhinavdev.animeapp" />
+                  <option name="mobileSdkAppId" value="1:120298559440:android:363fba1697a7ab7a334bd5" />
+                  <option name="projectId" value="anime-app-28139" />
+                  <option name="projectNumber" value="120298559440" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

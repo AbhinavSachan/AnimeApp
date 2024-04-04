@@ -6,22 +6,28 @@ import com.abhinavdev.animeapp.remote.model.anime.EpisodeResponse
 import com.abhinavdev.animeapp.remote.model.anime.EpisodesResponse
 import com.abhinavdev.animeapp.remote.model.anime.ImagesResponse
 import com.abhinavdev.animeapp.remote.model.anime.OpEdThemesResponse
+import com.abhinavdev.animeapp.remote.model.anime.SchedulesResponse
 import com.abhinavdev.animeapp.remote.model.anime.StaffResponse
 import com.abhinavdev.animeapp.remote.model.anime.StreamingResponse
 import com.abhinavdev.animeapp.remote.model.anime.VideoEpisodesResponse
 import com.abhinavdev.animeapp.remote.model.anime.VideosResponse
+import com.abhinavdev.animeapp.remote.model.clubs.ClubMembersResponse
 import com.abhinavdev.animeapp.remote.model.common.ExternalResponse
 import com.abhinavdev.animeapp.remote.model.common.ForumResponse
 import com.abhinavdev.animeapp.remote.model.common.MoreInfoResponse
+import com.abhinavdev.animeapp.remote.model.common.RecentAnimeRecommendationsResponse
 import com.abhinavdev.animeapp.remote.model.common.RecommendationsResponse
 import com.abhinavdev.animeapp.remote.model.common.RelationsResponse
 import com.abhinavdev.animeapp.remote.model.common.ReviewsResponse
 import com.abhinavdev.animeapp.remote.model.common.StatisticsResponse
 import com.abhinavdev.animeapp.remote.model.enums.AgeRating
+import com.abhinavdev.animeapp.remote.model.enums.AnimeFilter
 import com.abhinavdev.animeapp.remote.model.enums.AnimeOrderBy
 import com.abhinavdev.animeapp.remote.model.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.model.enums.AnimeType
+import com.abhinavdev.animeapp.remote.model.enums.DayOfWeek
 import com.abhinavdev.animeapp.remote.model.enums.ForumTopicType
+import com.abhinavdev.animeapp.remote.model.enums.GenreType
 import com.abhinavdev.animeapp.remote.model.enums.SortOrder
 import retrofit2.Response
 
@@ -128,4 +134,29 @@ interface AnimeRepository {
         endDate: String,
     ): Response<AnimeSearchResponse>
 
+    suspend fun getRandomAnime(): Response<AnimeFullResponse>
+
+    suspend fun getRecentAnimeRecommendations(page: Int): Response<RecentAnimeRecommendationsResponse>
+
+    suspend fun getAnimeSchedules(
+        filter: DayOfWeek,
+        kids: Int,
+        sfw: Int,
+        unapproved: Boolean,
+        page: Int,
+        limit: Int,
+    ): Response<SchedulesResponse>
+
+    suspend fun getTopAnime(
+        type: AnimeType,
+        filter: AnimeFilter,
+        rating: AgeRating,
+        sfw: Boolean,
+        page: Int,
+        limit: Int,
+    ): Response<AnimeSearchResponse>
+
+    suspend fun getAnimeGenres(
+        filter: GenreType,
+    ): Response<ClubMembersResponse>
 }

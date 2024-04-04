@@ -11,6 +11,7 @@ plugins {
 android {
     signingConfigs {
         create("release") {
+            storeFile = rootProject.file("AnimeApp_jks.jks")
             storePassword = "Abhinav786"
             keyAlias = "AnimeApp"
             keyPassword = "Abhinav786"
@@ -47,6 +48,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -98,9 +100,7 @@ dependencies {
 
     //Life Cycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 
@@ -124,6 +124,7 @@ dependencies {
 
     //Glide
     implementation("com.github.bumptech.glide:glide:$glideVersion")
+    //noinspection KaptUsageInsteadOfKsp
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
     //calendar de-sugaring library
@@ -192,4 +193,6 @@ dependencies {
 
     implementation("com.localebro:okhttpprofiler:1.0.8")
     implementation("com.daimajia.androidanimations:library:2.4@aar")
+    implementation("androidx.palette:palette-ktx:1.0.0")
 }
+//https://docs.consumet.org/#tag/anilist

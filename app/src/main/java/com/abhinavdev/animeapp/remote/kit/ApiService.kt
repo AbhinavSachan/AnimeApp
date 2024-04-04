@@ -32,22 +32,6 @@ import com.abhinavdev.animeapp.remote.model.common.RecommendationsResponse
 import com.abhinavdev.animeapp.remote.model.common.RelationsResponse
 import com.abhinavdev.animeapp.remote.model.common.ReviewsResponse
 import com.abhinavdev.animeapp.remote.model.common.StatisticsResponse
-import com.abhinavdev.animeapp.remote.model.enums.AgeRating
-import com.abhinavdev.animeapp.remote.model.enums.AnimeFilter
-import com.abhinavdev.animeapp.remote.model.enums.AnimeType
-import com.abhinavdev.animeapp.remote.model.enums.CharacterOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.ClubCategory
-import com.abhinavdev.animeapp.remote.model.enums.ClubOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.ClubType
-import com.abhinavdev.animeapp.remote.model.enums.DayOfWeek
-import com.abhinavdev.animeapp.remote.model.enums.GenreType
-import com.abhinavdev.animeapp.remote.model.enums.MagazineOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.MangaFilter
-import com.abhinavdev.animeapp.remote.model.enums.MangaOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.MangaStatus
-import com.abhinavdev.animeapp.remote.model.enums.MangaType
-import com.abhinavdev.animeapp.remote.model.enums.SortOrder
-import com.abhinavdev.animeapp.remote.model.magazines.MagazinesResponse
 import com.abhinavdev.animeapp.remote.model.manga.MangaCharacterResponse
 import com.abhinavdev.animeapp.remote.model.manga.MangaPicturesResponse
 import com.abhinavdev.animeapp.remote.model.manga.MangaResponse
@@ -316,8 +300,8 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("q") q: String,
-        @Query("order_by") orderBy: CharacterOrderBy,
-        @Query("sort") sort: SortOrder,
+        @Query("order_by") characterOrderBy: String,
+        @Query("sort") sortOrder: String,
         @Query("letter") letter: String,
     ): Response<CharacterSearchResponse>
 
@@ -374,10 +358,10 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("q") q: String,
-        @Query("type") type: ClubType,
-        @Query("category") category: ClubCategory,
-        @Query("order_by") orderBy: ClubOrderBy,
-        @Query("sort") sort: SortOrder,
+        @Query("type") clubType: String,
+        @Query("category") clubCategory: String,
+        @Query("order_by") clubOrderBy: String,
+        @Query("sort") sortOrder: String,
         @Query("letter") letter: String,
     ): Response<ClubSearchResponse>
 
@@ -387,41 +371,13 @@ interface ApiService {
 
     @GET(Const.ApiKeywords.GENRES + "/" + Const.ApiKeywords.ANIME)
     suspend fun getAnimeGenres(
-        @Query("filter") filter: GenreType,
+        @Query("filter") genreType: String,
     ): Response<ClubMembersResponse>
 
     @GET(Const.ApiKeywords.GENRES + "/" + Const.ApiKeywords.MANGA)
     suspend fun getMangaGenres(
-        @Query("filter") filter: GenreType,
+        @Query("filter") genreType: String,
     ): Response<ClubMembersResponse>
-
-    //endregion
-
-    //region Magazine
-    /**
-     * @param page
-     * @param limit
-     * @param q
-     * @param orderBy
-     * Enum: "mal_id" "name" "count"
-     * Order by magazine data
-     *
-     * @param sort
-     * Enum: "desc" "asc"
-     * Search query sort direction
-     *
-     * @param letter
-     * Return entries starting with the given letter
-     */
-    @GET(Const.ApiKeywords.MAGAZINES)
-    suspend fun getMagazinesBySearch(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int,
-        @Query("q") q: String,
-        @Query("order_by") orderBy: MagazineOrderBy,
-        @Query("sort") sort: SortOrder,
-        @Query("letter") letter: String,
-    ): Response<MagazinesResponse>
 
     //endregion
 
@@ -453,7 +409,7 @@ interface ApiService {
     ): Response<NewsResponse>
 
     @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.FORUM)
-    suspend fun getMangaTopics(
+    suspend fun getMangaForums(
         @Path("id") mangaId: Int,
         @Query("filter") forumFilterType: String,
     ): Response<ForumResponse>
@@ -549,16 +505,16 @@ interface ApiService {
         @Path("page") page: Int,
         @Path("limit") limit: Int,
         @Path("q") q: String,
-        @Path("type") type: MangaType,
+        @Path("type") mangaType: String,
         @Path("score") score: Int,
         @Path("min_score") minScore: Int,
         @Path("max_score") maxScore: Int,
-        @Path("status") status: MangaStatus,
+        @Path("status") mangaStatus: String,
         @Path("sfw") sfw: Boolean,
         @Path("genres") genres: Int,
         @Path("genres_exclude") genresExclude: Int,
-        @Path("order_by") orderBy: MangaOrderBy,
-        @Path("sort") sort: SortOrder,
+        @Path("order_by") mangaOrderBy: String,
+        @Path("sort") sortOrder: String,
         @Path("letter") letter: Int,
         @Path("magazines") magazines: Int,
         @Path("start_date") startDate: Int,
@@ -615,7 +571,7 @@ interface ApiService {
      */
     @GET(Const.ApiKeywords.SCHEDULES)
     suspend fun getAnimeSchedules(
-        @Query("filter") filter: DayOfWeek,
+        @Query("filter") dayOfWeek: String,
         @Query("kids") kids: Int,
         @Query("sfw") sfw: Int,
         @Query("unapproved") unapproved: Boolean,
@@ -654,9 +610,9 @@ interface ApiService {
      */
     @GET(Const.ApiKeywords.TOP + "/" + Const.ApiKeywords.ANIME)
     suspend fun getTopAnime(
-        @Query("type") type: AnimeType,
-        @Query("filter") filter: AnimeFilter,
-        @Query("rating") rating: AgeRating,
+        @Query("type") animeType: String,
+        @Query("filter") animeFilter: String,
+        @Query("rating") ageRating: String,
         @Query("sfw") sfw: Boolean,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
@@ -689,17 +645,14 @@ interface ApiService {
      * @param page
      * @param limit
      */
-    @GET(Const.ApiKeywords.TOP + "/" + Const.ApiKeywords.ANIME)
+    @GET(Const.ApiKeywords.TOP + "/" + Const.ApiKeywords.MANGA)
     suspend fun getTopManga(
-        @Query("type") type: MangaType,
-        @Query("filter") filter: MangaFilter,
+        @Query("type") mangaType: String,
+        @Query("filter") mangaFilter: String,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
     ): Response<MangaSearchResponse>
 
     //endregion
 
-    //region Watch
-
-    //endregion
 }

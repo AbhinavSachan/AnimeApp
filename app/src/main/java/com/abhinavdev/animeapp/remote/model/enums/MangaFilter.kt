@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 enum class MangaFilter(
     /** Used in the search queries.  */
-    val search: String?,
+    val search: String
 ) {
     @SerializedName("publishing")
     PUBLISHING("publishing"),

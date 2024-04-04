@@ -1,8 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="BaseAppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorAccent">@color/black</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
     </style>
 
     <style name="MainTheme" parent="BaseAppTheme" />
@@ -17,4 +21,99 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
     </style>
+
+    <style name="BaseFontAttribute">
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!--    TODO change the font in TabLayoutTextAppearance and selected down somewhere if changing the app font-->
+    <!--    TODO change the font in BottomNavigationTextAppearanceActive and selected down somewhere if changing the app font-->
+
+    <style name="FontRegular400" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/jost_regular</item>
+    </style>
+
+    <style name="FontMedium500" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/jost_medium</item>
+    </style>
+
+    <style name="FontSemiBold600" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/jost_semi_bold</item>
+    </style>
+
+    <style name="FontBold700" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/jost_bold</item>
+    </style>
+
+    <style name="FontExtraBold800" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/jost_extra_bold</item>
+    </style>
+
+    <style name="BottomNavigationTextAppearanceActive">
+        <item name="android:fontFamily">@font/jost_semi_bold</item>
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="BottomNavigationTextAppearanceInactive">
+        <item name="android:fontFamily">@font/jost_regular</item>
+        <item name="android:textColor">@color/muted8_878787</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="TabLayoutTextAppearance" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/jost_regular</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TabLayoutTextAppearanceSelected" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/jost_regular</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="MyCheckBoxStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="buttonTint">@color/secondary</item>
+        <item name="android:theme">@style/FontMedium500</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:textColor">@color/fontText1_32343E</item>
+    </style>
+
+    <style name="RootLayoutDarkStyle">
+        <item name="android:background">@color/secondary</item>
+    </style>
+
+    <style name="RootLayoutLightStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="CircleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="TabLayoutStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/_28sdp</item>
+        <item name="tabIndicatorAnimationMode">elastic</item>
+        <item name="tabIndicatorColor">@color/primary</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="android:background">@null</item>
+        <item name="tabPaddingEnd">5dp</item>
+        <item name="tabPaddingStart">5dp</item>
+        <!--        <item name="tabMinWidth">@dimen/_80sdp</item>-->
+        <item name="tabMode">scrollable</item>
+        <item name="tabSelectedTextAppearance">@style/TabLayoutTextAppearanceSelected</item>
+        <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
+        <item name="tabSelectedTextColor">@color/primary</item>
+        <item name="tabTextColor">@color/muted7_7B7A7A</item>
+    </style>
+
 </resources>

@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 enum class MangaOrderBy(
     /** Used in the search queries.  */
-    val search: String?
+    val search: String
 ) {
     @SerializedName("mal_id")
     MAL_ID("mal_id"),

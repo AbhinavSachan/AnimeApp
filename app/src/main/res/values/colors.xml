@@ -2,4 +2,101 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="whiteA15">#26FFFFFF</color>
+    <color name="whiteA17">#2CFFFFFF</color>
+    <color name="whiteA60">#99FFFFFF</color>
+    <color name="whiteA50">#80FFFFFF</color>
+    <color name="blackA5">#0D000000</color>
+    <color name="blackA30">#4D000000</color>
+    <color name="blackA70">#B3000000</color>
+    <color name="blackA40">#66000000</color>
+    <color name="blackA15">#26000000</color>
+    <color name="blackA20">#33000000</color>
+
+    <color name="colorPrimary">#000000</color>
+    <color name="colorSecondary">#000000</color>
+    <color name="colorAccent">#000000</color>
+
+    <color name="primary">#B3455E</color>
+    <color name="primaryA30">#4DB3455E</color>
+    <color name="secondary">#682837</color>
+    <color name="secondaryA50">#80682837</color>
+    <color name="secondary2">#403538</color>
+    <color name="muted">#686868</color>
+    <color name="muted2_454855">#454855</color>
+    <color name="muted3_686464">#686464</color>
+    <color name="muted4_878484">#878484</color>
+    <color name="muted5_919191">#919191</color>
+    <color name="muted6_403939">#403939</color>
+    <color name="muted7_7B7A7A">#7B7A7A</color>
+    <color name="muted8_878787">#878787</color>
+    <color name="muted9_434141">#434141</color>
+    <color name="bgGrey">#7B7B7B</color>
+    <color name="bgLightGrey">#D3D3D3</color>
+    <color name="bgRed">#FF0000</color>
+    <color name="fontRed">#CC3131</color>
+    <color name="bgBlue">#6B53F9</color>
+    <color name="bgYellow">#FFC244</color>
+    <color name="bgLightBlue">#F6EEF7</color>
+
+    <color name="fontTextGreen_14B661">#14B661</color>
+    <color name="fontTextRed_CC3131">#CC3131</color>
+    <color name="fontTextRed2_FF7E70">#FF7E70</color>
+    <color name="fontText1_32343E">#32343E</color>
+    <color name="fontText2_4F4F4F">#4F4F4F</color>
+    <color name="fontText3_181C2E">#181C2E</color>
+    <color name="fontText4_0D1B34">#0D1B34</color>
+    <color name="fontText5_333333">#333333</color>
+    <color name="fontText6_3C3C43">#3C3C43</color>
+    <color name="fontText6A30_3C3C43">#4D3C3C43</color>
+    <color name="fontText7_3A6268">#3A6268</color>
+    <color name="fontText8_424242">#424242</color>
+    <color name="fontText9_262626">#262626</color>
+    <color name="fontText10_838383">#838383</color>
+    <color name="fontText11_646982">#646982</color>
+    <color name="fontText12_646982">#646982</color>
+    <color name="fontHintColorA80_979797">#CC979797</color>
+    <color name="fontHintColor2_544848">#544848</color>
+    <color name="fontHintColor3_8B8B8B">#8B8B8B</color>
+
+    <color name="bgGrey1_CDCECE">#CDCECE</color>
+    <color name="bgGrey2_DFD2D2">#DFD2D2</color>
+    <color name="bgGrey3_F3F3F3">#F3F3F3</color>
+    <color name="bgGrey5_EFEFEF">#EFEFEF</color>
+    <color name="bgGrey5A30_EFEFEF">#4DEFEFEF</color>
+    <color name="bgGrey6_B4B3B3">#B4B3B3</color>
+    <color name="bgGrey7_7C7C7C">#7C7C7C</color>
+    <color name="bgGrey8_808080">#808080</color>
+    <color name="bgGrey9_D7D7D7">#D7D7D7</color>
+    <color name="bgGrey10_C5C3C3">#C5C3C3</color>
+    <color name="bgGrey11_B9B9B9">#B9B9B9</color>
+    <color name="bgGrey12_EDEDED">#EDEDED</color>
+    <color name="bgGrey13_F2F2F7">#F2F2F7</color>
+    <color name="bgBlack1_202020">#202020</color>
+    <color name="bgBlack2_383838">#383838</color>
+    <color name="bgBlack3_565656">#565656</color>
+    <color name="bgWhite2_F8F8F8">#F8F8F8</color>
+    <color name="bgWhite2A80_F8F8F8">#CCF8F8F8</color>     <!--80%-->
+    <color name="bgBlue1_2CA58D">#2CA58D</color>
+    <color name="bgBlue1A80_2CA58D">#CC2CA58D</color>
+    <color name="bgLimeA30_4FAF5A">#4D4FAF5A</color>
+    <color name="bgRed1A80_E00505">#CCE00505</color>
+    <color name="bgPink1A50_E59D89">#80E59D89</color>
+    <color name="bgPink2A10_D2816B">#1AD2816B</color>
+    <color name="bgPink2A20_D2816B">#33D2816B</color>
+    <color name="bgPink2A30_D2816B">#4DD2816B</color>
+    <color name="bgPink2A60_D2816B">#99D2816B</color>
+    <color name="bgPink3_FAE9E4">#FAE9E4</color>
+    <color name="bgPink4_D3856F">#D3856F</color>
+    <color name="bgPink6_FAF2F0">#FAF2F0</color>
+    <color name="bgBlueishGrey_F0F5FA">#F0F5FA</color>
+    <color name="bgGreenA10_2F6026">#1A2F6026</color>
+    <color name="bgGreenishGrey_57AF4D">#4D57AF4D</color>
+
+    <color name="iconBgGrey1_575656">#575656</color>
+    <color name="iconBgGrey2_8E8E93">#8E8E93</color>
+    <color name="iconBgGrey3_323232">#323232</color>
+
+    <color name="inactive_switch_color">#29787880</color>
+
 </resources>

@@ -28,7 +28,6 @@
 -dontwarn org.jaudiotagger.**
 
 
--keep class org.jaudiotagger.** { *; }
 -keep class org.jcodec.** { *; }
 
 # Glide ProGuard rules
@@ -40,8 +39,7 @@
 
 # Music player app ProGuard rules
 # keep all model classes
--keep class com.atomykcoder.atomykplay.data.** { *; }
--keep class com.atomykcoder.atomykplay.models.** { *; }
+-keep class com.abhinavdev.animeapp.remote.model.** { *; }
 
 # keep Glide-generated code
 -keep public class * implements com.bumptech.glide.GeneratedAppGlideModule {
@@ -111,7 +109,7 @@
 -dontwarn okio.**
 -dontwarn retrofit2.**
 -keep class retrofit2.**{*;}
--keep interface com.atomykcoder.atomykplay.interfaces.ApiService { *; }
+-keep interface com.abhinavdev.animeapp.remote.kit.ApiService { *; }
 
 
 -keep,allowobfuscation,allowshrinking interface retrofit2.Call
@@ -121,3 +119,5 @@
  # kept. Suspend functions are wrapped in continuations where the type argument
  # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-dontwarn com.daimajia.easing.Glider
+-dontwarn com.daimajia.easing.Skill

@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 enum class ClubType(
     /** Used in the search queries.  */
-    val search: String?,
+    val search: String
 ) {
     @SerializedName("public")
     PUBLIC("public"),

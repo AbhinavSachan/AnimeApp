@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="FontRegular400" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/hindi_regular</item>
+    </style>
+
+    <style name="FontMedium500" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/hindi_medium</item>
+    </style>
+
+    <style name="FontSemiBold600" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/hindi_semi_bold</item>
+    </style>
+
+    <style name="FontBold700" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/hindi_bold</item>
+    </style>
+
+    <style name="FontExtraBold800" parent="BaseFontAttribute">
+        <item name="android:fontFamily">@font/hindi_extra_bold</item>
+    </style>
+</resources>
