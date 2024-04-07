@@ -51,7 +51,7 @@
 
     <style name="BottomNavigationTextAppearanceActive">
         <item name="android:fontFamily">@font/jost_semi_bold</item>
-        <item name="android:textColor">@color/secondary</item>
+        <item name="android:textColor">@color/accent</item>
         <item name="android:textSize">@dimen/text_size_12</item>
     </style>
 
@@ -76,16 +76,16 @@
     <style name="MyCheckBoxStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="buttonTint">@color/secondary</item>
+        <item name="buttonTint">@color/accent</item>
         <item name="android:theme">@style/FontMedium500</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:textSize">@dimen/text_size_13</item>
-        <item name="android:textColor">@color/fontText1_32343E</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
     </style>
 
     <style name="RootLayoutDarkStyle">
-        <item name="android:background">@color/secondary</item>
+        <item name="android:background">@color/primary</item>
     </style>
 
     <style name="RootLayoutLightStyle">
@@ -95,6 +95,15 @@
     <style name="CircleImageView">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="CustomClickableIcon">
+        <item name="android:layout_width">@dimen/_35sdp</item>
+        <item name="android:layout_height">@dimen/_35sdp</item>
+        <item name="contentPadding">@dimen/_10sdp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="tint">@color/onPrimary</item>
     </style>
 
     <style name="TabLayoutStyle">
@@ -114,6 +123,47 @@
         <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
         <item name="tabSelectedTextColor">@color/primary</item>
         <item name="tabTextColor">@color/muted7_7B7A7A</item>
+    </style>
+
+    <!--    Font styles-->
+    <style name="TextStyleFont400">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:theme">@style/FontRegular400</item>
+    </style>
+
+    <style name="TextStyleFont500">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:theme">@style/FontMedium500</item>
+    </style>
+
+    <style name="TextStyleFont600">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:theme">@style/FontSemiBold600</item>
+    </style>
+
+    <style name="TextStyleFont700">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:theme">@style/FontBold700</item>
+    </style>
+
+    <style name="TextStyleFont800">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:theme">@style/FontExtraBold800</item>
     </style>
 
 </resources>

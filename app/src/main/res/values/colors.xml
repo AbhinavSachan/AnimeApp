@@ -13,15 +13,10 @@
     <color name="blackA15">#26000000</color>
     <color name="blackA20">#33000000</color>
 
-    <color name="colorPrimary">#000000</color>
-    <color name="colorSecondary">#000000</color>
-    <color name="colorAccent">#000000</color>
-
-    <color name="primary">#B3455E</color>
-    <color name="primaryA30">#4DB3455E</color>
-    <color name="secondary">#682837</color>
-    <color name="secondaryA50">#80682837</color>
-    <color name="secondary2">#403538</color>
+    <color name="primary">#FFFFFF</color>
+    <color name="onPrimary">#181f1f</color>
+    <color name="primaryA30">#4DFFFFFF</color>
+    <color name="accent">#FF6B6B</color>
     <color name="muted">#686868</color>
     <color name="muted2_454855">#454855</color>
     <color name="muted3_686464">#686464</color>
@@ -42,22 +37,11 @@
     <color name="fontTextGreen_14B661">#14B661</color>
     <color name="fontTextRed_CC3131">#CC3131</color>
     <color name="fontTextRed2_FF7E70">#FF7E70</color>
-    <color name="fontText1_32343E">#32343E</color>
-    <color name="fontText2_4F4F4F">#4F4F4F</color>
-    <color name="fontText3_181C2E">#181C2E</color>
-    <color name="fontText4_0D1B34">#0D1B34</color>
-    <color name="fontText5_333333">#333333</color>
-    <color name="fontText6_3C3C43">#3C3C43</color>
-    <color name="fontText6A30_3C3C43">#4D3C3C43</color>
-    <color name="fontText7_3A6268">#3A6268</color>
-    <color name="fontText8_424242">#424242</color>
-    <color name="fontText9_262626">#262626</color>
-    <color name="fontText10_838383">#838383</color>
-    <color name="fontText11_646982">#646982</color>
-    <color name="fontText12_646982">#646982</color>
-    <color name="fontHintColorA80_979797">#CC979797</color>
-    <color name="fontHintColor2_544848">#544848</color>
-    <color name="fontHintColor3_8B8B8B">#8B8B8B</color>
+    <color name="fontTextPrimary">#181f1f</color>
+    <color name="fontTextSecondary">#4F4F4F</color>
+    <color name="fontHintColorA80">#CC979797</color>
+    <color name="fontHintColor2">#544848</color>
+    <color name="fontHintColor">#8B8B8B</color>
 
     <color name="bgGrey1_CDCECE">#CDCECE</color>
     <color name="bgGrey2_DFD2D2">#DFD2D2</color>
