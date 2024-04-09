@@ -21,11 +21,15 @@
     <dimen name="text_size_28">@dimen/_22ssp</dimen>
     <dimen name="text_size_30">@dimen/_23ssp</dimen>
     <dimen name="text_size_31">@dimen/_24ssp</dimen>
+    <dimen name="text_size_32">@dimen/_25ssp</dimen>
     <dimen name="text_size_34">@dimen/_26ssp</dimen>
     <dimen name="text_size_36">@dimen/_28ssp</dimen>
     <dimen name="text_size_50">@dimen/_38ssp</dimen>
     <dimen name="text_size_80">@dimen/_60ssp</dimen>
     <dimen name="text_size_xlarge">@dimen/_22ssp</dimen>
+
+<!--    Safe zone dimens-->
+    <dimen name="safe_zone_vertical_card">@dimen/_8ssp</dimen>
 
 
 

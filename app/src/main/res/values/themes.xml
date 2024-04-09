@@ -97,6 +97,11 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="CircleImageViewRadius16">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/_12sdp</item>
+    </style>
+
     <style name="CustomClickableIcon">
         <item name="android:layout_width">@dimen/_35sdp</item>
         <item name="android:layout_height">@dimen/_35sdp</item>
@@ -164,6 +169,11 @@
         <item name="android:textColor">@color/fontTextPrimary</item>
         <item name="android:textSize">@dimen/text_size_12</item>
         <item name="android:theme">@style/FontExtraBold800</item>
+    </style>
+
+    <style name="DotIndicatorColorStyle">
+        <item name="dotsColor">@color/primaryA30</item>
+        <item name="selectedDotColor">@color/accent</item>
     </style>
 
 </resources>

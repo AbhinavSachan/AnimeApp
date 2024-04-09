@@ -284,11 +284,11 @@ interface ApiService {
      * @param page Page number
      * @param limit Limit per page
      * @param q Query
-     * @param orderBy
+     * @param characterOrderBy
      * Enum: "mal_id" "name" "favorites"
      * Available Character order_by properties
      *
-     * @param sort
+     * @param sortOrder
      * Enum: "desc" "asc"
      * Search query sort direction
      *
@@ -334,19 +334,19 @@ interface ApiService {
      * @param page page number]
      * @param limit Limit per page
      * @param q Query
-     * @param type
+     * @param clubType
      * Enum: "public" "private" "secret"
      * Club Search Query Type
      *
-     * @param category
+     * @param clubCategory
      * Enum: "anime" "manga" "actors_and_artists" "characters" "cities_and_neighborhoods" "companies" "conventions" "games" "japan" "music" "other" "schools"
      * Club Search Query Category
      *
-     * @param orderBy
+     * @param clubOrderBy
      * Enum: "mal_id" "name" "members_count" "created"
      * Club Search Query OrderBy
      *
-     * @param sort
+     * @param sortOrder
      * Enum: "desc" "asc"
      * Search query sort direction
      *
@@ -455,7 +455,7 @@ interface ApiService {
      * @param page
      * @param limit
      * @param q
-     * @param type
+     * @param mangaType
      * Enum: "manga" "novel" "lightnovel" "oneshot" "doujin" "manhwa" "manhua"
      * Available Manga types
      *
@@ -466,7 +466,7 @@ interface ApiService {
      * @param maxScore
      * Set a maximum score for results
      *
-     * @param status
+     * @param mangaStatus
      * Enum: "publishing" "complete" "hiatus" "discontinued" "upcoming"
      * Available Manga statuses
      *
@@ -479,11 +479,11 @@ interface ApiService {
      * @param genresExclude
      * Exclude genre(s) IDs. Can pass multiple with a comma as a delimiter. e.g 1,2,3
      *
-     * @param orderBy
+     * @param mangaOrderBy
      * Enum: "mal_id" "title" "start_date" "end_date" "chapters" "volumes" "score" "scored_by" "rank" "popularity" "members" "favorites"
      * Available Manga order_by properties
      *
-     * @param sort
+     * @param sortOrder
      * Enum: "desc" "asc"
      * Search query sort direction
      *
@@ -551,7 +551,7 @@ interface ApiService {
     //endregion
 
     /**
-     * @param filter
+     * @param dayOfWeek
      * Enum: "monday" "tuesday" "wednesday" "thursday" "friday" "saturday" "sunday" "unknown" "other"
      * Filter by day
      *
@@ -582,15 +582,15 @@ interface ApiService {
     //region Top
 
     /**
-     * @param type
+     * @param animeType
      * Enum: "tv" "movie" "ova" "special" "ona" "music" "cm" "pv" "tv_special"
      * Available Anime types
      *
-     * @param filter
+     * @param animeFilter
      * Enum: "airing" "upcoming" "bypopularity" "favorite"
      * Top items filter types
      *
-     * @param rating
+     * @param ageRating
      * Enum: "g" "pg" "pg13" "r17" "r" "rx"
      * Available Anime audience ratings
      *
@@ -619,28 +619,13 @@ interface ApiService {
     ): Response<AnimeSearchResponse>
 
     /**
-     * @param type
-     * Enum: "tv" "movie" "ova" "special" "ona" "music" "cm" "pv" "tv_special"
-     * Available Anime types
+     * @param mangaType
+     * Enum: "manga" "novel" "lightnovel" "oneshot" "doujin" "manhwa" "manhua"
+     * Available Manga types
      *
-     * @param filter
+     * @param mangaFilter
      * Enum: "publishing" "upcoming" "bypopularity" "favorite"
      * Top items filter types
-     *
-     * @param rating
-     * Enum: "g" "pg" "pg13" "r17" "r" "rx"
-     * Available Anime audience ratings
-     *
-     * Ratings
-     *
-     * G - All Ages
-     * PG - Children
-     * PG-13 - Teens 13 or older
-     * R - 17+ (violence & profanity)
-     * R+ - Mild Nudity
-     * Rx - Hentai
-     * @param sfw
-     * Filter out Adult entries
      *
      * @param page
      * @param limit

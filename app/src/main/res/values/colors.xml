@@ -15,6 +15,7 @@
 
     <color name="primary">#FFFFFF</color>
     <color name="onPrimary">#181f1f</color>
+    <color name="onAccent">#F8F8F8</color>
     <color name="primaryA30">#4DFFFFFF</color>
     <color name="accent">#FF6B6B</color>
     <color name="muted">#686868</color>
@@ -38,6 +39,8 @@
     <color name="fontTextRed_CC3131">#CC3131</color>
     <color name="fontTextRed2_FF7E70">#FF7E70</color>
     <color name="fontTextPrimary">#181f1f</color>
+    <color name="fontTextWhite">#ffffff</color>
+    <color name="fontTextBlack">#000000</color>
     <color name="fontTextSecondary">#4F4F4F</color>
     <color name="fontHintColorA80">#CC979797</color>
     <color name="fontHintColor2">#544848</color>
