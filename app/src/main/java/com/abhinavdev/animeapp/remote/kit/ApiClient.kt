@@ -20,16 +20,18 @@ object ApiClient {
     private lateinit var retrofitBuilder: Retrofit.Builder
     private lateinit var retrofit: Retrofit
     private lateinit var okHttpClient: OkHttpClient
-    private lateinit var apiService: ApiService
+    private lateinit var jikanApiService: JikanApiService
     lateinit var baseUrl: String
 
-    private var BASE_URL = "https://api.jikan.moe/v4/"
+    private var JIKAN_BASE_URL = "https://api.jikan.moe/v4/"
+    private var O_AUTH_BASE_URL = "https://myanimelist.net/v1/oauth2/"
+    private var MAL_BASE_URL = "https://api.myanimelist.net/v2/"
 
     fun init() {
-        baseUrl = BASE_URL
+        baseUrl = JIKAN_BASE_URL
 
         retrofitBuilder = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(JIKAN_BASE_URL)
 
         httpBuilder = OkHttpClient.Builder()
             .addInterceptor(RateLimitInterceptor())
@@ -46,14 +48,14 @@ object ApiClient {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        apiService = retrofit.create(ApiService::class.java)
+        jikanApiService = retrofit.create(JikanApiService::class.java)
     }
 
-    fun getApiService(): ApiService {
-        if (!::apiService.isInitialized) {
+    fun getApiService(): JikanApiService {
+        if (!::jikanApiService.isInitialized) {
             throw IllegalStateException("ApiClient not initialized. Call init() first.")
         }
-        return apiService
+        return jikanApiService
     }
 
     class RateLimitInterceptor : Interceptor {
@@ -64,8 +66,8 @@ object ApiClient {
             //See: https://jikan.docs.apiary.io/#introduction/http-response
             if (!response.isSuccessful && response.code == 429) {
                 try {
-                    log { "You are being rate limited or Api is being rate limited by MyAnimeList, retrying in 4 seconds..." }
-                    Thread.sleep(4000L)
+                    log { "You are being rate limited or Api is being rate limited by MyAnimeList, retrying in 1 seconds..." }
+                    Thread.sleep(1000L)
                 } catch (e: InterruptedException) {
                 }
 

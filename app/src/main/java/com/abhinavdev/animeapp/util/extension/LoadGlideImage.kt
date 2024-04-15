@@ -1,11 +1,14 @@
 package com.abhinavdev.animeapp.util.extension
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import com.abhinavdev.animeapp.util.glide.GlideApp
 import com.abhinavdev.animeapp.util.glide.ImageModel
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
 
 fun AppCompatImageView.loadImage(url: Any?, placeHolder: Int = 0) {
     GlideApp.with(this)
@@ -15,10 +18,24 @@ fun AppCompatImageView.loadImage(url: Any?, placeHolder: Int = 0) {
         .into(this)
 }
 
-fun AppCompatImageView.loadImage(
+fun AppCompatImageView.loadImage(url: String?, placeHolder: Int = 0) {
+    GlideApp.with(this)
+        .load(url?.let { ImageModel(it) })
+        .placeholder(placeHolder)
+        .error(placeHolder)
+        .into(this)
+}
+
+fun CustomTarget<Drawable>.loadBlurImage(context: Context, image: Int = 0) {
+    GlideApp.with(context)
+        .load(image)
+        .override(3, 3)
+        .into(this)
+}
+
+fun AppCompatImageView.loadImageWithAnime(
     path: String?,
     placeholderImage: Int,
-    image_measure: Int,
     animate: Boolean
 ) {
 
@@ -32,9 +49,8 @@ fun AppCompatImageView.loadImage(
             placeholderImage
         ).error(placeholderImage)
     )
-        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-        .skipMemoryCache(true)
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(false)
         .transition(drawableTransitionOptions)
-        .override(image_measure, image_measure)
         .into(this)
 }

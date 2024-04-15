@@ -10,7 +10,7 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.kit.fetchData
 import com.abhinavdev.animeapp.remote.kit.repository.AnimeRepository
 import com.abhinavdev.animeapp.remote.kit.sources.AnimeRepositoryImpl
-import com.abhinavdev.animeapp.remote.model.anime.AnimeFullResponse
+import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
 import kotlinx.coroutines.launch
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {

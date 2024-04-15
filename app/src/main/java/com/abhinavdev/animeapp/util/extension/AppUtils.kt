@@ -1,10 +1,15 @@
 package com.abhinavdev.animeapp.util.extension
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Insets
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,16 +20,22 @@ import android.text.Spanned
 import android.util.Base64
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.util.AppTheme
 import com.abhinavdev.animeapp.util.Const
@@ -66,49 +77,21 @@ fun String.formatPriceWithoutCurrency(): String {
     else num.toString()
 }
 
+fun String.formatToOneDigitAfterDecimal(): String {
+    val num = this.toFloat()
+
+    return "%.1f".format(Locale.ENGLISH, num)
+}
+
+fun Float.formatToOneDigitAfterDecimal(): String {
+    return "%.1f".format(Locale.ENGLISH, this)
+}
+
 fun String.isEmailValid(): Boolean {
     val expression = "^[\\w.-]+@([\\w\\-]+\\.)+[A-Z]{2,8}$"
     val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
     val matcher = pattern.matcher(this)
     return matcher.matches()
-}
-
-@Suppress("DEPRECATION")
-fun getDeviceWidth(activity: Activity): Int {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowMetrics = activity.windowManager.currentWindowMetrics
-        val displayMetrics = activity.resources.displayMetrics
-
-//		val pxHeight = windowMetrics.bounds.height()
-        val pxWidth = windowMetrics.bounds.width()
-
-        val density = displayMetrics.density
-
-        ((pxWidth / density).toInt())
-    } else {
-        val displayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        displayMetrics.widthPixels
-    }
-}
-
-@Suppress("DEPRECATION")
-fun getDeviceHeight(activity: Activity): Int {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val windowMetrics = activity.windowManager.currentWindowMetrics
-        val displayMetrics = activity.resources.displayMetrics
-
-        val pxHeight = windowMetrics.bounds.height()
-//		val pxWidth = windowMetrics.bounds.width()
-
-        val density = displayMetrics.density
-
-        ((pxHeight / density).toInt())
-    } else {
-        val displayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        displayMetrics.heightPixels
-    }
 }
 
 fun Int.toPx(context: Context): Int = (this * context.resources.displayMetrics.density).toInt()
@@ -199,11 +182,12 @@ fun convertToBase64(attachment: File): String {
 
 fun ViewPager2.enableAutoScroll(totalPages: Int, activity: Activity): Timer {
     val autoTimerTask = Timer()
-    var currentPageIndex = currentItem
     autoTimerTask.schedule(object : TimerTask() {
         override fun run() {
+            var currentPageIndex = currentItem
+
             activity.runOnUiThread {
-                currentItem = currentPageIndex++
+                currentItem = ++currentPageIndex
             }
             if (currentPageIndex == totalPages) currentPageIndex = 0
         }
@@ -367,3 +351,138 @@ private fun setSystemBarColor(window: Window, theme: AppTheme) {
 }
 
 fun String.removeSpace() = trim().replace("\\s+".toRegex(), replacement = "")
+
+fun getDisplaySize(activity: Activity): Size {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics1 = activity.windowManager.currentWindowMetrics
+        // Gets all excluding insets
+        val windowInsets = metrics1.windowInsets
+        val insets: Insets =
+            windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars())
+
+        val insetsWidth: Int = insets.right + insets.left
+        val insetsHeight: Int = insets.top + insets.bottom
+
+
+        // Legacy size that Display#getSize reports
+        val bounds = metrics1.bounds
+        return Size(
+            bounds.width() - insetsWidth, bounds.height() - insetsHeight
+        )
+    } else {
+        val metrics = DisplayMetrics()
+        activity.windowManager.defaultDisplay.getMetrics(metrics)
+        return Size(
+            metrics.widthPixels, metrics.heightPixels
+        )
+    }
+}
+
+/**
+ * default placeholder is "-"
+ */
+fun String?.placeholder(placeholder: String = "-"): String {
+    return if (this.isNullOrBlank()) {
+        placeholder
+    } else {
+        this
+    }
+}
+
+fun String.getFirstCharactersOfWords(): String {
+    return this.split(" ").joinToString("") { it.firstOrNull()?.toString() ?: "" }
+}
+
+fun createFileFromUri(context: Context, uri: Uri): File? {
+    val fileName = getFileName(context.contentResolver, uri)
+    fileName?.let { name ->
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            val outputFile = File(context.cacheDir, name)
+            FileOutputStream(outputFile).use { output ->
+                val buffer = ByteArray(4 * 1024) // buffer size
+                var read: Int
+                while (input.read(buffer).also { read = it } != -1) {
+                    output.write(buffer, 0, read)
+                }
+                output.flush()
+            }
+            return outputFile
+        }
+    }
+    return null
+}
+
+fun getFileName(contentResolver: ContentResolver, uri: Uri): String? {
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val displayName = it.getString(it.getColumnIndexOrThrow("_display_name"))
+            if (displayName != null) {
+                return displayName
+            }
+        }
+    }
+    return null
+}
+
+/** Open link in Chrome Custom Tabs */
+fun Context.openCustomTab(url: String) {
+    val colors = CustomTabColorSchemeParams.Builder()
+        .setToolbarColor(ContextCompat.getColor(this, R.color.primary))
+        .build()
+    CustomTabsIntent.Builder()
+        .setDefaultColorSchemeParams(colors)
+        .build().apply {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            launchUrl(this@openCustomTab, Uri.parse(url))
+        }
+}
+
+/** Open external link by default browser or intent chooser */
+fun Context.openLink(url: String) {
+    val uri = Uri.parse(url)
+    Intent(Intent.ACTION_VIEW, uri).apply {
+        val defaultBrowser =
+            findBrowserIntentActivities(PackageManager.MATCH_DEFAULT_ONLY).firstOrNull()
+        if (defaultBrowser != null) {
+            try {
+                setPackage(defaultBrowser.activityInfo.packageName)
+                startActivity(this)
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent.createChooser(this, null))
+            }
+        } else {
+            val browsers = findBrowserIntentActivities(PackageManager.MATCH_ALL)
+            val intents = browsers.map {
+                Intent(Intent.ACTION_VIEW, uri).apply {
+                    setPackage(it.activityInfo.packageName)
+                }
+            }
+            startActivity(
+                Intent.createChooser(this, null).apply {
+                    putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toTypedArray())
+                }
+            )
+        }
+    }
+}
+
+/** Finds all the browsers installed on the device */
+private fun Context.findBrowserIntentActivities(
+    flags: Int = 0
+): List<ResolveInfo> {
+    val emptyBrowserIntent = Intent(Intent.ACTION_VIEW, Uri.fromParts("http", "", null))
+
+    return packageManager
+        .queryIntentActivitiesCompat(emptyBrowserIntent, flags)
+        .filter { it.activityInfo.packageName != BuildConfig.APPLICATION_ID }
+        .sortedBy { it.priority }
+}
+
+/** Custom compat method until Google decides to make one */
+private fun PackageManager.queryIntentActivitiesCompat(intent: Intent, flags: Int = 0) =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
+    } else {
+        queryIntentActivities(intent, flags)
+    }

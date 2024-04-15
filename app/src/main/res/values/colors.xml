@@ -2,15 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="whiteA15">#26FFFFFF</color>
     <color name="whiteA17">#2CFFFFFF</color>
     <color name="whiteA60">#99FFFFFF</color>
+    <color name="whiteA80">#CCFFFFFF</color>
     <color name="whiteA50">#80FFFFFF</color>
     <color name="blackA5">#0D000000</color>
     <color name="blackA30">#4D000000</color>
     <color name="blackA70">#B3000000</color>
     <color name="blackA40">#66000000</color>
     <color name="blackA15">#26000000</color>
+    <color name="blackA10">#1A000000</color>
     <color name="blackA20">#33000000</color>
 
     <color name="primary">#FFFFFF</color>
@@ -18,6 +21,8 @@
     <color name="onAccent">#F8F8F8</color>
     <color name="primaryA30">#4DFFFFFF</color>
     <color name="accent">#FF6B6B</color>
+    <color name="accentA50">#80FF6B6B</color>
+    <color name="accentA30">#4DFF6B6B</color>
     <color name="muted">#686868</color>
     <color name="muted2_454855">#454855</color>
     <color name="muted3_686464">#686464</color>
@@ -85,5 +90,6 @@
     <color name="iconBgGrey3_323232">#323232</color>
 
     <color name="inactive_switch_color">#29787880</color>
+    <color name="shimmer_color">#80FF6B6B</color>
 
 </resources>

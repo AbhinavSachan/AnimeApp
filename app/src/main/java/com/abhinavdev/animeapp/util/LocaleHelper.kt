@@ -4,14 +4,9 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
-import java.util.*
+import java.util.Locale
 
 object LocaleHelper {
-    fun onAttach(context: Context): Context {
-        val lang = getPersistedData(context, Locale.getDefault().language)
-        return setLocale(context, lang)
-    }
-
     fun onAttach(context: Context, defaultLanguage: String): Context {
         val lang = getPersistedData(context, defaultLanguage)
         return setLocale(context, lang)

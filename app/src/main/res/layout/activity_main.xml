@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_3sdp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        android:background="@drawable/bg_bottom_nav_bar_shadow"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavBar"
         android:layout_width="0dp"
@@ -14,8 +27,8 @@
         app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="@dimen/_18sdp"
         app:itemIconTint="@color/bottom_navigation_icon_selector"
-        app:itemPaddingBottom="@dimen/_16sdp"
-        app:itemPaddingTop="@dimen/_13sdp"
+        app:itemPaddingBottom="@dimen/_11sdp"
+        app:itemPaddingTop="@dimen/_11sdp"
         app:itemTextAppearanceActive="@style/BottomNavigationTextAppearanceActive"
         app:itemTextAppearanceInactive="@style/BottomNavigationTextAppearanceInactive"
         app:itemTextColor="@color/selector_bottom_nav_text_color"
@@ -24,19 +37,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/main_bottom_menu" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:layout_width="match_parent"
-        android:elevation="@dimen/_4sdp"
         android:layout_height="0dp"
+        android:elevation="@dimen/_6sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/loader"
+        layout="@layout/custom_loader"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

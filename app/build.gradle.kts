@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -7,6 +9,11 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
+
+android.buildFeatures.buildConfig = true
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").reader())
 
 android {
     signingConfigs {
@@ -39,6 +46,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
         }
         release {
             isDebuggable = false
@@ -48,6 +56,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
             signingConfig = signingConfigs.getByName("release")
         }
     }
@@ -89,14 +98,17 @@ dependencies {
     val retrofitVersion = "2.11.0"
 
     implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.browser:browser:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.work:work-runtime:2.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+
+    implementation("com.google.android.material:material:1.11.0")
 
     //Life Cycle
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -132,14 +144,13 @@ dependencies {
 
 
     //firebase libs
-     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 //    implementation ("com.google.firebase:firebase-messaging-ktx")
 //    implementation ("com.google.firebase:firebase-installations-ktx")
 //    implementation ("com.google.firebase:firebase-messaging")
 //    implementation ("com.google.firebase:firebase-core")
 //    implementation ("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics:18.6.4")
+    implementation("com.google.firebase:firebase-analytics:21.6.2")
 
 
     //page indicator
@@ -192,7 +203,11 @@ dependencies {
 //    implementation("com.ncorti:slidetoact:0.11.0")
 
     implementation("com.localebro:okhttpprofiler:1.0.8")
+    //micro animations util library
     implementation("com.daimajia.androidanimations:library:2.4@aar")
     implementation("androidx.palette:palette-ktx:1.0.0")
+    //shimmer loading library
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+    //auto image slider library
 }
 //https://docs.consumet.org/#tag/anilist

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/tv_heading"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:background="@drawable/bg_shimmer_cor_6" />
+
+        <View
+            android:id="@+id/tv_view_all"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:background="@drawable/bg_shimmer_cor_6" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/rv_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_heading"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/_15sdp"
+            android:paddingTop="@dimen/_11sdp"
+            android:paddingEnd="@dimen/_15sdp"
+            android:paddingBottom="@dimen/_15sdp">
+
+            <include layout="@layout/shimmer_vertical_card" />
+
+            <include layout="@layout/shimmer_vertical_card" />
+
+            <include layout="@layout/shimmer_vertical_card" />
+
+            <include layout="@layout/shimmer_vertical_card" />
+
+            <include layout="@layout/shimmer_vertical_card" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </RelativeLayout>
+
+</com.facebook.shimmer.ShimmerFrameLayout>

@@ -39,7 +39,7 @@
 
 # Music player app ProGuard rules
 # keep all model classes
--keep class com.abhinavdev.animeapp.remote.model.** { *; }
+-keep class com.abhinavdev.animeapp.remote.models.** { *; }
 
 # keep Glide-generated code
 -keep public class * implements com.bumptech.glide.GeneratedAppGlideModule {

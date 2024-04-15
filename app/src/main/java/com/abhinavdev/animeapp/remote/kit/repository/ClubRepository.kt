@@ -1,14 +1,14 @@
 package com.abhinavdev.animeapp.remote.kit.repository
 
-import com.abhinavdev.animeapp.remote.model.clubs.ClubMembersResponse
-import com.abhinavdev.animeapp.remote.model.clubs.ClubRelationsResponse
-import com.abhinavdev.animeapp.remote.model.clubs.ClubResponse
-import com.abhinavdev.animeapp.remote.model.clubs.ClubSearchResponse
-import com.abhinavdev.animeapp.remote.model.clubs.ClubStaffResponse
-import com.abhinavdev.animeapp.remote.model.enums.ClubCategory
-import com.abhinavdev.animeapp.remote.model.enums.ClubOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.ClubType
-import com.abhinavdev.animeapp.remote.model.enums.SortOrder
+import com.abhinavdev.animeapp.remote.models.clubs.ClubMembersResponse
+import com.abhinavdev.animeapp.remote.models.clubs.ClubRelationsResponse
+import com.abhinavdev.animeapp.remote.models.clubs.ClubResponse
+import com.abhinavdev.animeapp.remote.models.clubs.ClubSearchResponse
+import com.abhinavdev.animeapp.remote.models.clubs.ClubStaffResponse
+import com.abhinavdev.animeapp.remote.models.enums.ClubCategory
+import com.abhinavdev.animeapp.remote.models.enums.ClubOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.ClubType
+import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import retrofit2.Response
 
 interface ClubRepository {

@@ -1,9 +1,9 @@
 package com.abhinavdev.animeapp.util
 
 object Const {
-    interface TimeOut{
-        companion object{
-            const val BANNER_SWIPE_DELAY = 300L
+    interface TimeOut {
+        companion object {
+            const val BANNER_SWIPE_DELAY = 8000L
             const val CONNECTION_TIMEOUT = 200L
             const val WRITE_TIMEOUT = 200L
             const val READ_TIMEOUT = 200L
@@ -11,19 +11,28 @@ object Const {
     }
 
     interface SharedPrefs {
-        companion object{
+        companion object {
             const val SELECTED_LANGUAGE_CODE = "selected_language_code"
         }
     }
 
     interface Language {
-        companion object{
+        companion object {
             const val ENGLISH_LANG_CODE = "en"
             const val HINDI_LANG_CODE = "hi"
+            const val JAPANESE_LANG_CODE = "ja"
         }
     }
+
+    interface Mal {
+        companion object {
+            const val APP_DEEP_LINK = "moyemoye://moyemoye.page.link/"
+            const val STATE = "MoyeMoyeState123"
+        }
+    }
+
     interface DateFormats {
-        companion object{
+        companion object {
             const val SERVER_FORMAT_DATE = "yyyy-MM-dd"
             const val SERVER_FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm"
             const val SERVER_FORMAT_TIME = "HH:mm"
@@ -32,8 +41,9 @@ object Const {
             const val IN_APP_SHOW_FORMAT_TIME = "hh:mm a"
         }
     }
+
     interface ApiKeywords {
-        companion object{
+        companion object {
             const val ANIME = "anime"
             const val CHARACTERS = "characters"
             const val CLUBS = "clubs"

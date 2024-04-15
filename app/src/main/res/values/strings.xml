@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AnimeApp</string>
+    <string name="app_name" translatable="false">Moye Moye</string>
 
     <!--    jikan error message's-->
     <string name="error_cache_modification">You have the latest data</string>
@@ -12,12 +12,16 @@
     <string name="error_network_failure">Network Failure</string>
     <string name="error_conversion_error">Conversion Error</string>
     <string name="error_something_went_wrong">Something went wrong</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="msg_top_hits">Top Hits</string>
     <string name="action_see_all">See all</string>
     <string name="msg_more">More</string>
     <string name="msg_manga">Manga</string>
     <string name="msg_anime">Anime</string>
+    <string name="action_details">Details</string>
+    <string name="msg_spotlight">Spotlight</string>
+    <string name="msg_top_favourite">Top Favourite</string>
+    <string name="msg_most_popular">Most Popular</string>
+    <string name="msg_upcoming">Upcoming</string>
+    <string name="msg_please_wait">Please wait…</string>
 
 </resources>

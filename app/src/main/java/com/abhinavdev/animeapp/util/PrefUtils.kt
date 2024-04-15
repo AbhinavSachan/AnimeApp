@@ -16,18 +16,16 @@ object PrefUtils {
 
     fun setString(key: String?, value: String?) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString(key, value)
         editor.apply()
     }
 
-    fun getString(key: String?): String? {
+    fun getString(key: String?, default: String = DEFAULT_STRING_VALUE): String {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
-        return prefs.getString(key, DEFAULT_STRING_VALUE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+        return prefs.getString(key, default) ?: default
     }
 
     fun setStringWithContext(context: Context, key: String?, value: String?) {
@@ -37,73 +35,67 @@ object PrefUtils {
         editor.apply()
     }
 
-    fun getStringWithContext(context: Context, key: String?): String? {
+    fun getStringWithContext(
+        context: Context, key: String?, default: String = DEFAULT_STRING_VALUE
+    ): String {
         val prefs = context.getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
-        return prefs.getString(key, DEFAULT_STRING_VALUE)
+        return prefs.getString(key, default) ?: default
     }
 
     fun setBoolean(key: String?, value: Boolean) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putBoolean(key, value)
         editor.apply()
     }
 
-    fun getBoolean(key: String?): Boolean {
+    fun getBoolean(key: String?, default: Boolean = false): Boolean {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
-        return prefs.getBoolean(key, false)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+        return prefs.getBoolean(key, default)
     }
 
     fun setLong(key: String?, value: Long) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putLong(key, value)
         editor.apply()
     }
 
-    fun getLong(key: String?): Long {
+    fun getLong(key: String?, default: Int = DEFAULT_NUMERIC_VALUE): Long {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
-        return prefs.getLong(key, DEFAULT_NUMERIC_VALUE.toLong())
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+        return prefs.getLong(key, default.toLong())
     }
 
     fun setInteger(key: String?, value: Int) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putInt(key, value)
         editor.apply()
     }
 
-    fun getInteger(key: String?): Int {
+    fun getInteger(key: String?, default: Int = DEFAULT_NUMERIC_VALUE): Int {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
-        return prefs.getInt(key, DEFAULT_NUMERIC_VALUE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+        return prefs.getInt(key, default)
     }
 
     fun setFloat(key: String?, value: Float) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putFloat(key, value)
         editor.apply()
     }
 
-    fun getFloat(key: String?): Float {
+    fun getFloat(key: String?, default: Int = DEFAULT_NUMERIC_VALUE): Float {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
-        return prefs.getFloat(key, DEFAULT_NUMERIC_VALUE as Float)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+        return prefs.getFloat(key, default.toFloat())
     }
 
     /**
@@ -111,8 +103,7 @@ object PrefUtils {
      */
     fun setObject(key: String?, value: Any) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString(key, Gson().toJson(value))
         editor.apply()
@@ -124,8 +115,7 @@ object PrefUtils {
      */
     fun <T> getObject(key: String?, pojoClass: Class<T>?): T? {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val jsonString = prefs.getString(key, null) ?: return null
         return Gson().fromJson(jsonString, pojoClass)
     }
@@ -136,8 +126,7 @@ object PrefUtils {
     val all: Map<String, *>
         get() {
             val prefs = ApplicationClass.getInstance().getSharedPreferences(
-                DEFAULT_PREFS,
-                Context.MODE_PRIVATE
+                DEFAULT_PREFS, Context.MODE_PRIVATE
             )
             return prefs.all
         }
@@ -147,8 +136,7 @@ object PrefUtils {
      */
     fun removeKey(key: String?) {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.remove(key)
         editor.apply()
@@ -159,8 +147,7 @@ object PrefUtils {
      */
     fun clearAll() {
         val prefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.clear()
         editor.apply()
@@ -171,8 +158,7 @@ object PrefUtils {
      */
     fun checkKeyAvailable(key: String?): Boolean {
         val sharedPrefs =
-            ApplicationClass.getInstance()
-                .getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
+            ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return sharedPrefs.contains(key)
     }
 }

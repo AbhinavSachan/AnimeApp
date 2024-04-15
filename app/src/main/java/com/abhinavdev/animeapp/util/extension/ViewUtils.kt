@@ -39,6 +39,9 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
 
@@ -89,6 +92,26 @@ fun View.hide() {
 
 fun View.show() {
     visibility = View.VISIBLE
+}
+
+fun View.isHidden():Boolean {
+    return visibility == View.GONE
+}
+
+fun View.isVisible():Boolean {
+    return visibility == View.VISIBLE
+}
+
+fun View.isInvisible():Boolean {
+    return visibility == View.INVISIBLE
+}
+
+fun View.showOrHide(shouldShow: Boolean) {
+    if (shouldShow) this.show() else this.hide()
+}
+
+fun View.showOrInvisible(shouldShow: Boolean) {
+    if (shouldShow) this.show() else this.invisible()
 }
 
 fun View.invisible() {
@@ -271,9 +294,7 @@ fun View?.getSizeOfView(onSizeReady: (Size) -> Unit) {
 }
 
 fun Context.inflateLayoutAsync(
-    @LayoutRes layoutRes: Int,
-    container: ViewGroup?,
-    onLayoutInflated: (View) -> Unit
+    @LayoutRes layoutRes: Int, container: ViewGroup?, onLayoutInflated: (View) -> Unit
 ) {
     val asyncLayoutInflater = AsyncLayoutInflater(this)
 
@@ -288,9 +309,7 @@ fun Drawable.toUnscaledBitmap(): Bitmap? {
     }
 
     val bitmap = Bitmap.createBitmap(
-        intrinsicWidth,
-        intrinsicHeight,
-        Bitmap.Config.RGB_565
+        intrinsicWidth, intrinsicHeight, Bitmap.Config.RGB_565
     )
 
     val canvas = Canvas(bitmap)
@@ -305,27 +324,58 @@ fun pxToDp(resources: Resources, px: Int): Float {
     return px / density
 }
 
-fun View.fadOutAnimation(duration: Long = 300, visibility: Int = View.INVISIBLE, completion: (() -> Unit)? = null) {
-    animate()
-        .alpha(0f)
-        .setDuration(duration)
-        .withEndAction {
-            this.visibility = visibility
-            completion?.let {
-                it()
-            }
+fun View.fadOutAnimation(
+    duration: Long = 300, visibility: Int = View.INVISIBLE, completion: (() -> Unit)? = null
+) {
+    animate().alpha(0f).setDuration(duration).withEndAction {
+        this.visibility = visibility
+        completion?.let {
+            it()
         }
+    }
 }
 
 fun View.fadInAnimation(duration: Long = 300, completion: (() -> Unit)? = null) {
     alpha = 0f
     visibility = View.VISIBLE
-    animate()
-        .alpha(1f)
-        .setDuration(duration)
-        .withEndAction {
-            completion?.let {
-                it()
-            }
+    animate().alpha(1f).setDuration(duration).withEndAction {
+        completion?.let {
+            it()
         }
+    }
+}
+
+fun ViewPager2.reduceDragSensitivity(f: Int = 4) {
+    val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")
+    recyclerViewField.isAccessible = true
+    val recyclerView = recyclerViewField.get(this) as RecyclerView
+
+    val touchSlopField = RecyclerView::class.java.getDeclaredField("mTouchSlop")
+    touchSlopField.isAccessible = true
+    val touchSlop = touchSlopField.get(recyclerView) as Int
+    touchSlopField.set(recyclerView, touchSlop * f)       // "8" was obtained experimentally
+}
+
+fun BottomSheetBehavior<*>.dismiss() {
+    this.state = BottomSheetBehavior.STATE_HIDDEN
+}
+
+fun BottomSheetBehavior<*>.collapse() {
+    this.state = BottomSheetBehavior.STATE_COLLAPSED
+}
+
+fun BottomSheetBehavior<*>.expand() {
+    this.state = BottomSheetBehavior.STATE_EXPANDED
+}
+
+fun BottomSheetBehavior<*>.isHidden(): Boolean {
+    return this.state == BottomSheetBehavior.STATE_HIDDEN
+}
+
+fun BottomSheetBehavior<*>.isCollapsed(): Boolean {
+    return this.state == BottomSheetBehavior.STATE_COLLAPSED
+}
+
+fun BottomSheetBehavior<*>.isExpanded(): Boolean {
+    return this.state == BottomSheetBehavior.STATE_EXPANDED
 }

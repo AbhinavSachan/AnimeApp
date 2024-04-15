@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.IntegerRes
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 
 @SuppressLint("ResourceType")
@@ -61,6 +61,10 @@ fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit
 
 fun Context.toast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+
+fun Fragment.toast(message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 fun Context.toastLong(message: String) {

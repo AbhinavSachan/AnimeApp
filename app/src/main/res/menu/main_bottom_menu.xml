@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_share"
+        android:id="@+id/navigation_anime"
+        android:icon="@drawable/selector_anime_icon"
         android:title="@string/msg_anime" />
     <item
-        android:id="@+id/navigation_meals"
-        android:icon="@drawable/ic_share"
+        android:id="@+id/navigation_manga"
+        android:icon="@drawable/selector_manga_icon"
         android:title="@string/msg_manga" />
     <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_share"
+        android:id="@+id/navigation_more"
+        android:icon="@drawable/selector_more_icon"
         android:title="@string/msg_more" />
 </menu>

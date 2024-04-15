@@ -90,7 +90,7 @@ class ApplicationClass : Application() {
 
 	override fun attachBaseContext(base: Context) {
 		var lang = PrefUtils.getStringWithContext(base, Const.SharedPrefs.SELECTED_LANGUAGE_CODE)
-		if (lang == null || lang == "")
+		if (lang.isBlank())
 			lang = Const.Language.ENGLISH_LANG_CODE
 		super.attachBaseContext(LocaleHelper.onAttach(base, lang))
 	}

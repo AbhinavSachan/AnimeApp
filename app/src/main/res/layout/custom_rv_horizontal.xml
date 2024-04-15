@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="rv_items,tv_heading,tv_view_all"
+        tools:visibility="visible" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_heading"
         style="@style/TextStyleFont600"
@@ -31,13 +39,19 @@
         android:clipToPadding="false"
         android:paddingStart="@dimen/_15sdp"
         android:paddingTop="@dimen/_11sdp"
-        android:paddingEnd="@dimen/_15sdp"
+        android:paddingEnd="@dimen/_10sdp"
         android:paddingBottom="@dimen/_15sdp"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/tv_heading"
         tools:itemCount="3"
         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/row_vertical_card"
-        tools:orientation="horizontal" />
+        tools:orientation="horizontal"
+        tools:visibility="visible" />
 
+    <include
+        android:id="@+id/shimmer_loader"
+        layout="@layout/shimmer_rv_horizontal"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

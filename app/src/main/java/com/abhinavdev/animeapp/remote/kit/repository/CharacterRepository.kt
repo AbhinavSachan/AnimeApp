@@ -1,14 +1,14 @@
 package com.abhinavdev.animeapp.remote.kit.repository
 
-import com.abhinavdev.animeapp.remote.model.anime.CharacterResponse
-import com.abhinavdev.animeapp.remote.model.characters.CharacterAnimeResponse
-import com.abhinavdev.animeapp.remote.model.characters.CharacterFullResponse
-import com.abhinavdev.animeapp.remote.model.characters.CharacterMangaResponse
-import com.abhinavdev.animeapp.remote.model.characters.CharacterPicturesResponse
-import com.abhinavdev.animeapp.remote.model.characters.CharacterSearchResponse
-import com.abhinavdev.animeapp.remote.model.characters.CharacterVoiceActorsResponse
-import com.abhinavdev.animeapp.remote.model.enums.CharacterOrderBy
-import com.abhinavdev.animeapp.remote.model.enums.SortOrder
+import com.abhinavdev.animeapp.remote.models.anime.CharacterResponse
+import com.abhinavdev.animeapp.remote.models.characters.CharacterAnimeResponse
+import com.abhinavdev.animeapp.remote.models.characters.CharacterFullResponse
+import com.abhinavdev.animeapp.remote.models.characters.CharacterMangaResponse
+import com.abhinavdev.animeapp.remote.models.characters.CharacterPicturesResponse
+import com.abhinavdev.animeapp.remote.models.characters.CharacterSearchResponse
+import com.abhinavdev.animeapp.remote.models.characters.CharacterVoiceActorsResponse
+import com.abhinavdev.animeapp.remote.models.enums.CharacterOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import retrofit2.Response
 
 interface CharacterRepository {
