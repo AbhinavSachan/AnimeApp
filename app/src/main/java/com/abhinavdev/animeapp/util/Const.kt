@@ -23,11 +23,35 @@ object Const {
             const val JAPANESE_LANG_CODE = "ja"
         }
     }
-
     interface Mal {
         companion object {
-            const val APP_DEEP_LINK = "moyemoye://moyemoye.page.link/"
             const val STATE = "MoyeMoyeState123"
+            const val USERS = "users"
+            const val ANIME = "anime"
+            const val MANGA = "manga"
+            const val MY_LIST_STATUS = "my_list_status"
+            const val ANIME_LIST = "animelist"
+            const val MANGA_LIST = "mangalist"
+        }
+    }
+
+    interface Other {
+        companion object {
+            const val UNKNOWN_CHAR = "─"
+        }
+    }
+
+    interface BaseUrls {
+        companion object {
+            const val JIKAN = "https://api.jikan.moe/v4/"
+            const val O_AUTH = "https://myanimelist.net/v1/oauth2/"
+            const val MAL = "https://api.myanimelist.net/v2/"
+        }
+    }
+
+    interface Links {
+        companion object {
+            const val APP_DEEP_LINK = "oauth://animeapp.abhinavdev.com/"
         }
     }
 
@@ -42,7 +66,7 @@ object Const {
         }
     }
 
-    interface ApiKeywords {
+    interface Jikan {
         companion object {
             const val ANIME = "anime"
             const val CHARACTERS = "characters"

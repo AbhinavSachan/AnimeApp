@@ -59,72 +59,72 @@ interface JikanApiService {
      * external: Includes external links related to the anime.
      * streaming: Provides information about streaming platforms where the anime is available.
      */
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.FULL)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.FULL)
     suspend fun getFullAnimeById(
         @Path("id") animeId: Int,
     ): Response<AnimeFullResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}")
+    @GET(Const.Jikan.ANIME + "/{id}")
     suspend fun getAnimeById(
         @Path("id") animeId: Int,
     ): Response<AnimeFullResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.STAFF)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.STAFF)
     suspend fun getAnimeStaff(
         @Path("id") animeId: Int,
     ): Response<StaffResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.EPISODES)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.EPISODES)
     suspend fun getAnimeEpisodes(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
     ): Response<EpisodesResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.EPISODES + "/{episode}")
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.EPISODES + "/{episode}")
     suspend fun getAnimeEpisodeById(
         @Path("id") animeId: Int,
         @Path("episode") episodeId: Int,
     ): Response<EpisodeResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.NEWS)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.NEWS)
     suspend fun getAnimeNews(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
     ): Response<EpisodesResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.FORUM)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.FORUM)
     suspend fun getAnimeForums(
         @Path("id") animeId: Int,
         @Query("filter") forumFilterType: String,
     ): Response<ForumResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.VIDEOS)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.VIDEOS)
     suspend fun getAnimeVideos(
         @Path("id") animeId: Int,
     ): Response<VideosResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.VIDEOS + "/" + Const.ApiKeywords.EPISODES)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.VIDEOS + "/" + Const.Jikan.EPISODES)
     suspend fun getAnimeVideoEpisodes(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
     ): Response<VideoEpisodesResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.PICTURES)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.PICTURES)
     suspend fun getAnimeImages(
         @Path("id") animeId: Int,
     ): Response<ImagesResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.STATISTICS)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.STATISTICS)
     suspend fun getAnimeStatistics(
         @Path("id") animeId: Int,
     ): Response<StatisticsResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.MORE_INFO)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.MORE_INFO)
     suspend fun getAnimeMoreInfo(
         @Path("id") animeId: Int,
     ): Response<MoreInfoResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.RECOMMENDATIONS)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.RECOMMENDATIONS)
     suspend fun getAnimeRecommendations(
         @Path("id") animeId: Int,
     ): Response<RecommendationsResponse>
@@ -133,7 +133,7 @@ interface JikanApiService {
      * @param preliminary Any reviews left during an ongoing anime/manga, those reviews are tagged as preliminary. NOTE: Preliminary reviews are not returned by default so if the entry is airing/publishing you need to add this otherwise you will get an empty list
      * @param spoiler Any reviews that are tagged as a spoiler. Spoiler reviews are not returned by default.
      */
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.REVIEWS)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.REVIEWS)
     suspend fun getAnimeReviews(
         @Path("id") animeId: Int,
         @Query("page") pageNo: Int,
@@ -141,22 +141,22 @@ interface JikanApiService {
         @Query("spoiler") spoiler: Boolean,
     ): Response<ReviewsResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.RELATIONS)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.RELATIONS)
     suspend fun getAnimeRelations(
         @Path("id") animeId: Int,
     ): Response<RelationsResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.THEMES)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.THEMES)
     suspend fun getAnimeOpEdThemes(
         @Path("id") animeId: Int,
     ): Response<OpEdThemesResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.EXTERNAL)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.EXTERNAL)
     suspend fun getAnimeExternal(
         @Path("id") animeId: Int,
     ): Response<ExternalResponse>
 
-    @GET(Const.ApiKeywords.ANIME + "/{id}/" + Const.ApiKeywords.STREAMING)
+    @GET(Const.Jikan.ANIME + "/{id}/" + Const.Jikan.STREAMING)
     suspend fun getAnimeStreaming(
         @Path("id") animeId: Int,
     ): Response<StreamingResponse>
@@ -220,7 +220,7 @@ interface JikanApiService {
      *
      * @param endDate Filter by ending date. Format: YYYY-MM-DD. e.g 2022, 2005-05, 2005-01-01
      */
-    @GET(Const.ApiKeywords.ANIME)
+    @GET(Const.Jikan.ANIME)
     suspend fun getAnimeBySearch(
         @Query("sfw") sfw: Boolean,
         @Query("unapproved") unapproved: Boolean,
@@ -250,32 +250,32 @@ interface JikanApiService {
     /**
      * includes additional fields for anime, manga, and voice acting roles
      */
-    @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.FULL)
+    @GET(Const.Jikan.CHARACTERS + "/{id}/" + Const.Jikan.FULL)
     suspend fun getCharacterFullById(
         @Path("id") characterId: Int,
     ): Response<CharacterFullResponse>
 
-    @GET(Const.ApiKeywords.CHARACTERS + "/{id}")
+    @GET(Const.Jikan.CHARACTERS + "/{id}")
     suspend fun getCharacterById(
         @Path("id") characterId: Int,
     ): Response<CharacterFullResponse>
 
-    @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.ANIME)
+    @GET(Const.Jikan.CHARACTERS + "/{id}/" + Const.Jikan.ANIME)
     suspend fun getCharacterAnime(
         @Path("id") characterId: Int,
     ): Response<CharacterAnimeResponse>
 
-    @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.MANGA)
+    @GET(Const.Jikan.CHARACTERS + "/{id}/" + Const.Jikan.MANGA)
     suspend fun getCharacterManga(
         @Path("id") characterId: Int,
     ): Response<CharacterMangaResponse>
 
-    @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.VOICES)
+    @GET(Const.Jikan.CHARACTERS + "/{id}/" + Const.Jikan.VOICES)
     suspend fun getCharacterVoiceActors(
         @Path("id") characterId: Int,
     ): Response<CharacterVoiceActorsResponse>
 
-    @GET(Const.ApiKeywords.CHARACTERS + "/{id}/" + Const.ApiKeywords.PICTURES)
+    @GET(Const.Jikan.CHARACTERS + "/{id}/" + Const.Jikan.PICTURES)
     suspend fun getCharacterPictures(
         @Path("id") characterId: Int,
     ): Response<CharacterPicturesResponse>
@@ -295,7 +295,7 @@ interface JikanApiService {
      * @param letter
      * Return entries starting with the given letter
      */
-    @GET(Const.ApiKeywords.CHARACTERS)
+    @GET(Const.Jikan.CHARACTERS)
     suspend fun getCharactersSearch(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
@@ -309,23 +309,23 @@ interface JikanApiService {
 
     //region Club
 
-    @GET(Const.ApiKeywords.CLUBS + "/{id}")
+    @GET(Const.Jikan.CLUBS + "/{id}")
     suspend fun getClubsById(
         @Path("id") clubId: Int,
     ): Response<ClubResponse>
 
-    @GET(Const.ApiKeywords.CLUBS + "/{id}/" + Const.ApiKeywords.MEMBERS)
+    @GET(Const.Jikan.CLUBS + "/{id}/" + Const.Jikan.MEMBERS)
     suspend fun getClubMembers(
         @Path("id") clubId: Int,
         @Query("page") page: Int,
     ): Response<ClubMembersResponse>
 
-    @GET(Const.ApiKeywords.CLUBS + "/{id}/" + Const.ApiKeywords.STAFF)
+    @GET(Const.Jikan.CLUBS + "/{id}/" + Const.Jikan.STAFF)
     suspend fun getClubStaff(
         @Path("id") clubId: Int,
     ): Response<ClubStaffResponse>
 
-    @GET(Const.ApiKeywords.CLUBS + "/{id}/" + Const.ApiKeywords.RELATIONS)
+    @GET(Const.Jikan.CLUBS + "/{id}/" + Const.Jikan.RELATIONS)
     suspend fun getClubRelations(
         @Path("id") clubId: Int,
     ): Response<ClubRelationsResponse>
@@ -353,7 +353,7 @@ interface JikanApiService {
      * @param letter
      * Return entries starting with the given letter
      */
-    @GET(Const.ApiKeywords.CLUBS)
+    @GET(Const.Jikan.CLUBS)
     suspend fun getClubSearch(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
@@ -369,12 +369,12 @@ interface JikanApiService {
 
     //region Genre
 
-    @GET(Const.ApiKeywords.GENRES + "/" + Const.ApiKeywords.ANIME)
+    @GET(Const.Jikan.GENRES + "/" + Const.Jikan.ANIME)
     suspend fun getAnimeGenres(
         @Query("filter") genreType: String,
     ): Response<ClubMembersResponse>
 
-    @GET(Const.ApiKeywords.GENRES + "/" + Const.ApiKeywords.MANGA)
+    @GET(Const.Jikan.GENRES + "/" + Const.Jikan.MANGA)
     suspend fun getMangaGenres(
         @Query("filter") genreType: String,
     ): Response<ClubMembersResponse>
@@ -387,54 +387,54 @@ interface JikanApiService {
      * "relations": An array containing objects describing relations to other entries, such as related manga or anime.
      * "external": An array containing objects with external links related to the manga.
      */
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.FULL)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.FULL)
     suspend fun getMangaFullById(
         @Path("id") mangaId: Int,
     ): Response<MangaResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}")
+    @GET(Const.Jikan.MANGA + "/{id}")
     suspend fun getMangaById(
         @Path("id") mangaId: Int,
     ): Response<MangaResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.CHARACTERS)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.CHARACTERS)
     suspend fun getMangaCharacterById(
         @Path("id") mangaId: Int,
     ): Response<MangaCharacterResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.NEWS)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.NEWS)
     suspend fun getMangaNews(
         @Path("id") mangaId: Int,
         @Query("page") page: Int,
     ): Response<NewsResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.FORUM)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.FORUM)
     suspend fun getMangaForums(
         @Path("id") mangaId: Int,
         @Query("filter") forumFilterType: String,
     ): Response<ForumResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.PICTURES)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.PICTURES)
     suspend fun getMangaPictures(
         @Path("id") mangaId: Int,
     ): Response<MangaPicturesResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.STATISTICS)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.STATISTICS)
     suspend fun getMangaStatistics(
         @Path("id") mangaId: Int,
     ): Response<StatisticsResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.MORE_INFO)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.MORE_INFO)
     suspend fun getMangaMoreInfo(
         @Path("id") mangaId: Int,
     ): Response<MoreInfoResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.RECOMMENDATIONS)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.RECOMMENDATIONS)
     suspend fun getMangaRecommendations(
         @Path("id") mangaId: Int,
     ): Response<RecommendationsResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.REVIEWS)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.REVIEWS)
     suspend fun getMangaReviews(
         @Path("id") mangaId: Int,
         @Query("page") pageNo: Int,
@@ -442,7 +442,7 @@ interface JikanApiService {
         @Query("spoiler") spoiler: Boolean,
     ): Response<ReviewsResponse>
 
-    @GET(Const.ApiKeywords.MANGA + "/{id}/" + Const.ApiKeywords.RECOMMENDATIONS)
+    @GET(Const.Jikan.MANGA + "/{id}/" + Const.Jikan.RECOMMENDATIONS)
     suspend fun getMangaRelations(
         @Path("id") mangaId: Int,
     ): Response<RelationsResponse>
@@ -499,7 +499,7 @@ interface JikanApiService {
      * @param endDate
      * Filter by ending date. Format: YYYY-MM-DD. e.g 2022, 2005-05, 2005-01-01
      */
-    @GET(Const.ApiKeywords.MANGA)
+    @GET(Const.Jikan.MANGA)
     suspend fun getMangaBySearch(
         @Path("unapproved") unapproved: Boolean,
         @Path("page") page: Int,
@@ -525,25 +525,25 @@ interface JikanApiService {
 
     //region Random
 
-    @GET(Const.ApiKeywords.RANDOM + "/" + Const.ApiKeywords.ANIME)
+    @GET(Const.Jikan.RANDOM + "/" + Const.Jikan.ANIME)
     suspend fun getRandomAnime(): Response<AnimeFullResponse>
 
-    @GET(Const.ApiKeywords.RANDOM + "/" + Const.ApiKeywords.MANGA)
+    @GET(Const.Jikan.RANDOM + "/" + Const.Jikan.MANGA)
     suspend fun getRandomManga(): Response<MangaResponse>
 
-    @GET(Const.ApiKeywords.RANDOM + "/" + Const.ApiKeywords.CHARACTERS)
+    @GET(Const.Jikan.RANDOM + "/" + Const.Jikan.CHARACTERS)
     suspend fun getRandomCharacters(): Response<CharacterResponse>
 
     //endregion
 
     //region Recommendations
 
-    @GET(Const.ApiKeywords.RECOMMENDATIONS + "/" + Const.ApiKeywords.ANIME)
+    @GET(Const.Jikan.RECOMMENDATIONS + "/" + Const.Jikan.ANIME)
     suspend fun getRecentAnimeRecommendations(
         @Query("page") page: Int,
     ): Response<RecentAnimeRecommendationsResponse>
 
-    @GET(Const.ApiKeywords.RECOMMENDATIONS + "/" + Const.ApiKeywords.MANGA)
+    @GET(Const.Jikan.RECOMMENDATIONS + "/" + Const.Jikan.MANGA)
     suspend fun getRecentMangaRecommendations(
         @Query("page") page: Int,
     ): Response<RecentAnimeRecommendationsResponse>
@@ -569,7 +569,7 @@ interface JikanApiService {
      * @param page
      * @param limit
      */
-    @GET(Const.ApiKeywords.SCHEDULES)
+    @GET(Const.Jikan.SCHEDULES)
     suspend fun getAnimeSchedules(
         @Query("filter") dayOfWeek: String,
         @Query("kids") kids: Int,
@@ -608,7 +608,7 @@ interface JikanApiService {
      * @param page
      * @param limit
      */
-    @GET(Const.ApiKeywords.TOP + "/" + Const.ApiKeywords.ANIME)
+    @GET(Const.Jikan.TOP + "/" + Const.Jikan.ANIME)
     suspend fun getTopAnime(
         @Query("type") animeType: String,
         @Query("filter") animeFilter: String,
@@ -630,7 +630,7 @@ interface JikanApiService {
      * @param page
      * @param limit
      */
-    @GET(Const.ApiKeywords.TOP + "/" + Const.ApiKeywords.MANGA)
+    @GET(Const.Jikan.TOP + "/" + Const.Jikan.MANGA)
     suspend fun getTopManga(
         @Query("type") mangaType: String,
         @Query("filter") mangaFilter: String,

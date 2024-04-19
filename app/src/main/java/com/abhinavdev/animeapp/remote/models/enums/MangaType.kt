@@ -7,34 +7,38 @@ import com.google.gson.annotations.SerializedName
  */
 enum class MangaType(
     /** Used in the search queries.  */
-    val search: String
+    val search: String,
+    val showName: String,
 ) {
     @SerializedName("All")
-    ALL(""),
+    ALL("", "All"),
 
     @SerializedName("Manga")
-    MANGA("manga"),
+    MANGA("manga", "Manga"),
 
     @SerializedName("Novel")
-    NOVEL("novel"),
+    NOVEL("novel", "Novel"),
 
     @SerializedName("Light-novel", alternate = ["Light Novel"])
-    LIGHT_NOVEL("lightnovel"),
+    LIGHT_NOVEL("lightnovel", "Light Novel"),
 
     @SerializedName("One-shot")
-    ONESHOT("oneshot"),
+    ONESHOT("oneshot", "Oneshot"),
 
     @SerializedName("Doujin", alternate = ["Doujinshi"])
-    DOUJIN("doujin"),
+    DOUJIN("doujin", "Doujin"),
 
     @SerializedName("Manhwa")
-    MANHWA("manhwa"),
+    MANHWA("manhwa", "Manhwa"),
 
     // Korean comics
     @SerializedName("Manhua")
-    MANUHA("manhua"),
+    MANUHA("manhua", "Manhua"),
 
     @SerializedName("OEL")
-    OEL("oel"),
+    OEL("oel", "OEL");
 
+    companion object {
+        val list = entries.map { it.showName }
+    }
 }

@@ -31,9 +31,6 @@ import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.InfiniteAdapter.Infi
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.AntiClockSpinTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.Clock_SpinTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.CubeInDepthTransformation;
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.VerticalFlipTransformation;
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.VerticalShutTransformation;
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.ZoomOutTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.CubeInRotationTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.CubeInScalingTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.CubeOutDepthTransformation;
@@ -50,6 +47,9 @@ import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.PopT
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.SimpleTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.SpinnerTransformation;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.TossTransformation;
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.VerticalFlipTransformation;
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.VerticalShutTransformation;
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations.ZoomOutTransformation;
 
 public class SliderView extends FrameLayout
         implements Runnable, View.OnTouchListener,
@@ -214,21 +214,6 @@ public class SliderView extends FrameLayout
      * @param pagerAdapter Set a SliderAdapter that will supply views
      *                     for this slider as needed.
      */
-    public void setSliderAdapter(@NonNull SliderViewAdapter pagerAdapter) {
-        mPagerAdapter = pagerAdapter;
-        //set slider adapter
-        mInfinitePagerAdapter = new InfinitePagerAdapter(pagerAdapter);
-        //registerAdapterDataObserver();
-        mSliderPager.setAdapter(mInfinitePagerAdapter);
-        mPagerAdapter.dataSetChangedListener(this);
-        // set slider on correct position whether its infinite or not.
-        setCurrentPagePosition(0);
-    }
-
-    /**
-     * @param pagerAdapter Set a SliderAdapter that will supply views
-     *                     for this slider as needed.
-     */
     public void setSliderAdapter(@NonNull SliderViewAdapter pagerAdapter, boolean infiniteAdapter) {
         this.mIsInfiniteAdapter = infiniteAdapter;
         if (!infiniteAdapter) {
@@ -238,7 +223,6 @@ public class SliderView extends FrameLayout
             setSliderAdapter(pagerAdapter);
         }
     }
-
 
     public void setInfiniteAdapterEnabled(boolean enabled) {
         if (mPagerAdapter != null) {
@@ -258,6 +242,21 @@ public class SliderView extends FrameLayout
      */
     public PagerAdapter getSliderAdapter() {
         return mPagerAdapter;
+    }
+
+    /**
+     * @param pagerAdapter Set a SliderAdapter that will supply views
+     *                     for this slider as needed.
+     */
+    public void setSliderAdapter(@NonNull SliderViewAdapter pagerAdapter) {
+        mPagerAdapter = pagerAdapter;
+        //set slider adapter
+        mInfinitePagerAdapter = new InfinitePagerAdapter(pagerAdapter);
+        //registerAdapterDataObserver();
+        mSliderPager.setAdapter(mInfinitePagerAdapter);
+        mPagerAdapter.dataSetChangedListener(this);
+        // set slider on correct position whether its infinite or not.
+        setCurrentPagePosition(0);
     }
 
     /**
@@ -421,6 +420,18 @@ public class SliderView extends FrameLayout
     }
 
     /**
+     * @return Nullable position of current sliding item.
+     */
+    public int getCurrentPagePosition() {
+
+        if (getSliderAdapter() != null) {
+            return getSliderPager().getCurrentItem();
+        } else {
+            throw new NullPointerException("Adapter not set");
+        }
+    }
+
+    /**
      * This method handles correct position whether slider is on infinite mode or not
      *
      * @param position changes position of slider
@@ -428,18 +439,6 @@ public class SliderView extends FrameLayout
      */
     public void setCurrentPagePosition(int position) {
         mSliderPager.setCurrentItem(position, true);
-    }
-
-    /**
-     * @return Nullable position of current sliding item.
-     */
-    public int getCurrentPagePosition() {
-
-        if (getSliderAdapter() != null) {
-            return getSliderPager().getCurrentItem() ;
-        } else {
-            throw new NullPointerException("Adapter not set");
-        }
     }
 
     public PageIndicatorView getPagerIndicator() {
@@ -553,6 +552,16 @@ public class SliderView extends FrameLayout
     }
 
     /**
+     * @return direction of auto cycling
+     * {@value AUTO_CYCLE_DIRECTION_LEFT}
+     * {@value AUTO_CYCLE_DIRECTION_RIGHT}
+     * {@value AUTO_CYCLE_DIRECTION_BACK_AND_FORTH}
+     */
+    public int getAutoCycleDirection() {
+        return mAutoCycleDirection;
+    }
+
+    /**
      * This method setting direction of sliders auto cycling
      * accepts constant values defined in {@link #SliderView} class
      * {@value AUTO_CYCLE_DIRECTION_LEFT}
@@ -564,16 +573,6 @@ public class SliderView extends FrameLayout
     }
 
     /**
-     * @return direction of auto cycling
-     * {@value AUTO_CYCLE_DIRECTION_LEFT}
-     * {@value AUTO_CYCLE_DIRECTION_RIGHT}
-     * {@value AUTO_CYCLE_DIRECTION_BACK_AND_FORTH}
-     */
-    public int getAutoCycleDirection() {
-        return mAutoCycleDirection;
-    }
-
-    /**
      * @return size of indicator dot
      */
     public int getIndicatorRadius() {
@@ -581,17 +580,17 @@ public class SliderView extends FrameLayout
     }
 
     /**
-     * @param rtlMode for indicator sliding direction
-     */
-    public void setIndicatorRtlMode(RtlMode rtlMode) {
-        mPagerIndicator.setRtlMode(rtlMode);
-    }
-
-    /**
      * @param pagerIndicatorRadius modifies size of indicator dots
      */
     public void setIndicatorRadius(int pagerIndicatorRadius) {
         this.mPagerIndicator.setRadius(pagerIndicatorRadius);
+    }
+
+    /**
+     * @param rtlMode for indicator sliding direction
+     */
+    public void setIndicatorRtlMode(RtlMode rtlMode) {
+        mPagerIndicator.setRtlMode(rtlMode);
     }
 
     /**
@@ -610,6 +609,13 @@ public class SliderView extends FrameLayout
     }
 
     /**
+     * @return color of selected dot
+     */
+    public int getIndicatorSelectedColor() {
+        return this.mPagerIndicator.getSelectedColor();
+    }
+
+    /**
      * @param color setting color of selected dot
      */
     public void setIndicatorSelectedColor(int color) {
@@ -617,21 +623,14 @@ public class SliderView extends FrameLayout
     }
 
     /**
-     * @return color of selected dot
-     */
-    public int getIndicatorSelectedColor() {
-        return this.mPagerIndicator.getSelectedColor();
-    }
-
-    public void setIndicatorUnselectedColor(int color) {
-        this.mPagerIndicator.setUnselectedColor(color);
-    }
-
-    /**
      * @return color of unselected dots
      */
     public int getIndicatorUnselectedColor() {
         return this.mPagerIndicator.getUnselectedColor();
+    }
+
+    public void setIndicatorUnselectedColor(int color) {
+        this.mPagerIndicator.setUnselectedColor(color);
     }
 
     /**

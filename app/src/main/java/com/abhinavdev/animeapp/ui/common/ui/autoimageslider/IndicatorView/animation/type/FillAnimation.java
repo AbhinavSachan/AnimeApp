@@ -3,20 +3,20 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.anima
 import android.animation.IntEvaluator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import androidx.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import androidx.annotation.NonNull;
+
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.controller.ValueController;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.data.type.FillAnimationValue;
 
 public class FillAnimation extends ColorAnimation {
 
+    public static final int DEFAULT_STROKE_DP = 1;
     private static final String ANIMATION_RADIUS_REVERSE = "ANIMATION_RADIUS_REVERSE";
     private static final String ANIMATION_RADIUS = "ANIMATION_RADIUS";
-
     private static final String ANIMATION_STROKE_REVERSE = "ANIMATION_STROKE_REVERSE";
     private static final String ANIMATION_STROKE = "ANIMATION_STROKE";
-
-    public static final int DEFAULT_STROKE_DP = 1;
     private FillAnimationValue value;
 
     private int radius;

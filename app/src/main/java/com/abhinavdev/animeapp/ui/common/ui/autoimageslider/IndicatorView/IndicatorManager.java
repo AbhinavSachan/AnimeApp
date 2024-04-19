@@ -14,10 +14,6 @@ public class IndicatorManager implements ValueController.UpdateListener {
     private AnimationManager animationManager;
     private Listener listener;
 
-    interface Listener {
-        void onIndicatorUpdated();
-    }
-
     IndicatorManager(@Nullable Listener listener) {
         this.listener = listener;
         this.drawManager = new DrawManager();
@@ -42,5 +38,9 @@ public class IndicatorManager implements ValueController.UpdateListener {
         if (listener != null) {
             listener.onIndicatorUpdated();
         }
+    }
+
+    interface Listener {
+        void onIndicatorUpdated();
     }
 }

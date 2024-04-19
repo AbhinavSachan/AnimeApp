@@ -9,7 +9,7 @@ import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickCallback
-import com.abhinavdev.animeapp.util.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.formatToOneDigitAfterDecimal
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden

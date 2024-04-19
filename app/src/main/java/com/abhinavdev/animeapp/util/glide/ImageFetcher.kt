@@ -36,6 +36,7 @@ class ImageFetcher(private val model: ImageModel) : DataFetcher<InputStream> {
             connection?.disconnect()
         }
     }
+
     private fun readInputStream(inputStream: InputStream): ByteArray {
         val byteArrayOutputStream = ByteArrayOutputStream()
         val buffer = ByteArray(1024)

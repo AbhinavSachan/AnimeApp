@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.LocaleHelper
+import com.abhinavdev.animeapp.util.appsettings.LocaleHelper
 import com.abhinavdev.animeapp.util.PrefUtils
 
 

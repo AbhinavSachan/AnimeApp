@@ -9,13 +9,13 @@
         android:id="@+id/iv_poster"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/placeholder"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_banner_fade_layer"/>
+        android:background="@drawable/bg_banner_fade_layer" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_spotlight"
@@ -23,9 +23,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_4sdp"
-        android:textColor="@color/whiteA80"
         android:paddingStart="@dimen/safe_zone_anime_page"
         android:paddingEnd="@dimen/safe_zone_anime_page"
+        android:textColor="@color/whiteA80"
         android:textSize="@dimen/text_size_11"
         app:layout_constraintBottom_toTopOf="@id/tv_name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,8 +40,8 @@
         android:layout_marginBottom="@dimen/_12sdp"
         android:paddingStart="@dimen/safe_zone_anime_page"
         android:paddingEnd="@dimen/safe_zone_anime_page"
-        android:textSize="@dimen/text_size_16"
         android:textColor="@color/fontTextWhite"
+        android:textSize="@dimen/text_size_16"
         app:layout_constraintBottom_toTopOf="@id/rl_details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

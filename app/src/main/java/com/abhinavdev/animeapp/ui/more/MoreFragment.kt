@@ -9,7 +9,7 @@ import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentMoreBinding
 import com.abhinavdev.animeapp.ui.main.MainActivity
 
-class MoreFragment : BaseFragment(),View.OnClickListener {
+class MoreFragment : BaseFragment(), View.OnClickListener {
     private var _binding: FragmentMoreBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -66,7 +66,7 @@ class MoreFragment : BaseFragment(),View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v){
+        when (v) {
 
         }
     }

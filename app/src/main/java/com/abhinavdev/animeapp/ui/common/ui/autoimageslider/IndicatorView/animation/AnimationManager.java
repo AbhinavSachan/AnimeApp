@@ -2,9 +2,9 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.anima
 
 import androidx.annotation.NonNull;
 
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.data.Indicator;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.controller.AnimationController;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.controller.ValueController;
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.data.Indicator;
 
 
 public class AnimationManager {

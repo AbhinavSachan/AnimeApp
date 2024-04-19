@@ -21,7 +21,7 @@ import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.util.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast

@@ -1,3 +1,3 @@
 package com.abhinavdev.animeapp.remote.models.common
 
-class AuthorData:MalUrlData()
+class AuthorData : MalUrlData()

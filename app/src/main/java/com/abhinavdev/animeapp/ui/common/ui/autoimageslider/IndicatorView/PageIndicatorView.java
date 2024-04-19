@@ -7,20 +7,19 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.text.TextUtilsCompat;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.core.view.ViewCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.text.TextUtilsCompat;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.ScaleAnimation;
@@ -146,6 +145,9 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         updateState();
     }
 
+    public int getCount() {
+        return manager.indicator().getCount();
+    }
 
     public void setCount(int count) {
         if (count >= 0 && manager.indicator().getCount() != count) {
@@ -154,12 +156,6 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
             requestLayout();
         }
     }
-
-
-    public int getCount() {
-        return manager.indicator().getCount();
-    }
-
 
     public void setDynamicCount(boolean dynamicCount) {
         manager.indicator().setDynamicCount(dynamicCount);
@@ -171,6 +167,9 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         }
     }
 
+    public int getRadius() {
+        return manager.indicator().getRadius();
+    }
 
     public void setRadius(int radiusDp) {
         if (radiusDp < 0) {
@@ -182,7 +181,6 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         invalidate();
     }
 
-
     public void setRadius(float radiusPx) {
         if (radiusPx < 0) {
             radiusPx = 0;
@@ -192,11 +190,9 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         invalidate();
     }
 
-
-    public int getRadius() {
-        return manager.indicator().getRadius();
+    public int getPadding() {
+        return manager.indicator().getPadding();
     }
-
 
     public void setPadding(int paddingDp) {
         if (paddingDp < 0) {
@@ -208,7 +204,6 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         invalidate();
     }
 
-
     public void setPadding(float paddingPx) {
         if (paddingPx < 0) {
             paddingPx = 0;
@@ -218,11 +213,9 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         invalidate();
     }
 
-
-    public int getPadding() {
-        return manager.indicator().getPadding();
+    public float getScaleFactor() {
+        return manager.indicator().getScaleFactor();
     }
-
 
     public void setScaleFactor(float factor) {
         if (factor > ScaleAnimation.MAX_SCALE_FACTOR) {
@@ -235,11 +228,9 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         manager.indicator().setScaleFactor(factor);
     }
 
-
-    public float getScaleFactor() {
-        return manager.indicator().getScaleFactor();
+    public int getStrokeWidth() {
+        return manager.indicator().getStroke();
     }
-
 
     public void setStrokeWidth(float strokePx) {
         int radiusPx = manager.indicator().getRadius();
@@ -254,7 +245,6 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         manager.indicator().setStroke((int) strokePx);
         invalidate();
     }
-
 
     public void setStrokeWidth(int strokeDp) {
         int strokePx = DensityUtils.dpToPx(strokeDp);
@@ -271,33 +261,23 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         invalidate();
     }
 
-
-    public int getStrokeWidth() {
-        return manager.indicator().getStroke();
+    public int getSelectedColor() {
+        return manager.indicator().getSelectedColor();
     }
-
 
     public void setSelectedColor(int color) {
         manager.indicator().setSelectedColor(color);
         invalidate();
     }
 
-
-    public int getSelectedColor() {
-        return manager.indicator().getSelectedColor();
+    public int getUnselectedColor() {
+        return manager.indicator().getUnselectedColor();
     }
-
 
     public void setUnselectedColor(int color) {
         manager.indicator().setUnselectedColor(color);
         invalidate();
     }
-
-
-    public int getUnselectedColor() {
-        return manager.indicator().getUnselectedColor();
-    }
-
 
     public void setAutoVisibility(boolean autoVisibility) {
         if (!autoVisibility) {
@@ -316,16 +296,13 @@ public class PageIndicatorView extends View implements SliderPager.OnPageChangeL
         }
     }
 
-
-    public void setAnimationDuration(long duration) {
-        manager.indicator().setAnimationDuration(duration);
-    }
-
-
     public long getAnimationDuration() {
         return manager.indicator().getAnimationDuration();
     }
 
+    public void setAnimationDuration(long duration) {
+        manager.indicator().setAnimationDuration(duration);
+    }
 
     public void setAnimationType(@Nullable IndicatorAnimationType type) {
         manager.onValueUpdated(null);

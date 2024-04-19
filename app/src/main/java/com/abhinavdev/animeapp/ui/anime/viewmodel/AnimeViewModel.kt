@@ -49,11 +49,47 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getAllAnimeData(sfw: Boolean) = viewModelScope.launch {
         val apiCalls = mapOf(
-            MultiApiCallType.TopAiring to suspend { repository.getTopAnime(AnimeType.TV, AnimeFilter.AIRING, AgeRating.NONE, sfw, 1, 10) },
-            MultiApiCallType.TopPopular to suspend { repository.getTopAnime(AnimeType.TV, AnimeFilter.BY_POPULARITY, AgeRating.NONE, sfw, 1, 10) },
-            MultiApiCallType.TopFavourite to suspend { repository.getTopAnime(AnimeType.TV, AnimeFilter.FAVORITE, AgeRating.NONE, sfw, 1, 10) },
-            MultiApiCallType.TopUpcoming to suspend { repository.getTopAnime(AnimeType.ALL, AnimeFilter.UPCOMING, AgeRating.NONE, sfw, 1, 10) }
+            MultiApiCallType.TopAiring to suspend {
+                repository.getTopAnime(
+                    AnimeType.TV,
+                    AnimeFilter.AIRING,
+                    AgeRating.NONE,
+                    sfw,
+                    1,
+                    10
+                )
+            },
+            MultiApiCallType.TopPopular to suspend {
+                repository.getTopAnime(
+                    AnimeType.TV,
+                    AnimeFilter.BY_POPULARITY,
+                    AgeRating.NONE,
+                    sfw,
+                    1,
+                    10
+                )
+            },
+            MultiApiCallType.TopFavourite to suspend {
+                repository.getTopAnime(
+                    AnimeType.TV,
+                    AnimeFilter.FAVORITE,
+                    AgeRating.NONE,
+                    sfw,
+                    1,
+                    10
+                )
+            },
+            MultiApiCallType.TopUpcoming to suspend {
+                repository.getTopAnime(
+                    AnimeType.ALL,
+                    AnimeFilter.UPCOMING,
+                    AgeRating.NONE,
+                    sfw,
+                    1,
+                    10
+                )
+            }
         )
-        _animeAllApiResponse.fetchMultiData(getApplication(),apiCalls)
+        _animeAllApiResponse.fetchMultiData(getApplication(), apiCalls)
     }
 }

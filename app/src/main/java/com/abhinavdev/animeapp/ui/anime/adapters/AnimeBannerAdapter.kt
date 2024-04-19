@@ -8,7 +8,7 @@ import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderViewAdapter
-import com.abhinavdev.animeapp.util.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
 
 class AnimeBannerAdapter(

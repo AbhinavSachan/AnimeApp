@@ -25,7 +25,7 @@ import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
 import retrofit2.Response
 
 class MangaRepositoryImpl : MangaRepository {
-    private val apiService = ApiClient.getApiService()
+    private val apiService = ApiClient.getJikanApiService()
 
     override suspend fun getMangaFullById(mangaId: Int): Response<MangaResponse> {
         return apiService.getMangaFullById(mangaId)

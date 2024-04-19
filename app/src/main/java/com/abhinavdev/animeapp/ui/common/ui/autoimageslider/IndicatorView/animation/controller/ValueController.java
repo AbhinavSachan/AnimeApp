@@ -28,10 +28,6 @@ public class ValueController {
 
     private UpdateListener updateListener;
 
-    public interface UpdateListener {
-        void onValueUpdated(@Nullable Value value);
-    }
-
     public ValueController(@Nullable UpdateListener listener) {
         updateListener = listener;
     }
@@ -115,5 +111,9 @@ public class ValueController {
         }
 
         return scaleDownAnimation;
+    }
+
+    public interface UpdateListener {
+        void onValueUpdated(@Nullable Value value);
     }
 }

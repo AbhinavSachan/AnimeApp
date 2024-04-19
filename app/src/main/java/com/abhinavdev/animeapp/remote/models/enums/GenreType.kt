@@ -11,10 +11,13 @@ enum class GenreType(
 ) {
     @SerializedName("genres")
     GENRES("genres"),
+
     @SerializedName("explicit_genres")
     EXPLICIT_GENRES("explicit_genres"),
+
     @SerializedName("themes")
     THEMES("themes"),
+
     @SerializedName("demographics")
     DEMOGRAPHICS("demographics"),
 

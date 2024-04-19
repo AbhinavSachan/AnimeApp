@@ -53,10 +53,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="moyemoye.page.link"
+                    android:host="animeapp.abhinavdev.com"
                     android:pathPattern="/.*"
                     android:pathPrefix="/.*"
-                    android:scheme="moyemoye" />
+                    android:scheme="oauth" />
 
             </intent-filter>
             <intent-filter>

@@ -28,6 +28,19 @@ public class AttributeController {
         this.indicator = indicator;
     }
 
+    public static RtlMode getRtlMode(int index) {
+        switch (index) {
+            case 0:
+                return RtlMode.On;
+            case 1:
+                return RtlMode.Off;
+            case 2:
+                return RtlMode.Auto;
+        }
+
+        return RtlMode.Auto;
+    }
+
     public void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.PageIndicatorView, 0, 0);
         initCountAttribute(typedArray);
@@ -63,7 +76,6 @@ public class AttributeController {
         indicator.setSelectingPosition(position);
         indicator.setLastSelectedPosition(position);
     }
-
 
     private void initColorAttribute(@NonNull TypedArray typedArray) {
         int unselectedColor = typedArray.getColor(R.styleable.PageIndicatorView_piv_unselectedColor, Color.parseColor(ColorAnimation.DEFAULT_UNSELECTED_COLOR));
@@ -161,19 +173,6 @@ public class AttributeController {
         }
 
         return IndicatorAnimationType.NONE;
-    }
-
-    public static RtlMode getRtlMode(int index) {
-        switch (index) {
-            case 0:
-                return RtlMode.On;
-            case 1:
-                return RtlMode.Off;
-            case 2:
-                return RtlMode.Auto;
-        }
-
-        return RtlMode.Auto;
     }
 
 }

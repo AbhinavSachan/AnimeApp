@@ -16,12 +16,12 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.statusbar.setTransparentForWindow
 import com.google.android.material.navigation.NavigationBarView
 
-class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener  {
+class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
-    private var fragmentAdapter:MainFragmentAdapter? = null
-    private val rootFragmentTypes:ArrayList<MainFragmentAdapter.PageType> = arrayListOf()
-    private var currentPageType:MainFragmentAdapter.PageType = MainFragmentAdapter.PageType.ANIME
+    private var fragmentAdapter: MainFragmentAdapter? = null
+    private val rootFragmentTypes: ArrayList<MainFragmentAdapter.PageType> = arrayListOf()
+    private var currentPageType: MainFragmentAdapter.PageType = MainFragmentAdapter.PageType.ANIME
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -48,7 +48,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener  {
     }
 
     private fun checkLoginIntent(intent: Intent?) {
-        if (intent?.data?.toString()?.startsWith(Const.Mal.APP_DEEP_LINK) == true) {
+        if (intent?.data?.toString()?.startsWith(Const.Links.APP_DEEP_LINK) == true) {
             intent.data?.let { parseIntentData(it) }
         }
     }
@@ -68,7 +68,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener  {
         rootFragmentTypes.add(MainFragmentAdapter.PageType.MANGA)
         rootFragmentTypes.add(MainFragmentAdapter.PageType.MORE)
 
-        fragmentAdapter = MainFragmentAdapter(this,rootFragmentTypes)
+        fragmentAdapter = MainFragmentAdapter(this, rootFragmentTypes)
         binding.viewPager.adapter = fragmentAdapter
         binding.viewPager.isUserInputEnabled = false
 
@@ -109,6 +109,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener  {
             navigateToFragment(MainFragmentAdapter.PageType.ANIME)
         }
     }
+
     fun isLoaderVisible(b: Boolean) {
         binding.loader.progressOverlay.showOrHide(b)
     }
@@ -122,10 +123,10 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener  {
         }
     }
 
-    private fun navigateToFragment(type:MainFragmentAdapter.PageType): Boolean {
+    private fun navigateToFragment(type: MainFragmentAdapter.PageType): Boolean {
         if (currentPageType != type) {
             val position = rootFragmentTypes.indexOf(type)
-            binding.viewPager.setCurrentItem(position,false)
+            binding.viewPager.setCurrentItem(position, false)
         }
         return true
     }

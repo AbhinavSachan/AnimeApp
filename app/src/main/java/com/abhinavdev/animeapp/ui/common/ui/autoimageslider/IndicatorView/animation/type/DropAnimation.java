@@ -3,8 +3,10 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.anima
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
-import androidx.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import androidx.annotation.NonNull;
+
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.controller.ValueController;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.data.type.DropAnimationValue;
 
@@ -15,9 +17,6 @@ public class DropAnimation extends BaseAnimation<AnimatorSet> {
     private int heightStart;
     private int heightEnd;
     private int radius;
-
-    private enum AnimationType {Width, Height, Radius}
-
     private DropAnimationValue value;
 
     public DropAnimation(@NonNull ValueController.UpdateListener listener) {
@@ -167,5 +166,7 @@ public class DropAnimation extends BaseAnimation<AnimatorSet> {
 
         return false;
     }
+
+    private enum AnimationType {Width, Height, Radius}
 
 }

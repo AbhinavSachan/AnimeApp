@@ -94,15 +94,15 @@ fun View.show() {
     visibility = View.VISIBLE
 }
 
-fun View.isHidden():Boolean {
+fun View.isHidden(): Boolean {
     return visibility == View.GONE
 }
 
-fun View.isVisible():Boolean {
+fun View.isVisible(): Boolean {
     return visibility == View.VISIBLE
 }
 
-fun View.isInvisible():Boolean {
+fun View.isInvisible(): Boolean {
     return visibility == View.INVISIBLE
 }
 

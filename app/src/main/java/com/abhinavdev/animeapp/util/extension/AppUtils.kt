@@ -2,6 +2,8 @@ package com.abhinavdev.animeapp.util.extension
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -31,13 +33,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.core.os.LocaleListCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.R
-import com.abhinavdev.animeapp.util.AppTheme
+import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.abhinavdev.animeapp.util.Const
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -486,3 +489,23 @@ private fun PackageManager.queryIntentActivitiesCompat(intent: Intent, flags: In
     } else {
         queryIntentActivities(intent, flags)
     }
+
+fun Context.openShareSheet(url: String) {
+    Intent(Intent.ACTION_SEND).apply {
+        putExtra(Intent.EXTRA_TEXT, url)
+        type = "text/plain"
+        startActivity(Intent.createChooser(this, null))
+    }
+}
+
+fun Context.copyToClipBoard(text: String) {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
+    toast(getString(R.string.copied))
+}
+
+fun changeLocale(language: String) {
+    val appLocale = if (language == "follow_system") LocaleListCompat.getEmptyLocaleList()
+    else LocaleListCompat.forLanguageTags(language)
+    AppCompatDelegate.setApplicationLocales(appLocale)
+}

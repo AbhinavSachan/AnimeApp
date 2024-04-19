@@ -2,11 +2,12 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
 import androidx.annotation.NonNull;
 
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.data.Value;
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.data.Indicator;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.data.type.ColorAnimationValue;
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.data.Indicator;
 
 public class ColorDrawer extends BaseDrawer {
 
@@ -15,10 +16,10 @@ public class ColorDrawer extends BaseDrawer {
     }
 
     public void draw(@NonNull Canvas canvas,
-              @NonNull Value value,
-              int position,
-              int coordinateX,
-              int coordinateY) {
+                     @NonNull Value value,
+                     int position,
+                     int coordinateX,
+                     int coordinateY) {
 
         if (!(value instanceof ColorAnimationValue)) {
             return;

@@ -19,11 +19,11 @@
 
             <com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderView
                 android:id="@+id/sv_top_airing"
+                style="@style/CustomSliderView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_210sdp"
                 android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="parent"
-                style="@style/CustomSliderView"
                 tools:visibility="visible" />
 
             <View

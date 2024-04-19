@@ -1,8 +1,9 @@
 package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.controller;
 
-import androidx.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.data.Indicator;

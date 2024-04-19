@@ -1,7 +1,7 @@
 package com.abhinavdev.animeapp.remote.models.anime
 
-import com.abhinavdev.animeapp.remote.models.BaseResponse
 import com.abhinavdev.animeapp.remote.models.BaseModelWithMal
+import com.abhinavdev.animeapp.remote.models.BaseResponse
 import com.google.gson.annotations.SerializedName
 
 class EpisodeResponse : BaseResponse<EpisodeData>()

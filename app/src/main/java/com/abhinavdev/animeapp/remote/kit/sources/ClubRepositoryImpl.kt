@@ -14,7 +14,7 @@ import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import retrofit2.Response
 
 class ClubRepositoryImpl : ClubRepository {
-    private val apiService = ApiClient.getApiService()
+    private val apiService = ApiClient.getJikanApiService()
 
     override suspend fun getClubsById(clubId: Int): Response<ClubResponse> {
         return apiService.getClubsById(clubId)

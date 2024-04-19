@@ -102,7 +102,7 @@
                 android:textSize="@dimen/text_size_9"
                 app:layout_constraintEnd_toEndOf="@id/guide_end"
                 app:layout_constraintTop_toTopOf="@id/guide_top"
-                tools:text="Movie"/>
+                tools:text="Movie" />
 
             <View
                 android:id="@+id/view_bottom_left_fade"

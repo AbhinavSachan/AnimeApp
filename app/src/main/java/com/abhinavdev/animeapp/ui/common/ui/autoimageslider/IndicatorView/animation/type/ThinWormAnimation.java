@@ -1,8 +1,9 @@
 package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type;
 
 import android.animation.ValueAnimator;
-import androidx.annotation.NonNull;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import androidx.annotation.NonNull;
 
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.controller.ValueController;
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.data.type.ThinWormAnimationValue;

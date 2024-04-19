@@ -1,9 +1,10 @@
 package com.abhinavdev.animeapp.util.extension
 
 import android.util.Log
+import com.abhinavdev.animeapp.BuildConfig
 
 inline fun Any.log(tag: String = this::class.java.simpleName, message: () -> String) {
-//    if (BuildConfig.DEBUG) {
-//        Log.d(tag, message())
-//    }
+    if (BuildConfig.DEBUG) {
+        Log.d(tag, message())
+    }
 }

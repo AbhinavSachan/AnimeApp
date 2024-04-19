@@ -7,21 +7,25 @@ import com.google.gson.annotations.SerializedName
  */
 enum class MangaStatus(
     /** Used in the search queries.  */
-    val search: String
+    val search: String,
+    val showName: String,
 ) {
     @SerializedName("Publishing")
-    PUBLISHING("publishing"),
+    PUBLISHING("publishing","Publishing"),
 
     @SerializedName("Completed", alternate = ["Complete", "Finished"])
-    COMPLETED("complete"),
+    COMPLETED("complete","Complete"),
 
-    @SerializedName("Hiatus",alternate = ["On Hiatus"])
-    HIATUS("hiatus"),
+    @SerializedName("Hiatus", alternate = ["On Hiatus"])
+    HIATUS("hiatus","Hiatus"),
 
     @SerializedName("Discontinued")
-    DISCONTINUED("discontinued"),
+    DISCONTINUED("discontinued","Discontinued"),
 
-    @SerializedName("Upcoming", alternate = ["TBP", "To be published","Not yet published"])
-    UPCOMING("upcoming"),
+    @SerializedName("Upcoming", alternate = ["TBP", "To be published", "Not yet published"])
+    UPCOMING("upcoming","Upcoming");
 
+    companion object {
+        val list = entries.map { it.showName }
+    }
 }

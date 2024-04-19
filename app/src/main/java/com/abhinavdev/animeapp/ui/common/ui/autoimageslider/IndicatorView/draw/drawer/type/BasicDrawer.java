@@ -2,6 +2,7 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
 import androidx.annotation.NonNull;
 
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -36,12 +37,12 @@ public class BasicDrawer extends BaseDrawer {
         int selectedPosition = indicator.getSelectedPosition();
         IndicatorAnimationType animationType = indicator.getAnimationType();
 
-		if (animationType == IndicatorAnimationType.SCALE && !isSelectedItem) {
-			radius *= scaleFactor;
+        if (animationType == IndicatorAnimationType.SCALE && !isSelectedItem) {
+            radius *= scaleFactor;
 
-		} else if (animationType == IndicatorAnimationType.SCALE_DOWN && isSelectedItem) {
-			radius *= scaleFactor;
-		}
+        } else if (animationType == IndicatorAnimationType.SCALE_DOWN && isSelectedItem) {
+            radius *= scaleFactor;
+        }
 
         int color = unselectedColor;
         if (position == selectedPosition) {

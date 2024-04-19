@@ -30,7 +30,18 @@ class VerticalTextView(context: Context, attrs: AttributeSet) : AppCompatTextVie
             metrics.width = height
             paint.color = currentTextColor
             paint.drawableState = drawableState
-            layout1 = BoringLayout.make(text, paint, metrics.width, Layout.Alignment.ALIGN_NORMAL, 2f, 0f, metrics, false, TruncateAt.END, height - compoundPaddingLeft - compoundPaddingRight)
+            layout1 = BoringLayout.make(
+                text,
+                paint,
+                metrics.width,
+                Layout.Alignment.ALIGN_NORMAL,
+                2f,
+                0f,
+                metrics,
+                false,
+                TruncateAt.END,
+                height - compoundPaddingLeft - compoundPaddingRight
+            )
             padLeft = compoundPaddingLeft
             padTop = extendedPaddingTop
         }

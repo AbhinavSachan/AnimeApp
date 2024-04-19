@@ -35,7 +35,7 @@ import retrofit2.Response
 
 class AnimeRepositoryImpl : AnimeRepository {
 
-    private val apiService = ApiClient.getApiService()
+    private val apiService = ApiClient.getJikanApiService()
 
     override suspend fun getFullAnimeById(animeId: Int): Response<AnimeFullResponse> {
         return apiService.getFullAnimeById(animeId)

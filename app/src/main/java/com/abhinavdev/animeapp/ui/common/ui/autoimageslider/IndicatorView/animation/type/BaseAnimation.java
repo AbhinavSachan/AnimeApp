@@ -2,8 +2,10 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.anima
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.controller.ValueController;
 
 public abstract class BaseAnimation<T extends Animator> {

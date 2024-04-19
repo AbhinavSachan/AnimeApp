@@ -59,7 +59,7 @@ suspend fun <T> MutableLiveData<Event<Resource<T>>>.fetchData(
     }
 }
 
-suspend fun <K,T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
+suspend fun <K, T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
     application: Application,
     apiCalls: Map<K, suspend () -> Response<T>>
 ) {
@@ -71,7 +71,7 @@ suspend fun <K,T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
 
     if (application.hasInternetConnection()) {
         val responses = apiCalls.map { (identifier, apiCall) -> identifier to apiCall.invoke() }
-        val responseMap = mutableMapOf<K,Resource<T>>()
+        val responseMap = mutableMapOf<K, Resource<T>>()
         responses.forEach { (identifier, response) ->
             try {
                 val updatedResponse = response.handleResponse(application)
@@ -81,7 +81,7 @@ suspend fun <K,T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
                 t.printStackTrace()
                 when (t) {
                     is IOException -> responseMap[identifier] = Resource.Error(networkErrorMsg)
-                    else -> responseMap[identifier] =  Resource.Error(conversionErrorMsg)
+                    else -> responseMap[identifier] = Resource.Error(conversionErrorMsg)
                 }
             }
             withContext(Dispatchers.Main) {
@@ -91,7 +91,8 @@ suspend fun <K,T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
 
         }
     } else {
-        val errorEvent:Map<K, Resource<T>> = apiCalls.keys.associateWith { Resource.Error(noInternetMsg) }
+        val errorEvent: Map<K, Resource<T>> =
+            apiCalls.keys.associateWith { Resource.Error(noInternetMsg) }
         this@fetchMultiData.postValue(Event(errorEvent))
     }
 }

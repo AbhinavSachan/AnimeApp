@@ -14,7 +14,7 @@ import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import retrofit2.Response
 
 class CharacterRepositoryImpl : CharacterRepository {
-    private val apiService = ApiClient.getApiService()
+    private val apiService = ApiClient.getJikanApiService()
 
     override suspend fun getCharacterFullById(characterId: Int): Response<CharacterFullResponse> {
         return apiService.getCharacterFullById(characterId)

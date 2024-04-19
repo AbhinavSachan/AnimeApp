@@ -1,10 +1,10 @@
 package com.abhinavdev.animeapp.ui.common.ui.autoimageslider;
 
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
-
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -13,16 +13,6 @@ import java.util.Queue;
 public abstract class SliderViewAdapter<VH extends SliderViewAdapter.ViewHolder> extends PagerAdapter {
 
     private DataSetListener dataSetListener;
-
-    //Default View holder class
-    public static abstract class ViewHolder {
-        public final View itemView;
-
-        public ViewHolder(View itemView) {
-            this.itemView = itemView;
-        }
-    }
-
     private Queue<VH> destroyedItems = new LinkedList<>();
 
     @NonNull
@@ -85,6 +75,15 @@ public abstract class SliderViewAdapter<VH extends SliderViewAdapter.ViewHolder>
 
     interface DataSetListener {
         void dataSetChanged();
+    }
+
+    //Default View holder class
+    public static abstract class ViewHolder {
+        public final View itemView;
+
+        public ViewHolder(View itemView) {
+            this.itemView = itemView;
+        }
     }
 
 }

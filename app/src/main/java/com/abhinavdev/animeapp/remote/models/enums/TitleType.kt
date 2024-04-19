@@ -5,19 +5,17 @@ import com.google.gson.annotations.SerializedName
 /**
  * The club type.
  */
-enum class TitleType(
-    /** Used in the search queries.  */
-    val search: String,
-) {
+enum class TitleType {
     @SerializedName("Default")
-    ROMAJI("Default"),
+    ROMAJI,
 
     @SerializedName("Synonym")
-    SYNONYM("Synonym"),
+    SYNONYM,
 
     @SerializedName("Japanese")
-    JAPANESE("Japanese"),
+    JAPANESE,
 
     @SerializedName("English")
-    ENGLISH("English"),
+    ENGLISH;
+
 }

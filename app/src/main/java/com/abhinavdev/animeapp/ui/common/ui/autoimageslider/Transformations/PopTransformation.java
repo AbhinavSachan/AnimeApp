@@ -1,8 +1,8 @@
 package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations;
 
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderPager;
-
 import android.view.View;
+
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderPager;
 
 public class PopTransformation implements SliderPager.PageTransformer {
     @Override

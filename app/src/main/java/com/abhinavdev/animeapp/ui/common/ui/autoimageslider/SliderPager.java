@@ -59,6 +59,22 @@ import java.util.List;
 public class SliderPager extends ViewGroup {
 
     public static final int DEFAULT_SCROLL_DURATION = 250;
+    /**
+     * Indicates that the pager is in an idle, settled state. The current page
+     * is fully in view and no animation is in progress.
+     */
+    public static final int SCROLL_STATE_IDLE = 0;
+    /**
+     * Indicates that the pager is currently being dragged by the user.
+     */
+    public static final int SCROLL_STATE_DRAGGING = 1;
+    /**
+     * Indicates that the pager is in the process of settling to a final position.
+     */
+    public static final int SCROLL_STATE_SETTLING = 2;
+    static final int[] LAYOUT_ATTRS = new int[]{
+            android.R.attr.layout_gravity
+    };
     private static final String TAG = "SliderPager";
     private static final boolean DEBUG = false;
     private static final boolean USE_CACHE = false;
@@ -67,33 +83,12 @@ public class SliderPager extends ViewGroup {
     private static final int MIN_DISTANCE_FOR_FLING = 25; // dips
     private static final int DEFAULT_GUTTER_SIZE = 16; // dips
     private static final int MIN_FLING_VELOCITY = 400; // dips
-
-
-    static final int[] LAYOUT_ATTRS = new int[]{
-            android.R.attr.layout_gravity
-    };
-
-    /**
-     * Used to track what the expected number of items in the adapter should be.
-     * If the app changes this when we don't expect it, we'll throw a big obnoxious exception.
-     */
-    private int mExpectedAdapterCount;
-
-    static class ItemInfo {
-        Object object;
-        int position;
-        boolean scrolling;
-        float widthFactor;
-        float offset;
-    }
-
     private static final Comparator<ItemInfo> COMPARATOR = new Comparator<ItemInfo>() {
         @Override
         public int compare(ItemInfo lhs, ItemInfo rhs) {
             return lhs.position - rhs.position;
         }
     };
-
     private static final Interpolator sInterpolator = new Interpolator() {
         @Override
         public float getInterpolation(float t) {
@@ -101,43 +96,50 @@ public class SliderPager extends ViewGroup {
             return t * t * t * t * t + 1.0f;
         }
     };
-
+    /**
+     * Sentinel value for no current active pointer.
+     * Used by {@link #mActivePointerId}.
+     */
+    private static final int INVALID_POINTER = -1;
+    // If the pager is at least this close to its final position, complete the scroll
+    // on touch down and let the user interact with the content inside instead of
+    // "catching" the flinging pager.
+    private static final int CLOSE_ENOUGH = 2; // dp
+    private static final int DRAW_ORDER_DEFAULT = 0;
+    private static final int DRAW_ORDER_FORWARD = 1;
+    private static final int DRAW_ORDER_REVERSE = 2;
+    private static final ViewPositionComparator sPositionComparator = new ViewPositionComparator();
     private final ArrayList<ItemInfo> mItems = new ArrayList<>();
     private final ItemInfo mTempItem = new ItemInfo();
-
     private final Rect mTempRect = new Rect();
-
     PagerAdapter mAdapter;
     int mCurItem;   // Index of currently displayed page.
+    /**
+     * Used to track what the expected number of items in the adapter should be.
+     * If the app changes this when we don't expect it, we'll throw a big obnoxious exception.
+     */
+    private int mExpectedAdapterCount;
     private int mRestoredCurItem = -1;
     private Parcelable mRestoredAdapterState = null;
     private ClassLoader mRestoredClassLoader = null;
-
     private Scroller mScroller;
     private boolean mIsScrollStarted;
-
     private PagerObserver mObserver;
-
     private int mPageMargin;
     private Drawable mMarginDrawable;
     private int mTopPageBounds;
     private int mBottomPageBounds;
-
     // Offsets of the first and last items, if known.
     // Set during population, used to determine if we are at the beginning
     // or end of the pager data set during touch scrolling.
     private float mFirstOffset = -Float.MAX_VALUE;
     private float mLastOffset = Float.MAX_VALUE;
-
     private int mChildWidthMeasureSpec;
     private int mChildHeightMeasureSpec;
     private boolean mInLayout;
-
     private boolean mScrollingCacheEnabled;
-
     private boolean mPopulatePending;
     private int mOffscreenPageLimit = DEFAULT_OFFSCREEN_PAGES;
-
     private boolean mIsBeingDragged;
     private boolean mIsUnableToDrag;
     private int mDefaultGutterSize;
@@ -156,12 +158,6 @@ public class SliderPager extends ViewGroup {
      */
     private int mActivePointerId = INVALID_POINTER;
     /**
-     * Sentinel value for no current active pointer.
-     * Used by {@link #mActivePointerId}.
-     */
-    private static final int INVALID_POINTER = -1;
-
-    /**
      * Determines speed during touch scrolling
      */
     private VelocityTracker mVelocityTracker;
@@ -169,53 +165,23 @@ public class SliderPager extends ViewGroup {
     private int mMaximumVelocity;
     private int mFlingDistance;
     private int mCloseEnough;
-
-    // If the pager is at least this close to its final position, complete the scroll
-    // on touch down and let the user interact with the content inside instead of
-    // "catching" the flinging pager.
-    private static final int CLOSE_ENOUGH = 2; // dp
-
     private boolean mFakeDragging;
     private long mFakeDragBeginTime;
-
     private EdgeEffect mLeftEdge;
     private EdgeEffect mRightEdge;
-
     private boolean mFirstLayout = true;
     private boolean mNeedCalculatePageOffsets = false;
     private boolean mCalledSuper;
     private int mDecorChildCount;
-
     private List<OnPageChangeListener> mOnPageChangeListeners;
     private OnPageChangeListener mOnPageChangeListener;
     private OnPageChangeListener mInternalPageChangeListener;
     private List<OnAdapterChangeListener> mAdapterChangeListeners;
     private PageTransformer mPageTransformer;
     private int mPageTransformerLayerType;
-
-    private static final int DRAW_ORDER_DEFAULT = 0;
-    private static final int DRAW_ORDER_FORWARD = 1;
-    private static final int DRAW_ORDER_REVERSE = 2;
     private int mDrawingOrder;
     private ArrayList<View> mDrawingOrderedChildren;
-    private static final ViewPositionComparator sPositionComparator = new ViewPositionComparator();
-
-    /**
-     * Indicates that the pager is in an idle, settled state. The current page
-     * is fully in view and no animation is in progress.
-     */
-    public static final int SCROLL_STATE_IDLE = 0;
-
-    /**
-     * Indicates that the pager is currently being dragged by the user.
-     */
-    public static final int SCROLL_STATE_DRAGGING = 1;
-
-    /**
-     * Indicates that the pager is in the process of settling to a final position.
-     */
-    public static final int SCROLL_STATE_SETTLING = 2;
-
+    private int mScrollState = SCROLL_STATE_IDLE;
     private final Runnable mEndScrollRunnable = new Runnable() {
         @Override
         public void run() {
@@ -223,119 +189,6 @@ public class SliderPager extends ViewGroup {
             populate();
         }
     };
-
-    private int mScrollState = SCROLL_STATE_IDLE;
-
-    /**
-     * Callback interface for responding to changing state of the selected page.
-     */
-    public interface OnPageChangeListener {
-
-        /**
-         * This method will be invoked when the current page is scrolled, either as part
-         * of a programmatically initiated smooth scroll or a user initiated touch scroll.
-         *
-         * @param position             Position index of the first page currently being displayed.
-         *                             Page position+1 will be visible if positionOffset is nonzero.
-         * @param positionOffset       Value from [0, 1) indicating the offset from the page at position.
-         * @param positionOffsetPixels Value in pixels indicating the offset from position.
-         */
-        void onPageScrolled(int position, float positionOffset, @Px int positionOffsetPixels);
-
-        /**
-         * This method will be invoked when a new page becomes selected. Animation is not
-         * necessarily complete.
-         *
-         * @param position Position index of the new selected page.
-         */
-        void onPageSelected(int position);
-
-        /**
-         * Called when the scroll state changes. Useful for discovering when the user
-         * begins dragging, when the pager is automatically settling to the current page,
-         * or when it is fully stopped/idle.
-         *
-         * @param state The new scroll state.
-         * @see SliderPager#SCROLL_STATE_IDLE
-         * @see SliderPager#SCROLL_STATE_DRAGGING
-         * @see SliderPager#SCROLL_STATE_SETTLING
-         */
-        void onPageScrollStateChanged(int state);
-    }
-
-    /**
-     * Simple implementation of the {@link ##OnPageChangeListener} interface with stub
-     * implementations of each method. Extend this if you do not intend to override
-     * every method of {@link ##OnPageChangeListener}.
-     */
-    public static class SimpleOnPageChangeListener implements OnPageChangeListener {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            // This space for rent
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            // This space for rent
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-            // This space for rent
-        }
-    }
-
-    /**
-     * A PageTransformer is invoked whenever a visible/attached page is scrolled.
-     * This offers an opportunity for the application to apply a custom transformation
-     * to the page views using animation properties.
-     *
-     * <p>As property animation is only supported as of Android 3.0 and forward,
-     * setting a PageTransformer on a SliderPager on earlier platform versions will
-     * be ignored.</p>
-     */
-    public interface PageTransformer {
-        /**
-         * Apply a property transformation to the given page.
-         *
-         * @param page     Apply the transformation to this page
-         * @param position Position of page relative to the current front-and-center
-         *                 position of the pager. 0 is front and center. 1 is one full
-         *                 page position to the right, and -1 is one page position to the left.
-         */
-        void transformPage(@NonNull View page, float position);
-    }
-
-    /**
-     * Callback interface for responding to adapter changes.
-     */
-    public interface OnAdapterChangeListener {
-        /**
-         * Called when the adapter for the given view pager has changed.
-         *
-         * @param viewPager  SliderPager where the adapter change has happened
-         * @param oldAdapter the previously set adapter
-         * @param newAdapter the newly set adapter
-         */
-        void onAdapterChanged(@NonNull SliderPager viewPager,
-                              @Nullable PagerAdapter oldAdapter, @Nullable PagerAdapter newAdapter);
-    }
-
-    /**
-     * Annotation which allows marking of views to be decoration views when added to a view
-     * pager.
-     *
-     * <p>Views marked with this annotation can be added to the view pager with a layout resource.
-     * An example being {@link ##PagerTitleStrip}.</p>
-     *
-     * <p>You can also control whether a view is a decor view but setting
-     * {@link ##LayoutParams#isDecor} on the child's layout params.</p>
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    @Inherited
-    public @interface DecorView {
-    }
 
     public SliderPager(@NonNull Context context) {
         super(context);
@@ -345,6 +198,11 @@ public class SliderPager extends ViewGroup {
     public SliderPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initSliderPager();
+    }
+
+    private static boolean isDecorView(@NonNull View view) {
+        Class<?> clazz = view.getClass();
+        return clazz.getAnnotation(DecorView.class) != null;
     }
 
     void initSliderPager() {
@@ -448,6 +306,43 @@ public class SliderPager extends ViewGroup {
     }
 
     /**
+     * This method calls setViewPagerObserver defined in PagerAdapter by using
+     * reflection.
+     *
+     * @param observer pager observer
+     */
+    private void setAdapterViewPagerObserver(PagerObserver observer) {
+        try {
+            Method setViewPagerObserver = PagerAdapter.class.getDeclaredMethod("setViewPagerObserver", DataSetObserver.class);
+            setViewPagerObserver.setAccessible(true);
+            setViewPagerObserver.invoke(mAdapter, observer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeNonDecorViews() {
+        for (int i = 0; i < getChildCount(); i++) {
+            final View child = getChildAt(i);
+            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            if (!lp.isDecor) {
+                removeViewAt(i);
+                i--;
+            }
+        }
+    }
+
+    /**
+     * Retrieve the current adapter supplying pages.
+     *
+     * @return The currently registered PagerAdapter
+     */
+    @Nullable
+    public PagerAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    /**
      * Set a PagerAdapter that will supply views for this pager as needed.
      *
      * @param adapter Adapter to use
@@ -507,43 +402,6 @@ public class SliderPager extends ViewGroup {
     }
 
     /**
-     * This method calls setViewPagerObserver defined in PagerAdapter by using
-     * reflection.
-     *
-     * @param observer pager observer
-     */
-    private void setAdapterViewPagerObserver(PagerObserver observer) {
-        try {
-            Method setViewPagerObserver = PagerAdapter.class.getDeclaredMethod("setViewPagerObserver", DataSetObserver.class);
-            setViewPagerObserver.setAccessible(true);
-            setViewPagerObserver.invoke(mAdapter, observer);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void removeNonDecorViews() {
-        for (int i = 0; i < getChildCount(); i++) {
-            final View child = getChildAt(i);
-            final LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            if (!lp.isDecor) {
-                removeViewAt(i);
-                i--;
-            }
-        }
-    }
-
-    /**
-     * Retrieve the current adapter supplying pages.
-     *
-     * @return The currently registered PagerAdapter
-     */
-    @Nullable
-    public PagerAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    /**
      * Add a listener that will be invoked whenever the adapter for this SliderPager changes.
      *
      * @param listener listener to add
@@ -572,18 +430,6 @@ public class SliderPager extends ViewGroup {
     }
 
     /**
-     * Set the currently selected page. If the SliderPager has already been through its first
-     * layout with its current adapter there will be a smooth animated transition between
-     * the current item and the specified item.
-     *
-     * @param item Item index to select
-     */
-    public void setCurrentItem(int item) {
-        mPopulatePending = false;
-        setCurrentItem(item, !mFirstLayout);
-    }
-
-    /**
      * Set the currently selected page.
      *
      * @param item         Item index to select
@@ -602,6 +448,18 @@ public class SliderPager extends ViewGroup {
             return ((InfinitePagerAdapter) mAdapter).getRealPosition(mCurItem);
         }
         return mCurItem;
+    }
+
+    /**
+     * Set the currently selected page. If the SliderPager has already been through its first
+     * layout with its current adapter there will be a smooth animated transition between
+     * the current item and the specified item.
+     *
+     * @param item Item index to select
+     */
+    public void setCurrentItem(int item) {
+        mPopulatePending = false;
+        setCurrentItem(item, !mFirstLayout);
     }
 
     void setCurrentItemInternal(int item, boolean smoothScroll, boolean always) {
@@ -834,6 +692,15 @@ public class SliderPager extends ViewGroup {
     }
 
     /**
+     * Return the margin between pages.
+     *
+     * @return The size of the margin in pixels
+     */
+    public int getPageMargin() {
+        return mPageMargin;
+    }
+
+    /**
      * Set the margin between pages.
      *
      * @param marginPixels Distance between adjacent pages in pixels
@@ -849,15 +716,6 @@ public class SliderPager extends ViewGroup {
         recomputeScrollPosition(width, width, marginPixels, oldMargin);
 
         requestLayout();
-    }
-
-    /**
-     * Return the margin between pages.
-     *
-     * @return The size of the margin in pixels
-     */
-    public int getPageMargin() {
-        return mPageMargin;
     }
 
     /**
@@ -1299,7 +1157,6 @@ public class SliderPager extends ViewGroup {
         }
     }
 
-
     private void calculatePageOffsets(ItemInfo curItem, int curIndex, ItemInfo oldCurInfo) {
         final int N = mAdapter.getCount();
         final int width = getClientWidth();
@@ -1386,63 +1243,6 @@ public class SliderPager extends ViewGroup {
         mNeedCalculatePageOffsets = false;
     }
 
-    /**
-     * This is the persistent state that is saved by SliderPager.  Only needed
-     * if you are creating a sublass of SliderPager that must save its own
-     * state, in which case it should implement a subclass of this which
-     * contains that state.
-     */
-    public static class SavedState extends AbsSavedState {
-        int position;
-        Parcelable adapterState;
-        ClassLoader loader;
-
-        public SavedState(@NonNull Parcelable superState) {
-            super(superState);
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeInt(position);
-            out.writeParcelable(adapterState, flags);
-        }
-
-        @Override
-        public String toString() {
-            return "FragmentPager.SavedState{"
-                    + Integer.toHexString(System.identityHashCode(this))
-                    + " position=" + position + "}";
-        }
-
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                return new SavedState(in, loader);
-            }
-
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in, null);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-
-        SavedState(Parcel in, ClassLoader loader) {
-            super(in, loader);
-            if (loader == null) {
-                loader = getClass().getClassLoader();
-            }
-            position = in.readInt();
-            adapterState = in.readParcelable(loader);
-            this.loader = loader;
-        }
-    }
-
     @Override
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
@@ -1499,11 +1299,6 @@ public class SliderPager extends ViewGroup {
                 child.setDrawingCacheEnabled(false);
             }
         }
-    }
-
-    private static boolean isDecorView(@NonNull View view) {
-        Class<?> clazz = view.getClass();
-        return clazz.getAnnotation(DecorView.class) != null;
     }
 
     @Override
@@ -3044,6 +2839,245 @@ public class SliderPager extends ViewGroup {
         return new LayoutParams(getContext(), attrs);
     }
 
+    /**
+     * Callback interface for responding to changing state of the selected page.
+     */
+    public interface OnPageChangeListener {
+
+        /**
+         * This method will be invoked when the current page is scrolled, either as part
+         * of a programmatically initiated smooth scroll or a user initiated touch scroll.
+         *
+         * @param position             Position index of the first page currently being displayed.
+         *                             Page position+1 will be visible if positionOffset is nonzero.
+         * @param positionOffset       Value from [0, 1) indicating the offset from the page at position.
+         * @param positionOffsetPixels Value in pixels indicating the offset from position.
+         */
+        void onPageScrolled(int position, float positionOffset, @Px int positionOffsetPixels);
+
+        /**
+         * This method will be invoked when a new page becomes selected. Animation is not
+         * necessarily complete.
+         *
+         * @param position Position index of the new selected page.
+         */
+        void onPageSelected(int position);
+
+        /**
+         * Called when the scroll state changes. Useful for discovering when the user
+         * begins dragging, when the pager is automatically settling to the current page,
+         * or when it is fully stopped/idle.
+         *
+         * @param state The new scroll state.
+         * @see SliderPager#SCROLL_STATE_IDLE
+         * @see SliderPager#SCROLL_STATE_DRAGGING
+         * @see SliderPager#SCROLL_STATE_SETTLING
+         */
+        void onPageScrollStateChanged(int state);
+    }
+
+    /**
+     * A PageTransformer is invoked whenever a visible/attached page is scrolled.
+     * This offers an opportunity for the application to apply a custom transformation
+     * to the page views using animation properties.
+     *
+     * <p>As property animation is only supported as of Android 3.0 and forward,
+     * setting a PageTransformer on a SliderPager on earlier platform versions will
+     * be ignored.</p>
+     */
+    public interface PageTransformer {
+        /**
+         * Apply a property transformation to the given page.
+         *
+         * @param page     Apply the transformation to this page
+         * @param position Position of page relative to the current front-and-center
+         *                 position of the pager. 0 is front and center. 1 is one full
+         *                 page position to the right, and -1 is one page position to the left.
+         */
+        void transformPage(@NonNull View page, float position);
+    }
+
+    /**
+     * Callback interface for responding to adapter changes.
+     */
+    public interface OnAdapterChangeListener {
+        /**
+         * Called when the adapter for the given view pager has changed.
+         *
+         * @param viewPager  SliderPager where the adapter change has happened
+         * @param oldAdapter the previously set adapter
+         * @param newAdapter the newly set adapter
+         */
+        void onAdapterChanged(@NonNull SliderPager viewPager,
+                              @Nullable PagerAdapter oldAdapter, @Nullable PagerAdapter newAdapter);
+    }
+
+    /**
+     * Annotation which allows marking of views to be decoration views when added to a view
+     * pager.
+     *
+     * <p>Views marked with this annotation can be added to the view pager with a layout resource.
+     * An example being {@link ##PagerTitleStrip}.</p>
+     *
+     * <p>You can also control whether a view is a decor view but setting
+     * {@link ##LayoutParams#isDecor} on the child's layout params.</p>
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    @Inherited
+    public @interface DecorView {
+    }
+
+    static class ItemInfo {
+        Object object;
+        int position;
+        boolean scrolling;
+        float widthFactor;
+        float offset;
+    }
+
+    /**
+     * Simple implementation of the {@link ##OnPageChangeListener} interface with stub
+     * implementations of each method. Extend this if you do not intend to override
+     * every method of {@link ##OnPageChangeListener}.
+     */
+    public static class SimpleOnPageChangeListener implements OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            // This space for rent
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            // This space for rent
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            // This space for rent
+        }
+    }
+
+    /**
+     * This is the persistent state that is saved by SliderPager.  Only needed
+     * if you are creating a sublass of SliderPager that must save its own
+     * state, in which case it should implement a subclass of this which
+     * contains that state.
+     */
+    public static class SavedState extends AbsSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+                return new SavedState(in, loader);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in, null);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+        int position;
+        Parcelable adapterState;
+        ClassLoader loader;
+
+        public SavedState(@NonNull Parcelable superState) {
+            super(superState);
+        }
+
+        SavedState(Parcel in, ClassLoader loader) {
+            super(in, loader);
+            if (loader == null) {
+                loader = getClass().getClassLoader();
+            }
+            position = in.readInt();
+            adapterState = in.readParcelable(loader);
+            this.loader = loader;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(position);
+            out.writeParcelable(adapterState, flags);
+        }
+
+        @Override
+        public String toString() {
+            return "FragmentPager.SavedState{"
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " position=" + position + "}";
+        }
+    }
+
+    /**
+     * Layout parameters that should be supplied for views added to a
+     * SliderPager.
+     */
+    public static class LayoutParams extends ViewGroup.LayoutParams {
+        /**
+         * true if this view is a decoration on the pager itself and not
+         * a view supplied by the adapter.
+         */
+        public boolean isDecor;
+
+        /**
+         * Gravity setting for use on decor views only:
+         * Where to position the view page within the overall SliderPager
+         * container; constants are defined in {@link ##Gravity}.
+         */
+        public int gravity;
+
+        /**
+         * Width as a 0-1 multiplier of the measured pager width
+         */
+        float widthFactor = 0.f;
+
+        /**
+         * true if this view was added during layout and needs to be measured
+         * before being positioned.
+         */
+        boolean needsMeasure;
+
+        /**
+         * Adapter position this view is for if !isDecor
+         */
+        int position;
+
+        /**
+         * Current child index within the SliderPager that this view occupies
+         */
+        int childIndex;
+
+        public LayoutParams() {
+            super(MATCH_PARENT, MATCH_PARENT);
+        }
+
+        public LayoutParams(Context context, AttributeSet attrs) {
+            super(context, attrs);
+
+            final TypedArray a = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
+            gravity = a.getInteger(0, Gravity.TOP);
+            a.recycle();
+        }
+    }
+
+    static class ViewPositionComparator implements Comparator<View> {
+        @Override
+        public int compare(View lhs, View rhs) {
+            final LayoutParams llp = (LayoutParams) lhs.getLayoutParams();
+            final LayoutParams rlp = (LayoutParams) rhs.getLayoutParams();
+            if (llp.isDecor != rlp.isDecor) {
+                return llp.isDecor ? 1 : -1;
+            }
+            return llp.position - rlp.position;
+        }
+    }
+
     class MyAccessibilityDelegate extends AccessibilityDelegateCompat {
 
         @Override
@@ -3132,70 +3166,6 @@ public class SliderPager extends ViewGroup {
         @Override
         public void startScroll(int startX, int startY, int dx, int dy, int duration) {
             super.startScroll(startX, startY, dx, dy, durationScrollMillis);
-        }
-    }
-
-    /**
-     * Layout parameters that should be supplied for views added to a
-     * SliderPager.
-     */
-    public static class LayoutParams extends ViewGroup.LayoutParams {
-        /**
-         * true if this view is a decoration on the pager itself and not
-         * a view supplied by the adapter.
-         */
-        public boolean isDecor;
-
-        /**
-         * Gravity setting for use on decor views only:
-         * Where to position the view page within the overall SliderPager
-         * container; constants are defined in {@link ##Gravity}.
-         */
-        public int gravity;
-
-        /**
-         * Width as a 0-1 multiplier of the measured pager width
-         */
-        float widthFactor = 0.f;
-
-        /**
-         * true if this view was added during layout and needs to be measured
-         * before being positioned.
-         */
-        boolean needsMeasure;
-
-        /**
-         * Adapter position this view is for if !isDecor
-         */
-        int position;
-
-        /**
-         * Current child index within the SliderPager that this view occupies
-         */
-        int childIndex;
-
-        public LayoutParams() {
-            super(MATCH_PARENT, MATCH_PARENT);
-        }
-
-        public LayoutParams(Context context, AttributeSet attrs) {
-            super(context, attrs);
-
-            final TypedArray a = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
-            gravity = a.getInteger(0, Gravity.TOP);
-            a.recycle();
-        }
-    }
-
-    static class ViewPositionComparator implements Comparator<View> {
-        @Override
-        public int compare(View lhs, View rhs) {
-            final LayoutParams llp = (LayoutParams) lhs.getLayoutParams();
-            final LayoutParams rlp = (LayoutParams) rhs.getLayoutParams();
-            if (llp.isDecor != rlp.isDecor) {
-                return llp.isDecor ? 1 : -1;
-            }
-            return llp.position - rlp.position;
         }
     }
 }

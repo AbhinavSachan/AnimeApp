@@ -16,8 +16,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_3sdp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
-        android:background="@drawable/bg_bottom_nav_bar_shadow"/>
+        android:background="@drawable/bg_bottom_nav_bar_shadow"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavBar"

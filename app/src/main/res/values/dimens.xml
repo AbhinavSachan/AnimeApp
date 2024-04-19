@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!--Text Sizes -->
     <dimen name="text_size_7">@dimen/_6ssp</dimen>          <!--8px-->
     <dimen name="text_size_8">@dimen/_6ssp</dimen>          <!--8px-->
@@ -28,10 +28,9 @@
     <dimen name="text_size_80">@dimen/_60ssp</dimen>
     <dimen name="text_size_xlarge">@dimen/_22ssp</dimen>
 
-<!--    Safe zone dimens-->
+    <!--    Safe zone dimens-->
     <dimen name="safe_zone_vertical_card">@dimen/_8ssp</dimen>
     <dimen name="safe_zone_anime_page">@dimen/_15ssp</dimen>
-
 
 
 </resources>

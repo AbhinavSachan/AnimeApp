@@ -66,4 +66,4 @@ data class AnimeData(
     @SerializedName("theme") val opEdTheme: OpEdThemeData?,
     @SerializedName("external") val externalLinks: ArrayList<ExternalData>?,
     @SerializedName("streaming") val streamingLinks: ArrayList<StreamingData>?,
-) : BaseModelWithMal(),Parcelable
+) : BaseModelWithMal(), Parcelable

@@ -24,8 +24,12 @@ fun Context?.captureImage(
         put(MediaStore.Images.Media.DISPLAY_NAME, createImageFileName())
         put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         put(
-            MediaStore.Images.Media.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/${this@captureImage?.getString(
-                R.string.app_name)}")
+            MediaStore.Images.Media.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/${
+                this@captureImage?.getString(
+                    R.string.app_name
+                )
+            }"
+        )
     }
     val resolver = this?.contentResolver
     val mCapturedImageURI =

@@ -2,6 +2,7 @@ package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.draw.
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
 import androidx.annotation.NonNull;
 
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.data.Value;

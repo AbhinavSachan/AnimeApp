@@ -23,5 +23,11 @@
     <string name="msg_most_popular">Most Popular</string>
     <string name="msg_upcoming">Upcoming</string>
     <string name="msg_please_wait">Please wait…</string>
-
+    <string name="copied">Copied To Clipboard!</string>
+    <string name="msg_default">Default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="hindi_native">Hindi</string>
+    <string name="japanese_native">Japanese</string>
+    <string name="english_native">English</string>
 </resources>

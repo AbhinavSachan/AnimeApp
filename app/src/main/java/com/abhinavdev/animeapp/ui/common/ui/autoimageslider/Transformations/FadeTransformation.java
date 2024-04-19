@@ -1,17 +1,17 @@
 package com.abhinavdev.animeapp.ui.common.ui.autoimageslider.Transformations;
 
-import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderPager;
-
 import android.view.View;
+
+import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderPager;
 
 public class FadeTransformation implements SliderPager.PageTransformer {
     @Override
     public void transformPage(View view, float position) {
 
-        view.setTranslationX(-position*view.getWidth());
+        view.setTranslationX(-position * view.getWidth());
 
         // Page is not an immediate sibling, just make transparent
-        if(position < -1 || position > 1) {
+        if (position < -1 || position > 1) {
             view.setAlpha(0);
         }
         // Page is sibling to left or right
@@ -26,7 +26,6 @@ public class FadeTransformation implements SliderPager.PageTransformer {
         else if (position == 0) {
             view.setAlpha(1);
         }
-
 
 
     }
