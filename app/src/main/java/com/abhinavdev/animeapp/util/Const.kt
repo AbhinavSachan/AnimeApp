@@ -25,7 +25,7 @@ object Const {
     }
     interface Mal {
         companion object {
-            const val STATE = "MoyeMoyeState123"
+            const val STATE = "FairyTaleState123"
             const val USERS = "users"
             const val ANIME = "anime"
             const val MANGA = "manga"

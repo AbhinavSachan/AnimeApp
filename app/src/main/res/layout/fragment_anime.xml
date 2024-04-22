@@ -26,21 +26,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
-            <View
+            <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer_view_pager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/shimmer_color"
                 android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@id/sv_top_airing"
-                app:layout_constraintEnd_toEndOf="@id/sv_top_airing"
-                app:layout_constraintStart_toStartOf="@id/sv_top_airing"
-                app:layout_constraintTop_toTopOf="@id/sv_top_airing" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@drawable/bg_top_fade"
                 app:layout_constraintBottom_toBottomOf="@id/sv_top_airing"
                 app:layout_constraintEnd_toEndOf="@id/sv_top_airing"
                 app:layout_constraintStart_toStartOf="@id/sv_top_airing"
@@ -75,28 +66,36 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="30dp">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_top_fade">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_search"
-            style="@style/CustomClickableIcon"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:src="@drawable/ic_search"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginTop="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_refresh"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_refresh"
-            style="@style/CustomClickableIcon"
-            android:layout_marginEnd="@dimen/safe_zone_anime_page"
-            android:src="@drawable/ic_refresh"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_search"
+                style="@style/CustomClickableIcon"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:src="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_refresh"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_refresh"
+                style="@style/CustomClickableIcon"
+                android:layout_marginEnd="@dimen/safe_zone_anime_page"
+                android:src="@drawable/ic_refresh"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

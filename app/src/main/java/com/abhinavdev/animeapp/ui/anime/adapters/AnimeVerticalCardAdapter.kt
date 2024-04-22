@@ -44,7 +44,7 @@ class AnimeVerticalCardAdapter(
                 tvType.text = item.type?.showName ?: AnimeType.UNKNOWN.showName
 
                 val userPreferredType = SettingsPrefs.preferredTitleType
-                val animeName = item.titles?.find { it.type == userPreferredType }?.title
+                val animeName = item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
                 vtvAnimeName.text = animeName
 
                 when (type) {
@@ -73,6 +73,10 @@ class AnimeVerticalCardAdapter(
                 root.setOnClickListener { listener.onItemClick(position, type) }
             }
         }
+    }
+
+    override fun getItemId(position: Int): Long {
+        return list[position].malId.toLong()
     }
 
     override fun getItemCount(): Int {

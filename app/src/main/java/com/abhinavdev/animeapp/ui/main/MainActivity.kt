@@ -6,22 +6,33 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseActivity
 import com.abhinavdev.animeapp.databinding.ActivityMainBinding
+import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.ui.main.adapters.MainFragmentAdapter
+import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.showOrHide
+import com.abhinavdev.animeapp.util.extension.toast
 import com.abhinavdev.animeapp.util.statusbar.setTransparentForWindow
 import com.google.android.material.navigation.NavigationBarView
 
 class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private val rootFragmentTypes: List<MainFragmentAdapter.PageType> = arrayListOf(
+        MainFragmentAdapter.PageType.ANIME,
+        MainFragmentAdapter.PageType.MANGA,
+        MainFragmentAdapter.PageType.MORE,
+    )
 
     private var fragmentAdapter: MainFragmentAdapter? = null
-    private val rootFragmentTypes: ArrayList<MainFragmentAdapter.PageType> = arrayListOf()
     private var currentPageType: MainFragmentAdapter.PageType = MainFragmentAdapter.PageType.ANIME
+
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -29,6 +40,8 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setTransparentForWindow()
+
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         checkLoginIntent(intent)
         init()
@@ -38,7 +51,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         val code = uri.getQueryParameter("code")
         val receivedState = uri.getQueryParameter("state")
         if (code != null && receivedState == Const.Mal.STATE) {
-            //get access token
+            viewModel.getAccessToken(code)
         }
     }
 
@@ -57,6 +70,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         initComponents()
         setAdapters()
         setListeners()
+        setObservers()
     }
 
     private fun initComponents() {
@@ -64,10 +78,6 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun setAdapters() {
-        rootFragmentTypes.add(MainFragmentAdapter.PageType.ANIME)
-        rootFragmentTypes.add(MainFragmentAdapter.PageType.MANGA)
-        rootFragmentTypes.add(MainFragmentAdapter.PageType.MORE)
-
         fragmentAdapter = MainFragmentAdapter(this, rootFragmentTypes)
         binding.viewPager.adapter = fragmentAdapter
         binding.viewPager.isUserInputEnabled = false
@@ -83,6 +93,30 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
                 updateSelectedItemId(position)
             }
         })
+    }
+
+    private fun setObservers() {
+        viewModel.getAccessTokenResponse.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.let {
+                            SettingsPrefs.accessToken = it
+                        }
+                        isLoaderVisible(false)
+                    }
+
+                    is Resource.Error -> {
+                        isLoaderVisible(false)
+                        response.message?.let { message -> toast(message) }
+                    }
+
+                    is Resource.Loading -> {
+                        isLoaderVisible(true)
+                    }
+                }
+            }
+        }
     }
 
     private fun setUpStatusBarColor(position: Int) {

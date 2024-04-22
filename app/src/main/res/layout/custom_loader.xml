@@ -16,5 +16,5 @@
         android:padding="@dimen/_90sdp"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/color_loader" />
+        app:lottie_rawRes="@raw/circle_loader" />
 </FrameLayout>

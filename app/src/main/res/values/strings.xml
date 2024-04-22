@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name" translatable="false">Moye Moye</string>
+    <string name="app_name" translatable="false">Fairy Tale</string>
 
     <!--    jikan error message's-->
     <string name="error_cache_modification">You have the latest data</string>
     <string name="error_invalid_request">You\'ve made an invalid request</string>
+    <string name="error_request_refresh_page">Please try refreshing</string>
+    <string name="error_login_again">Please try login again</string>
     <string name="error_resource_not_found">The resource was not found</string>
     <string name="error_only_get_request_allowed">Requested Method is not supported for resource</string>
     <string name="error_rate_limit">Please wait and try again</string>
@@ -30,4 +32,8 @@
     <string name="hindi_native">Hindi</string>
     <string name="japanese_native">Japanese</string>
     <string name="english_native">English</string>
+    <string name="msg_login">Login</string>
+    <string name="msg_login_des">To access your MAL preferences you have to login with MAL account.</string>
+    <string name="msg_cancel">Cancel</string>
+    <string name="msg_use_external_browser">Use External Browser</string>
 </resources>

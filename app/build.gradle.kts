@@ -10,18 +10,16 @@ plugins {
     id("com.google.firebase.crashlytics")
 }
 
-android.buildFeatures.buildConfig = true
-
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").reader())
 
 android {
     signingConfigs {
         create("release") {
-            storeFile = rootProject.file("AnimeApp_jks.jks")
-            storePassword = "Abhinav786"
-            keyAlias = "AnimeApp"
-            keyPassword = "Abhinav786"
+            storeFile = rootProject.file(properties.getProperty("file_name"))
+            storePassword = properties.getProperty("password")
+            keyAlias = properties.getProperty("alias")
+            keyPassword = properties.getProperty("password")
         }
     }
     namespace = "com.abhinavdev.animeapp"
@@ -71,6 +69,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
     packaging {
@@ -90,57 +89,50 @@ android {
 }
 
 dependencies {
-    val okhttpVersion = "4.12.0"
-    val lifecycleVersion = "2.7.0"
-    val navigationVersion = "2.7.7"
-    val dimensionVersion = "1.1.1"
-    val glideVersion = "4.16.0"
-    val retrofitVersion = "2.11.0"
+    implementation(libs.core.ktx)
+    implementation(libs.browser)
+    implementation(libs.core.splashscreen)
+    implementation(libs.appcompat)
+    implementation(libs.work.runtime)
+    implementation(libs.constraintlayout)
+    implementation(libs.swiperefreshlayout)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation(libs.legacy.support.v4)
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.browser:browser:1.8.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.work:work-runtime:2.9.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-
-    implementation("com.google.android.material:material:1.11.0")
+    implementation(libs.material)
 
     //Life Cycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.extensions)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
 
     //Gson
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson)
 
     //okhttp and logging interceptor
-    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion") {
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit) {
         exclude(module = "okhttp")
     }
 
     //Dimension
-    implementation("com.intuit.sdp:sdp-android:$dimensionVersion")
-    implementation("com.intuit.ssp:ssp-android:$dimensionVersion")
+    implementation(libs.sdp.android)
+    implementation(libs.ssp.android)
 
     //json loader
-    implementation("com.airbnb.android:lottie:6.4.0")
+    implementation(libs.lottie)
 
     //Glide
-    implementation("com.github.bumptech.glide:glide:$glideVersion")
+    implementation(libs.glide)
     //noinspection KaptUsageInsteadOfKsp
-    kapt("com.github.bumptech.glide:compiler:$glideVersion")
+    kapt(libs.compiler)
 
     //calendar de-sugaring library
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
 
     //firebase libs
@@ -149,12 +141,12 @@ dependencies {
 //    implementation ("com.google.firebase:firebase-messaging")
 //    implementation ("com.google.firebase:firebase-core")
 //    implementation ("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-crashlytics:18.6.4")
-    implementation("com.google.firebase:firebase-analytics:21.6.2")
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
 
     //page indicator
-    implementation("com.tbuonomo:dotsindicator:5.0")
+    implementation(libs.dotsindicator)
 
     //play video
 //    implementation ("com.google.android.exoplayer:exoplayer:2.18.7")
@@ -202,12 +194,12 @@ dependencies {
     //sliding button
 //    implementation("com.ncorti:slidetoact:0.11.0")
 
-    implementation("com.localebro:okhttpprofiler:1.0.8")
+    implementation(libs.okhttpprofiler)
     //micro animations util library
-    implementation("com.daimajia.androidanimations:library:2.4@aar")
-    implementation("androidx.palette:palette-ktx:1.0.0")
+    implementation(libs.library)
+    implementation(libs.palette.ktx)
     //shimmer loading library
-    implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation(libs.shimmer)
     //auto image slider library
 }
 //https://docs.consumet.org/#tag/anilist

@@ -33,7 +33,8 @@ class AnimeBannerAdapter(
                 tvSpotlight.text = spotlight
 
                 val userPreferredType = SettingsPrefs.preferredTitleType
-                val animeName = item.titles?.find { it.type == userPreferredType }?.title
+                val animeName =
+                    item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
                 tvName.text = animeName
 
                 root.setOnClickListener {
@@ -50,8 +51,6 @@ class AnimeBannerAdapter(
         return list.size
     }
 
-    inner class ViewHolder(binding: RowBannerAnimeBinding) :
-        SliderViewAdapter.ViewHolder(binding.root) {
-        val binding = binding
-    }
+    inner class ViewHolder(val binding: RowBannerAnimeBinding) :
+        SliderViewAdapter.ViewHolder(binding.root)
 }

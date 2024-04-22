@@ -30,6 +30,7 @@
 
     <!--    Safe zone dimens-->
     <dimen name="safe_zone_vertical_card">@dimen/_8ssp</dimen>
+    <dimen name="safe_zone_dialogs">@dimen/_16ssp</dimen>
     <dimen name="safe_zone_anime_page">@dimen/_15ssp</dimen>
 
 

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/DialogBaseStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/safe_zone_dialogs" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/safe_zone_dialogs" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/safe_zone_dialogs" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/safe_zone_dialogs" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_title"
+        style="@style/TextStyleFont700"
+        android:text="@string/msg_login"
+        android:textSize="@dimen/text_size_20"
+        app:layout_constraintStart_toStartOf="@id/guide_start"
+        app:layout_constraintTop_toTopOf="@id/guide_top" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_description"
+        style="@style/TextStyleFont400"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="@string/msg_login_des"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintEnd_toEndOf="@id/guide_end"
+        app:layout_constraintStart_toStartOf="@id/guide_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cb_use_external_browser"
+        style="@style/CustomCheckBoxStyle"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="@string/msg_use_external_browser"
+        app:layout_constraintStart_toStartOf="@id/guide_start"
+        app:layout_constraintTop_toBottomOf="@id/tv_description" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:barrierMargin="@dimen/_8sdp"
+        app:constraint_referenced_ids="cb_use_external_browser" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/btn_cancel"
+        style="@style/CustomPrimaryButtonLL.Bordered"
+        android:layout_width="0dp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
+        app:layout_constraintEnd_toStartOf="@id/btn_login"
+        app:layout_constraintStart_toStartOf="@id/guide_start"
+        app:layout_constraintTop_toBottomOf="@id/barrier_description">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextStyleFont500"
+            android:text="@string/msg_cancel"
+            android:textSize="@dimen/text_size_13" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/btn_login"
+        style="@style/CustomAccentButtonLL"
+        android:layout_width="0dp"
+        android:layout_marginStart="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
+        app:layout_constraintEnd_toEndOf="@id/guide_end"
+        app:layout_constraintStart_toEndOf="@id/btn_cancel"
+        app:layout_constraintTop_toBottomOf="@id/barrier_description">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextStyleFont500"
+            android:text="@string/msg_login"
+            android:textColor="@color/onAccent"
+            android:textSize="@dimen/text_size_13" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

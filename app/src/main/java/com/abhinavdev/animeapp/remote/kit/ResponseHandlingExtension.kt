@@ -3,21 +3,24 @@ package com.abhinavdev.animeapp.remote.kit
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.abhinavdev.animeapp.R
+import com.abhinavdev.animeapp.remote.kit.repository.OAuthRepository
+import com.abhinavdev.animeapp.remote.kit.sources.OAuthRepositoryImpl
+import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.hasInternetConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.checkerframework.checker.units.qual.K
 import retrofit2.Response
 import java.io.IOException
 
-fun <T> Response<T>.handleResponse(application: Application): Event<Resource<T>> {
+suspend fun <T> Response<T>.handleResponse(application: Application): Event<Resource<T>> {
+    val body = this.body()
     if (this.isSuccessful) {
-        this.body()?.let { resultResponse ->
+        body?.let { resultResponse ->
             return Event(Resource.Success(resultResponse))
         }
     }
-    val code = this.code()
-    val errorMessage = when (code) {
+    var code = this.code()
+    var errorMessage = when (code) {
         304 -> application.getString(R.string.error_cache_modification)
         400 -> application.getString(R.string.error_invalid_request)
         404 -> application.getString(R.string.error_resource_not_found)
@@ -26,7 +29,32 @@ fun <T> Response<T>.handleResponse(application: Application): Event<Resource<T>>
         500 -> application.getString(R.string.error_internal_server)
         else -> application.getString(R.string.error_something_went_wrong)
     }
+    if (code == 401) {
+        val repo: OAuthRepository = OAuthRepositoryImpl()
+        val refreshToken = SettingsPrefs.accessToken?.refreshToken
+        errorMessage = if (refreshToken != null) {
+            val refreshTokenResponse = repo.getRefreshAccessToken(refreshToken)
+            if (refreshTokenResponse.isSuccessful) {
+                refreshTokenResponse.body()?.let { accessToken ->
+                    SettingsPrefs.accessToken = accessToken
+                }
+                application.getString(R.string.error_request_refresh_page)
+            } else {
+                code = 402
+                handleRefreshTokenFailure(application)
+            }
+        } else {
+            code = 402
+            handleRefreshTokenFailure(application)
+        }
+    }
+
     return Event(Resource.Error(errorMessage, this.body(), code))
+}
+
+private fun handleRefreshTokenFailure(application: Application): String {
+    SettingsPrefs.clearAccessToken()
+    return application.getString(R.string.error_login_again)
 }
 
 suspend fun <T> MutableLiveData<Event<Resource<T>>>.fetchData(
@@ -60,8 +88,7 @@ suspend fun <T> MutableLiveData<Event<Resource<T>>>.fetchData(
 }
 
 suspend fun <K, T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
-    application: Application,
-    apiCalls: Map<K, suspend () -> Response<T>>
+    application: Application, apiCalls: Map<K, suspend () -> Response<T>>
 ) {
     this@fetchMultiData.postValue(Event(apiCalls.keys.associateWith { Resource.Loading() }))
 

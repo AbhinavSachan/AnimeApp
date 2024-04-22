@@ -5,8 +5,6 @@ import retrofit2.Response
 
 interface OAuthRepository {
 
-    suspend fun getLoginUrl():String
-
     /**
      * code	REQUIRED. Authorization code itself
      * code_verifier	REQUIRED. A minimum length of 43 characters and a maximum length of 128 characters. See the detail of PKCE code_challenge.

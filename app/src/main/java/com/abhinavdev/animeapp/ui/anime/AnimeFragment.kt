@@ -25,6 +25,7 @@ import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
+import com.facebook.shimmer.ShimmerFrameLayout
 
 class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback {
     private var _binding: FragmentAnimeBinding? = null
@@ -46,6 +47,7 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     private var upcomingAdapter: AnimeVerticalCardAdapter? = null
 
     private var isLoading = false
+    private var isRefreshed = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -105,7 +107,6 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
         } else {
             binding.svTopAiring.layoutParams.height = (screenSize.width * 8) / 9
         }
-        binding.svTopAiring.requestLayout()
     }
 
     private fun setAdapters() {
@@ -116,6 +117,7 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
 
         //second rv
         popularAdapter = AnimeVerticalCardAdapter(popularList, MultiApiCallType.TopPopular, this)
+        popularAdapter?.setHasStableIds(true)
         binding.groupPopularAnime.rvItems.setHasFixedSize(true)
         binding.groupPopularAnime.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -124,6 +126,7 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
         //third rv
         favouriteAdapter =
             AnimeVerticalCardAdapter(favouriteList, MultiApiCallType.TopFavourite, this)
+        favouriteAdapter?.setHasStableIds(true)
         binding.groupFavouriteAnime.rvItems.setHasFixedSize(true)
         binding.groupFavouriteAnime.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -131,6 +134,7 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
 
         //fourth rv
         upcomingAdapter = AnimeVerticalCardAdapter(upcomingList, MultiApiCallType.TopUpcoming, this)
+        upcomingAdapter?.setHasStableIds(true)
         binding.groupUpcomingAnime.rvItems.setHasFixedSize(true)
         binding.groupUpcomingAnime.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -150,6 +154,7 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     }
 
     private fun onRefreshClick() = if (!isLoading) {
+        isRefreshed = true
         allApiCalls()
     } else {
         toast(getString(R.string.msg_please_wait))
@@ -215,23 +220,38 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     }
 
     private fun airingLoading(isLoading: Boolean) {
-        binding.svTopAiring.showOrInvisible(!isLoading)
-        binding.shimmerViewPager.showOrInvisible(isLoading)
+        with(binding) {
+            showLoaderOrShimmer(isLoading, svTopAiring, shimmerViewPager)
+        }
     }
 
     private fun popularLoading(isLoading: Boolean) {
-        binding.groupPopularAnime.group.showOrInvisible(!isLoading)
-        binding.groupPopularAnime.shimmerLoader.root.showOrInvisible(isLoading)
+        with(binding.groupPopularAnime) {
+            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+        }
     }
 
     private fun favouriteLoading(isLoading: Boolean) {
-        binding.groupFavouriteAnime.group.showOrInvisible(!isLoading)
-        binding.groupFavouriteAnime.shimmerLoader.root.showOrInvisible(isLoading)
+        with(binding.groupFavouriteAnime) {
+            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+        }
     }
 
     private fun upcomingLoading(isLoading: Boolean) {
-        binding.groupUpcomingAnime.group.showOrInvisible(!isLoading)
-        binding.groupUpcomingAnime.shimmerLoader.root.showOrInvisible(isLoading)
+        with(binding.groupUpcomingAnime) {
+            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+        }
+    }
+
+    private fun showLoaderOrShimmer(
+        isLoading: Boolean, groupView: View, shimmerView: ShimmerFrameLayout
+    ) {
+        if (isRefreshed) {
+            parentActivity?.isLoaderVisible(isLoading)
+        } else {
+            groupView.showOrInvisible(!isLoading)
+            shimmerView.showOrInvisible(isLoading)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
