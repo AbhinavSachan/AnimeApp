@@ -4,6 +4,7 @@ import androidx.annotation.IntRange
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
+import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MangaListStatus
 import com.abhinavdev.animeapp.util.Const
 import retrofit2.Response
@@ -80,4 +81,8 @@ interface MalApiService {
         @Query("offset") offset: Int,
         @Query("fields") fields: String,
     ): Response<MalMyMangaListResponse>
+
+    @GET(Const.Mal.USERS + "/@me")
+    suspend fun getProfile(): Response<MalProfileResponse>
+
 }
