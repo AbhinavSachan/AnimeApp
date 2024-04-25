@@ -112,7 +112,7 @@
 -dontwarn retrofit2.**
 -keep class retrofit2.**{*;}
 -keep interface com.abhinavdev.animeapp.remote.kit.JikanApiService { *; }
--keep interface com.abhinavdev.animeapp.remote.mal.MalApiService { *; }
+-keep interface com.abhinavdev.animeapp.remote.kit.MalApiService { *; }
 -keep interface com.abhinavdev.animeapp.remote.models.malmodels.AccessToken { *; }
 
 

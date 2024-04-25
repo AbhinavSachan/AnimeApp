@@ -2,15 +2,24 @@ package com.abhinavdev.animeapp.remote.models.malmodels
 
 import com.abhinavdev.animeapp.remote.models.BaseModel
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.google.gson.annotations.SerializedName
 
 
 class MalMyMangaListResponse : MalBaseResponse<ArrayList<MalMangaData>>()
 
 data class MalMangaData(
-    @SerializedName("node") val node: Node?,
+    @SerializedName("node") val node: MalMangaNode?,
     @SerializedName("synopsis") val synopsis: String?,
     @SerializedName("list_status") val listStatus: MangaListStatus?
+) : BaseModel()
+
+data class MalMangaNode(
+    @SerializedName("id") val id: Int?,
+    @SerializedName("title") val title: String?,
+    @SerializedName("main_picture") val mainPicture: MainPicture?,
+    @SerializedName("alternative_titles") val alternativeTitles: MalAlternativeTitles?,
+    @SerializedName("media_type") val mediaType: MalMangaType?,
 ) : BaseModel()
 
 data class MangaListStatus(

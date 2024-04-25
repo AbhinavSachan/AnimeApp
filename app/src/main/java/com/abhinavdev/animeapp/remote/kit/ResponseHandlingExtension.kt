@@ -27,16 +27,17 @@ suspend fun <T> Response<T>.handleResponse(application: Application): Event<Reso
         405 -> application.getString(R.string.error_only_get_request_allowed)
         429 -> application.getString(R.string.error_rate_limit)
         500 -> application.getString(R.string.error_internal_server)
+        503 -> application.getString(R.string.error_maintenance)
         else -> application.getString(R.string.error_something_went_wrong)
     }
     if (code == 401) {
         val repo: OAuthRepository = OAuthRepositoryImpl()
-        val refreshToken = SettingsPrefs.accessToken?.refreshToken
+        val refreshToken = SettingsPrefs.getAccessToken()?.refreshToken
         errorMessage = if (refreshToken != null) {
             val refreshTokenResponse = repo.getRefreshAccessToken(refreshToken)
             if (refreshTokenResponse.isSuccessful) {
                 refreshTokenResponse.body()?.let { accessToken ->
-                    SettingsPrefs.accessToken = accessToken
+                    SettingsPrefs.setAccessToken(accessToken)
                 }
                 application.getString(R.string.error_request_refresh_page)
             } else {
@@ -53,7 +54,7 @@ suspend fun <T> Response<T>.handleResponse(application: Application): Event<Reso
 }
 
 private fun handleRefreshTokenFailure(application: Application): String {
-    SettingsPrefs.clearAccessToken()
+    SettingsPrefs.clearMalCredentials()
     return application.getString(R.string.error_login_again)
 }
 

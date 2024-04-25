@@ -41,9 +41,9 @@ class CharacterRepositoryImpl : CharacterRepository {
     }
 
     override suspend fun getCharactersSearch(
-        page: Int, limit: Int, q: String, orderBy: CharacterOrderBy, sort: SortOrder, letter: String
+        page: Int, limit: Int, query: String, orderBy: CharacterOrderBy, sort: SortOrder, letter: String
     ): Response<CharacterSearchResponse> {
-        return apiService.getCharactersSearch(page, limit, q, orderBy.search, sort.search, letter)
+        return apiService.getCharactersSearch(page, limit, query, orderBy.search, sort.search, letter)
     }
 
     override suspend fun getRandomCharacters(): Response<CharacterResponse> {

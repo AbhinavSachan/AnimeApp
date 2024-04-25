@@ -35,7 +35,7 @@ class ClubRepositoryImpl : ClubRepository {
     override suspend fun getClubSearch(
         page: Int,
         limit: Int,
-        q: String,
+        query: String,
         type: ClubType,
         category: ClubCategory,
         orderBy: ClubOrderBy,
@@ -43,7 +43,7 @@ class ClubRepositoryImpl : ClubRepository {
         letter: String
     ): Response<ClubSearchResponse> {
         return apiService.getClubSearch(
-            page, limit, q, type.search, category.search, orderBy.search, sort.search, letter
+            page, limit, query, type.search, category.search, orderBy.search, sort.search, letter
         )
     }
 }

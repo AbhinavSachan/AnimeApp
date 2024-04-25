@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Fairy Tale</string>
+    <string name="app_name" translatable="false">Fairytale</string>
 
     <!--    jikan error message's-->
     <string name="error_cache_modification">You have the latest data</string>
@@ -13,6 +13,7 @@
     <string name="error_internet_unavailable">Internet unavailable!</string>
     <string name="error_network_failure">Network Failure</string>
     <string name="error_conversion_error">Conversion Error</string>
+    <string name="error_maintenance">MAL servers are currently under maintenance</string>
     <string name="error_something_went_wrong">Something went wrong</string>
     <string name="msg_top_hits">Top Hits</string>
     <string name="action_see_all">See all</string>
@@ -36,4 +37,14 @@
     <string name="msg_login_des">To access your MAL preferences you have to login with MAL account.</string>
     <string name="msg_cancel">Cancel</string>
     <string name="msg_use_external_browser">Use External Browser</string>
+    <string name="msg_my_profile">My Profile</string>
+    <string name="msg_my_anime_list">My Anime List</string>
+    <string name="msg_my_manga_list">My Manga List</string>
+    <string name="msg_settings">Settings</string>
+    <string name="msg_logout">Logout</string>
+    <string name="msg_login_to_access_des">Please login to access these features</string>
+    <string name="msg_logout_des">You will have to login again to access some features.</string>
+    <string name="msg_okay">Okay</string>
+    <string name="msg_top_recommended">Top Recommended</string>
+    <string name="msg_top_ranked">Top Ranked</string>
 </resources>

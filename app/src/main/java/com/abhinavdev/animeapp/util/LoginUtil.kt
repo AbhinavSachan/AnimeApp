@@ -28,13 +28,14 @@ object LoginUtil {
         builder.setCancelable(false)
         builder.setView(view.root)
 
-        view.btnCancel.setOnClickListener {
+        view.btnNegative.setOnClickListener {
             dialog?.cancel()
             onCancel?.invoke()
         }
-        view.btnLogin.setOnClickListener {
+        view.btnPositive.setOnClickListener {
+            dialog?.cancel()
             val loginUrl = getLoginUrl()
-            val useExternalBrowser = view.cbUseExternalBrowser.isChecked
+            val useExternalBrowser = view.checkbox.isChecked
             if (useExternalBrowser) {
                 try {
                     openLink(loginUrl)

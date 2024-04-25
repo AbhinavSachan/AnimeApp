@@ -7,15 +7,22 @@ import com.google.gson.annotations.SerializedName
  */
 enum class UserGender(
     /** Used in the search queries.  */
-    val search: String?
+    val search: String,
+    val showName: String,
 ) {
+    @SerializedName("Any")
+    ANY("any","Any"),
+
     @SerializedName("Male")
-    MALE("male"),
+    MALE("male","Male"),
 
     @SerializedName("Female")
-    FEMALE("female"),
+    FEMALE("female","Female"),
 
     @SerializedName("Nonbinary")
-    NON_BINARY("nonbinary"),
+    NON_BINARY("nonbinary","Non-Binary");
 
+    companion object {
+        val list = entries.map { it.showName }
+    }
 }

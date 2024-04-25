@@ -2,7 +2,8 @@ package com.abhinavdev.animeapp.remote.models.enums
 
 import com.google.gson.annotations.SerializedName
 
-enum class MalAnimeType(
+
+enum class MalMangaType(
     /** Used in the search queries.  */
     val search: String,
     val showName: String,
@@ -10,23 +11,23 @@ enum class MalAnimeType(
     @SerializedName("all")
     ALL("all", "All"),
 
-    @SerializedName("airing")
-    AIRING("airing", "Airing"),
+    @SerializedName("manga")
+    MANGA("manga", "Manga"),
 
-    @SerializedName("upcoming")
-    UPCOMING("upcoming", "Upcoming"),
+    @SerializedName("novel")
+    NOVELS("novels", "Novels"),
 
-    @SerializedName("tv")
-    TV("tv", "Tv"),
+    @SerializedName("one_shot")
+    ONE_SHOTS("oneshots", "One Shots"),
 
-    @SerializedName("ova")
-    OVA("ova", "Ova"),
+    @SerializedName("doujinshi")
+    DOUJIN("doujin", "Doujin"),
 
-    @SerializedName("movie")
-    MOVIE("movie", "Movie"),
+    @SerializedName("manhwa")
+    MANHWA("manhwa", "Manhwa"),
 
-    @SerializedName("special", alternate = ["tv_special"])
-    SPECIAL("special", "Special"),
+    @SerializedName("manhua")
+    MANHUA("manhua", "Manhua"),
 
     @SerializedName("bypopularity")
     BY_POPULARITY("bypopularity", "By Popularity"),
@@ -35,6 +36,6 @@ enum class MalAnimeType(
     FAVORITE("favorite", "Favorite");
 
     companion object {
-        val list = entries.filter { it.showName != "Unknown" }.map { it.showName }
+        val list = entries.map { it.showName }
     }
 }

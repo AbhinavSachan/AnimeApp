@@ -1,7 +1,5 @@
 package com.abhinavdev.animeapp.remote.kit
 
-import com.abhinavdev.animeapp.remote.mal.MalApiService
-import com.abhinavdev.animeapp.remote.mal.OAuthApiService
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.log
@@ -112,7 +110,7 @@ object ApiClient {
     class AuthInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val requestBuilder = chain.request().newBuilder()
-            val token = SettingsPrefs.accessToken?.accessToken
+            val token = SettingsPrefs.getAccessToken()?.accessToken
 
             if (!token.isNullOrEmpty()) {
                 requestBuilder.addHeader("Authorization", "Bearer $token")

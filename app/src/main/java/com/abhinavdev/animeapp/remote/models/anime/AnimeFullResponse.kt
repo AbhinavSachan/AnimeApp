@@ -29,7 +29,6 @@ import kotlinx.parcelize.Parcelize
 
 class AnimeFullResponse : BaseResponse<AnimeData>()
 
-@Parcelize
 data class AnimeData(
     @SerializedName("url") val url: String?,
     @SerializedName("images") val images: ImagesData?,
@@ -66,4 +65,4 @@ data class AnimeData(
     @SerializedName("theme") val opEdTheme: OpEdThemeData?,
     @SerializedName("external") val externalLinks: ArrayList<ExternalData>?,
     @SerializedName("streaming") val streamingLinks: ArrayList<StreamingData>?,
-) : BaseModelWithMal(), Parcelable
+) : BaseModelWithMal()

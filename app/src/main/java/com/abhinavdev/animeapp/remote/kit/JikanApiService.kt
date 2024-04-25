@@ -36,6 +36,9 @@ import com.abhinavdev.animeapp.remote.models.manga.MangaCharacterResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaPicturesResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
+import com.abhinavdev.animeapp.remote.models.users.UserByIdResponse
+import com.abhinavdev.animeapp.remote.models.users.UserFullProfileResponse
+import com.abhinavdev.animeapp.remote.models.users.UsersSearchResponse
 import com.abhinavdev.animeapp.util.Const
 import retrofit2.Response
 import retrofit2.http.GET
@@ -170,7 +173,7 @@ interface JikanApiService {
      *
      * @param page Which page
      * @param limit Item limit per page
-     * @param q Query
+     * @param query Query
      * @param animeType
      * Enum: "tv" "movie" "ova" "special" "ona" "music" "cm" "pv" "tv_special"
      * Available AnimeTypes
@@ -226,7 +229,7 @@ interface JikanApiService {
         @Query("unapproved") unapproved: Boolean,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("q") q: String,
+        @Query("q") query: String,
         @Query("type") animeType: String,
         @Query("score") score: Int,
         @Query("min_score") minScore: Int,
@@ -283,7 +286,7 @@ interface JikanApiService {
     /**
      * @param page Page number
      * @param limit Limit per page
-     * @param q Query
+     * @param query Query
      * @param characterOrderBy
      * Enum: "mal_id" "name" "favorites"
      * Available Character order_by properties
@@ -299,7 +302,7 @@ interface JikanApiService {
     suspend fun getCharactersSearch(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("q") q: String,
+        @Query("q") query: String,
         @Query("order_by") characterOrderBy: String,
         @Query("sort") sortOrder: String,
         @Query("letter") letter: String,
@@ -333,7 +336,7 @@ interface JikanApiService {
     /**
      * @param page page number]
      * @param limit Limit per page
-     * @param q Query
+     * @param query Query
      * @param clubType
      * Enum: "public" "private" "secret"
      * Club Search Query Type
@@ -357,7 +360,7 @@ interface JikanApiService {
     suspend fun getClubSearch(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("q") q: String,
+        @Query("q") query: String,
         @Query("type") clubType: String,
         @Query("category") clubCategory: String,
         @Query("order_by") clubOrderBy: String,
@@ -454,7 +457,7 @@ interface JikanApiService {
      *
      * @param page
      * @param limit
-     * @param q
+     * @param query
      * @param mangaType
      * Enum: "manga" "novel" "lightnovel" "oneshot" "doujin" "manhwa" "manhua"
      * Available Manga types
@@ -504,7 +507,7 @@ interface JikanApiService {
         @Path("unapproved") unapproved: Boolean,
         @Path("page") page: Int,
         @Path("limit") limit: Int,
-        @Path("q") q: String,
+        @Path("q") query: String,
         @Path("type") mangaType: String,
         @Path("score") score: Int,
         @Path("min_score") minScore: Int,
@@ -640,4 +643,40 @@ interface JikanApiService {
 
     //endregion
 
+    //region Users
+
+    @GET(Const.Jikan.USERS + "/" + Const.Jikan.USER_BY_ID + "/{id}")
+    suspend fun getUserById(
+        @Path("id") userId: Int,
+    ): Response<UserByIdResponse>
+
+    @GET(Const.Jikan.USERS + "/{username}/" + Const.Jikan.FULL)
+    suspend fun getUserFullProfile(
+        @Path("username") userName: String,
+    ): Response<UserFullProfileResponse>
+
+    /**
+     * @param page
+     * @param limit
+     * @param query
+     * @param gender
+     * Enum: "any" "male" "female" "nonbinary" (UserGender)
+     * Users Search Query Gender.
+     *
+     * @param location
+     * @param maxAge
+     * @param minAge
+     */
+    @GET(Const.Jikan.USERS)
+    suspend fun getUsersSearch(
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("q") query: String,
+        @Query("gender") gender: String,
+        @Query("location") location: String,
+        @Query("maxAge") maxAge: Int,
+        @Query("minAge") minAge: Int,
+    ): Response<UsersSearchResponse>
+
+    //endregion
 }

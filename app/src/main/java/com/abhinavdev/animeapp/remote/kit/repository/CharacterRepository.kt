@@ -39,7 +39,7 @@ interface CharacterRepository {
     suspend fun getCharactersSearch(
         page: Int,
         limit: Int,
-        q: String,
+        query: String,
         orderBy: CharacterOrderBy,
         sort: SortOrder,
         letter: String,

@@ -41,10 +41,12 @@ class AnimeVerticalCardAdapter(
                 val rank = (adapterPosition + 1).toString()
                 tvRanking.text = rank
 
-                tvType.text = item.type?.showName ?: AnimeType.UNKNOWN.showName
+                tvType.text = item.type?.showName.takeIf { !it.isNullOrBlank() } ?: AnimeType.UNKNOWN.showName
 
-                val userPreferredType = SettingsPrefs.preferredTitleType
-                val animeName = item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
+
+                val userPreferredType = SettingsPrefs.getPreferredTitleType()
+                val animeName =
+                    item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
                 vtvAnimeName.text = animeName
 
                 when (type) {
@@ -64,6 +66,17 @@ class AnimeVerticalCardAdapter(
                     MultiApiCallType.TopUpcoming -> {
                         tvRanking.hide()
                         tvRating.hide()
+                        tvType.show()
+                    }
+
+                    MultiApiCallType.TopRecommended -> {
+                        tvRanking.hide()
+                        tvRating.show()
+                        tvType.show()
+                    }
+                    MultiApiCallType.TopRanked -> {
+                        tvRanking.show()
+                        tvRating.show()
                         tvType.show()
                     }
                 }

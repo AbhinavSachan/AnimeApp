@@ -5,12 +5,15 @@
     <color name="transparent">#00000000</color>
     <color name="whiteA15">#26FFFFFF</color>
     <color name="whiteA17">#2CFFFFFF</color>
+    <color name="whiteA30">#4DFFFFFF</color>
     <color name="whiteA60">#99FFFFFF</color>
     <color name="whiteA80">#CCFFFFFF</color>
     <color name="whiteA50">#80FFFFFF</color>
     <color name="blackA5">#0D000000</color>
     <color name="blackA30">#4D000000</color>
     <color name="blackA70">#B3000000</color>
+    <color name="blackA80">#CC000000</color>
+    <color name="blackA90">#E6000000</color>
     <color name="blackA40">#66000000</color>
     <color name="blackA15">#26000000</color>
     <color name="blackA10">#1A000000</color>
@@ -35,7 +38,6 @@
     <color name="bgGrey">#7B7B7B</color>
     <color name="bgLightGrey">#D3D3D3</color>
     <color name="bgRed">#FF0000</color>
-    <color name="fontRed">#CC3131</color>
     <color name="bgBlue">#6B53F9</color>
     <color name="bgYellow">#FFC244</color>
     <color name="bgLightBlue">#F6EEF7</color>

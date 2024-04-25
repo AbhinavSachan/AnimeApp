@@ -32,7 +32,7 @@ interface ClubRepository {
     suspend fun getClubSearch(
         page: Int,
         limit: Int,
-        q: String,
+        query: String,
         type: ClubType,
         category: ClubCategory,
         orderBy: ClubOrderBy,

@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseActivity
@@ -16,8 +16,10 @@ import com.abhinavdev.animeapp.ui.main.adapters.MainFragmentAdapter
 import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
+import com.abhinavdev.animeapp.util.statusbar.setStatusBarIconsDark
 import com.abhinavdev.animeapp.util.statusbar.setTransparentForWindow
 import com.google.android.material.navigation.NavigationBarView
 
@@ -41,7 +43,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         setContentView(binding.root)
         setTransparentForWindow()
 
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = createViewModel(MainViewModel::class.java)
 
         checkLoginIntent(intent)
         init()
@@ -89,19 +91,47 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 currentPageType = rootFragmentTypes[position]
-                setUpStatusBarColor(position)
-                updateSelectedItemId(position)
+                setUpStatusBarColor()
+                updateSelectedItemId()
             }
         })
     }
 
     private fun setObservers() {
+        val accessToken = SettingsPrefs.getAccessToken()?.accessToken
+        SettingsPrefs.onAccessTokenChange {
+            if (it?.accessToken != null && it.accessToken != accessToken){
+                getProfile()
+            }
+        }
         viewModel.getAccessTokenResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let {
-                            SettingsPrefs.accessToken = it
+                            SettingsPrefs.setAccessToken(it)
+                        }
+                        isLoaderVisible(false)
+                    }
+
+                    is Resource.Error -> {
+                        isLoaderVisible(false)
+                        response.message?.let { message -> toast(message) }
+                    }
+
+                    is Resource.Loading -> {
+                        isLoaderVisible(true)
+                    }
+                }
+            }
+        }
+        viewModel.getMalProfileResponse.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.let {
+                            SettingsPrefs.setMalProfile(it)
+                            SettingsPrefs.setIsAuthenticated(true)
                         }
                         isLoaderVisible(false)
                     }
@@ -119,28 +149,25 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         }
     }
 
-    private fun setUpStatusBarColor(position: Int) {
-//        statusBarStartColor = if (position == MainFragmentAdapter.HOME) {
-//            val endColor = applyColor(R.color.white)
-//            setStatusBarIconsDark(DesignColors.Util.isDarkColor(endColor))
-//            animateStatusBarColor(statusBarStartColor, endColor)
-//            endColor
-//        } else {
-//            val endColor = applyColor(R.color.secondary)
-//            setStatusBarIconsDark(DesignColors.Util.isDarkColor(endColor))
-//            animateStatusBarColor(statusBarStartColor, endColor)
-//            endColor
-//        }
+    private fun getProfile() {
+        viewModel.getProfile()
+    }
+
+    private fun setUpStatusBarColor() {
+        setStatusBarIconsDark(currentPageType != MainFragmentAdapter.PageType.MORE)
     }
 
     @SuppressLint("MissingSuperCall")
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
             finish()
+        } else if (fragment != null) {
+            supportFragmentManager.popBackStackImmediate()
         } else {
             //if its not home page then back pressing will bring us on home page
-            navigateToFragment(MainFragmentAdapter.PageType.ANIME)
+            navigateToPosition(MainFragmentAdapter.PageType.ANIME)
         }
     }
 
@@ -150,14 +177,14 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.navigation_anime -> navigateToFragment(MainFragmentAdapter.PageType.ANIME)
-            R.id.navigation_manga -> navigateToFragment(MainFragmentAdapter.PageType.MANGA)
-            R.id.navigation_more -> navigateToFragment(MainFragmentAdapter.PageType.MORE)
+            R.id.navigation_anime -> navigateToPosition(MainFragmentAdapter.PageType.ANIME)
+            R.id.navigation_manga -> navigateToPosition(MainFragmentAdapter.PageType.MANGA)
+            R.id.navigation_more -> navigateToPosition(MainFragmentAdapter.PageType.MORE)
             else -> false
         }
     }
 
-    private fun navigateToFragment(type: MainFragmentAdapter.PageType): Boolean {
+    private fun navigateToPosition(type: MainFragmentAdapter.PageType): Boolean {
         if (currentPageType != type) {
             val position = rootFragmentTypes.indexOf(type)
             binding.viewPager.setCurrentItem(position, false)
@@ -165,9 +192,13 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         return true
     }
 
-    private fun updateSelectedItemId(position: Int) {
+    fun navigateToFragment(fragment: Fragment) {
+        addFragment(fragment, R.id.nav_host_fragment, true)
+    }
 
-        val selectedItemId = when (rootFragmentTypes[position]) {
+    private fun updateSelectedItemId() {
+
+        val selectedItemId = when (currentPageType) {
             MainFragmentAdapter.PageType.ANIME -> R.id.navigation_anime
             MainFragmentAdapter.PageType.MANGA -> R.id.navigation_manga
             MainFragmentAdapter.PageType.MORE -> R.id.navigation_more
@@ -175,5 +206,9 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
 
         // Update the bottom navigation bar
         binding.bottomNavBar.selectedItemId = selectedItemId
+    }
+
+    fun logout() {
+        SettingsPrefs.clearMalCredentials()
     }
 }

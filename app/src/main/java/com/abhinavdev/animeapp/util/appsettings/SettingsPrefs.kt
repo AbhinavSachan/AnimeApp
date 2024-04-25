@@ -19,12 +19,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-object AuthenticationService {
+object SettingsPrefs {
     //storage
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings_authentication_service")
     private val coroutine = CoroutineScope(Dispatchers.IO)
 
-    private val context = ApplicationClass.getInstance()
+    private val context get() = ApplicationClass.getInstance()
 
     // Keys
     private val SFW_ENABLE_KEY = booleanPreferencesKey("settings_sfw_enable_key")
@@ -39,9 +39,11 @@ object AuthenticationService {
     private val Context.isAuthenticated: Flow<Boolean>
         get() = dataStore.data.map { preferences -> preferences[IS_AUTHENTICATED_KEY] ?: false }
 
+    fun getIsAuthenticated() = runBlocking { context.isAuthenticated.firstOrNull() ?: false }
+
     fun onAuthenticationChange(onValueChange: (Boolean) -> Unit) {
         coroutine.launch {
-            context?.isAuthenticated?.collect {
+            context.isAuthenticated.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(it)
                 }
@@ -49,9 +51,9 @@ object AuthenticationService {
         }
     }
 
-    fun setIsAuthenticated(context: Context?, value: Boolean) {
+    fun setIsAuthenticated(value: Boolean) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[IS_AUTHENTICATED_KEY] = value
             }
         }
@@ -60,12 +62,11 @@ object AuthenticationService {
     private val Context.isSfwEnabled: Flow<Boolean>
         get() = dataStore.data.map { preferences -> preferences[SFW_ENABLE_KEY] ?: true }
 
-    fun getSfwEnabled(context: Context?) =
-        runBlocking { context?.isSfwEnabled?.firstOrNull() ?: true }
+    fun getSfwEnabled() = runBlocking { context.isSfwEnabled.firstOrNull() ?: true }
 
-    fun onSfwEnabledChange(context: Context?, onValueChange: (Boolean) -> Unit) {
+    fun onSfwEnabledChange(onValueChange: (Boolean) -> Unit) {
         coroutine.launch {
-            context?.isSfwEnabled?.collect {
+            context.isSfwEnabled.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(it)
                 }
@@ -73,9 +74,9 @@ object AuthenticationService {
         }
     }
 
-    fun setIsSfwEnabled(context: Context?, value: Boolean) {
+    fun setIsSfwEnabled(value: Boolean) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[SFW_ENABLE_KEY] = value
             }
         }
@@ -86,12 +87,11 @@ object AuthenticationService {
             preferences[APP_THEME_KEY]
         }
 
-    fun getAppTheme(context: Context?) =
-        runBlocking { AppTheme.valueOfOrDefault(context?.appTheme?.firstOrNull()) }
+    fun getAppTheme() = runBlocking { AppTheme.valueOfOrDefault(context.appTheme.firstOrNull()) }
 
-    fun onAppThemeChange(context: Context?, onValueChange: (AppTheme) -> Unit) {
+    fun onAppThemeChange(onValueChange: (AppTheme) -> Unit) {
         coroutine.launch {
-            context?.appTheme?.collect {
+            context.appTheme.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(AppTheme.valueOfOrDefault(it))
                 }
@@ -99,9 +99,9 @@ object AuthenticationService {
         }
     }
 
-    fun setAppTheme(context: Context?, value: AppTheme) {
+    fun setAppTheme(value: AppTheme) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[APP_THEME_KEY] = value.name
             }
         }
@@ -112,12 +112,12 @@ object AuthenticationService {
             preferences[PREFERRED_TITLE_TYPE_KEY]
         }
 
-    fun getPreferredTitleType(context: Context?) =
-        runBlocking { AppTitleType.valueOfOrDefault(context?.preferredTitleType?.firstOrNull()) }
+    fun getPreferredTitleType() =
+        runBlocking { AppTitleType.valueOfOrDefault(context.preferredTitleType.firstOrNull()) }
 
-    fun onPreferredTitleTypeChange(context: Context?, onValueChange: (AppTitleType) -> Unit) {
+    fun onPreferredTitleTypeChange(onValueChange: (AppTitleType) -> Unit) {
         coroutine.launch {
-            context?.preferredTitleType?.collect {
+            context.preferredTitleType.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(AppTitleType.valueOfOrDefault(it))
                 }
@@ -125,9 +125,9 @@ object AuthenticationService {
         }
     }
 
-    fun setPreferredTitleType(context: Context?, value: AppTitleType) {
+    fun setPreferredTitleType(value: AppTitleType) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[PREFERRED_TITLE_TYPE_KEY] = value.search
             }
         }
@@ -138,12 +138,12 @@ object AuthenticationService {
             preferences[APP_LANGUAGE_KEY]
         }
 
-    fun getAppLanguage(context: Context?) =
-        runBlocking { AppLanguage.valueOfOrDefault(context?.appLanguage?.firstOrNull()) }
+    fun getAppLanguage() =
+        runBlocking { AppLanguage.valueOfOrDefault(context.appLanguage.firstOrNull()) }
 
-    fun onAppLanguageChange(context: Context?, onValueChange: (AppLanguage) -> Unit) {
+    fun onAppLanguageChange(onValueChange: (AppLanguage) -> Unit) {
         coroutine.launch {
-            context?.appLanguage?.collect {
+            context.appLanguage.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(AppLanguage.valueOfOrDefault(it))
                 }
@@ -151,9 +151,9 @@ object AuthenticationService {
         }
     }
 
-    fun setAppLanguage(context: Context?, value: AppLanguage) {
+    fun setAppLanguage(value: AppLanguage) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[APP_LANGUAGE_KEY] = value.search
             }
         }
@@ -164,15 +164,15 @@ object AuthenticationService {
             preferences[ACCESS_TOKEN_KEY]
         }
 
-    fun getAccessToken(context: Context?): AccessToken? = runBlocking {
+    fun getAccessToken(): AccessToken? = runBlocking {
         Gson().fromJson(
-            context?.accessToken?.firstOrNull(), AccessToken::class.java
+            context.accessToken.firstOrNull(), AccessToken::class.java
         )
     }
 
-    fun onAccessTokenChange(context: Context?, onValueChange: (AccessToken) -> Unit) {
+    fun onAccessTokenChange(onValueChange: (AccessToken?) -> Unit) {
         coroutine.launch {
-            context?.accessToken?.collect {
+            context.accessToken.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(Gson().fromJson(it, AccessToken::class.java))
                 }
@@ -180,9 +180,9 @@ object AuthenticationService {
         }
     }
 
-    fun setAccessToken(context: Context?, value: AccessToken) {
+    fun setAccessToken(value: AccessToken) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[ACCESS_TOKEN_KEY] = Gson().toJson(value)
             }
         }
@@ -193,15 +193,15 @@ object AuthenticationService {
             preferences[MAL_PROFILE_KEY]
         }
 
-    fun getMalProfile(context: Context?): MalProfileResponse? = runBlocking {
+    fun getMalProfile(): MalProfileResponse? = runBlocking {
         Gson().fromJson(
-            context?.malProfile?.firstOrNull(), MalProfileResponse::class.java
+            context.malProfile.firstOrNull(), MalProfileResponse::class.java
         )
     }
 
-    fun onMalProfileChange(context: Context?, onValueChange: (MalProfileResponse) -> Unit) {
+    fun onMalProfileChange(onValueChange: (MalProfileResponse?) -> Unit) {
         coroutine.launch {
-            context?.malProfile?.collect {
+            context.malProfile.collect {
                 coroutine.launch(Dispatchers.Main) {
                     onValueChange(Gson().fromJson(it, MalProfileResponse::class.java))
                 }
@@ -209,22 +209,23 @@ object AuthenticationService {
         }
     }
 
-    fun setMalProfile(context: Context?, value: MalProfileResponse) {
+    fun setMalProfile(value: MalProfileResponse) {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences[MAL_PROFILE_KEY] = Gson().toJson(value)
             }
         }
     }
 
-    fun clearMalCredentials(context: Context?) {
-        context?.clearKey(MAL_PROFILE_KEY)
-        context?.clearKey(ACCESS_TOKEN_KEY)
+    fun clearMalCredentials() {
+        context.clearKey(ACCESS_TOKEN_KEY)
+        context.clearKey(MAL_PROFILE_KEY)
+        context.clearKey(IS_AUTHENTICATED_KEY)
     }
 
-    private fun clearAll(context: Context?) {
+    private fun clearAll() {
         coroutine.launch {
-            context?.dataStore?.edit { preferences ->
+            context.dataStore.edit { preferences ->
                 preferences.clear()
             }
         }

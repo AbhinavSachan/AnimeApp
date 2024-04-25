@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.remote.mal
+package com.abhinavdev.animeapp.remote.kit
 
 import com.abhinavdev.animeapp.remote.models.malmodels.AccessToken
 import retrofit2.Response

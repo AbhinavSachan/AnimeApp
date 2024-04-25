@@ -2,21 +2,25 @@ package com.abhinavdev.animeapp.remote.models.malmodels
 
 import com.abhinavdev.animeapp.remote.models.BaseModel
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.google.gson.annotations.SerializedName
 
 
 class MalMyAnimeListResponse : MalBaseResponse<ArrayList<MalAnimeData>>()
 
 data class MalAnimeData(
-    @SerializedName("node") val node: Node?,
+    @SerializedName("node") val node: MalAnimeNode?,
     @SerializedName("synopsis") val synopsis: String?,
-    @SerializedName("list_status") val listStatus: AnimeListStatus?
 ) : BaseModel()
 
-data class Node(
+data class MalAnimeNode(
     @SerializedName("id") val id: Int?,
     @SerializedName("title") val title: String?,
-    @SerializedName("main_picture") val mainPicture: MainPicture?
+    @SerializedName("main_picture") val mainPicture: MainPicture?,
+    @SerializedName("alternative_titles") val alternativeTitles: MalAlternativeTitles?,
+    @SerializedName("my_list_status") val myListStatus: AnimeListStatus?,
+    @SerializedName("media_type") val mediaType: MalAnimeType?,
+    @SerializedName("mean") val mean: Float?,
 ) : BaseModel()
 
 data class MainPicture(
@@ -41,5 +45,10 @@ data class AnimeListStatus(
 
 data class Paging(
     @SerializedName("previous") val previous: String?, @SerializedName("next") val next: String?
+) : BaseModel()
+
+data class MalAlternativeTitles(
+    @SerializedName("en") val en: String?,
+    @SerializedName("ja") val ja: String?
 ) : BaseModel()
 

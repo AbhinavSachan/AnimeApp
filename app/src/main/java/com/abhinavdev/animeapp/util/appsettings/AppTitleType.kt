@@ -11,15 +11,7 @@ enum class AppTitleType(val search: String, val showName: String) {
     ENGLISH("english", "English");
 
     companion object {
-        fun valueOfOrDefault(value: String?) = try {
-            if (value != null) {
-                valueOf(value)
-            } else {
-                ROMAJI
-            }
-        } catch (e: IllegalArgumentException) {
-            ROMAJI
-        }
+        fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: ROMAJI
 
         val titleTypeList = arrayListOf(ROMAJI.showName, JAPANESE.showName, ENGLISH.showName)
     }

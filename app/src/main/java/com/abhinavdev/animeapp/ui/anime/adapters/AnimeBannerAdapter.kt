@@ -32,7 +32,7 @@ class AnimeBannerAdapter(
                     "#${(position + 1)} ${tvSpotlight.context.getString(R.string.msg_spotlight)}"
                 tvSpotlight.text = spotlight
 
-                val userPreferredType = SettingsPrefs.preferredTitleType
+                val userPreferredType = SettingsPrefs.getPreferredTitleType()
                 val animeName =
                     item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
                 tvName.text = animeName

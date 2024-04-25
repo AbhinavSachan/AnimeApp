@@ -4,11 +4,14 @@ import androidx.annotation.IntRange
 import com.abhinavdev.animeapp.remote.kit.ApiClient
 import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.enums.MalSortType
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
+import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MangaListStatus
 import retrofit2.Response
 
@@ -95,5 +98,27 @@ class MalRepositoryImpl : MalRepository {
         status: MalMangaStatus, sort: MalSortType, limit: Int, offset: Int, fields: String
     ): Response<MalMyMangaListResponse> {
         return apiService.getMyMangaList(status.search, sort.search, limit, offset, fields)
+    }
+
+    override suspend fun getProfile(): Response<MalProfileResponse> {
+        return apiService.getProfile()
+    }
+
+    override suspend fun getRecommendedAnime(
+        limit: Int, offset: Int, fields: String
+    ): Response<MalMyAnimeListResponse> {
+        return apiService.getRecommendedAnime(limit, offset, fields)
+    }
+
+    override suspend fun getAnimeRanking(
+        rankingType: MalAnimeType, limit: Int, offset: Int, fields: String
+    ): Response<MalMyAnimeListResponse> {
+        return apiService.getAnimeRanking(rankingType.search, limit, offset, fields)
+    }
+
+    override suspend fun getMangaRanking(
+        rankingType: MalMangaType, limit: Int, offset: Int, fields: String
+    ): Response<MalMyMangaListResponse> {
+        return apiService.getMangaRanking(rankingType.search, limit, offset, fields)
     }
 }

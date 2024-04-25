@@ -53,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/cb_use_external_browser"
+        android:id="@+id/checkbox"
         style="@style/CustomCheckBoxStyle"
         android:layout_marginTop="@dimen/_8sdp"
         android:text="@string/msg_use_external_browser"
@@ -66,41 +66,26 @@
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:barrierMargin="@dimen/_8sdp"
-        app:constraint_referenced_ids="cb_use_external_browser" />
+        app:constraint_referenced_ids="checkbox" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/btn_cancel"
-        style="@style/CustomPrimaryButtonLL.Bordered"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_negative"
+        style="@style/CustomPrimaryButton.Bordered"
         android:layout_width="0dp"
-        android:layout_marginEnd="@dimen/_8sdp"
         app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
-        app:layout_constraintEnd_toStartOf="@id/btn_login"
+        app:layout_constraintEnd_toStartOf="@id/btn_positive"
+        android:text="@string/msg_cancel"
         app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/barrier_description">
+        app:layout_constraintTop_toBottomOf="@id/barrier_description"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/TextStyleFont500"
-            android:text="@string/msg_cancel"
-            android:textSize="@dimen/text_size_13" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/btn_login"
-        style="@style/CustomAccentButtonLL"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_positive"
+        style="@style/CustomAccentButton"
         android:layout_width="0dp"
-        android:layout_marginStart="@dimen/_8sdp"
         app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toEndOf="@id/btn_cancel"
-        app:layout_constraintTop_toBottomOf="@id/barrier_description">
-
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/TextStyleFont500"
-            android:text="@string/msg_login"
-            android:textColor="@color/onAccent"
-            android:textSize="@dimen/text_size_13" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:text="@string/msg_login"
+        app:layout_constraintStart_toEndOf="@id/btn_negative"
+        app:layout_constraintTop_toBottomOf="@id/barrier_description"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

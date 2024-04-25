@@ -10,17 +10,23 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.kit.fetchData
 import com.abhinavdev.animeapp.remote.kit.fetchMultiData
 import com.abhinavdev.animeapp.remote.kit.repository.AnimeRepository
+import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
 import com.abhinavdev.animeapp.remote.kit.sources.AnimeRepositoryImpl
+import com.abhinavdev.animeapp.remote.kit.sources.MalRepositoryImpl
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
 import com.abhinavdev.animeapp.remote.models.anime.AnimeSearchResponse
 import com.abhinavdev.animeapp.remote.models.enums.AgeRating
 import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
+import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import kotlinx.coroutines.launch
 
 class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: AnimeRepository = AnimeRepositoryImpl()
+    private val malRepository: MalRepository = MalRepositoryImpl()
 
     private val _animeFullResponse = MutableLiveData<Event<Resource<AnimeFullResponse>>>()
     val animeFullResponse: LiveData<Event<Resource<AnimeFullResponse>>> = _animeFullResponse
@@ -47,49 +53,69 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     val animeAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<AnimeSearchResponse>>>> =
         _animeAllApiResponse
 
-    fun getAllAnimeData(sfw: Boolean) = viewModelScope.launch {
-        val apiCalls = mapOf(
-            MultiApiCallType.TopAiring to suspend {
-                repository.getTopAnime(
-                    AnimeType.TV,
-                    AnimeFilter.AIRING,
-                    AgeRating.NONE,
-                    sfw,
-                    1,
-                    10
-                )
-            },
-            MultiApiCallType.TopPopular to suspend {
-                repository.getTopAnime(
-                    AnimeType.TV,
-                    AnimeFilter.BY_POPULARITY,
-                    AgeRating.NONE,
-                    sfw,
-                    1,
-                    10
-                )
-            },
-            MultiApiCallType.TopFavourite to suspend {
-                repository.getTopAnime(
-                    AnimeType.TV,
-                    AnimeFilter.FAVORITE,
-                    AgeRating.NONE,
-                    sfw,
-                    1,
-                    10
-                )
-            },
-            MultiApiCallType.TopUpcoming to suspend {
-                repository.getTopAnime(
-                    AnimeType.ALL,
-                    AnimeFilter.UPCOMING,
-                    AgeRating.NONE,
-                    sfw,
-                    1,
-                    10
+    fun getAllAnimeData() = viewModelScope.launch {
+        val animeType = AnimeType.TV
+        val ageRating = AgeRating.NONE
+        val page = 1
+        val limit = 10
+        val sfw = SettingsPrefs.getSfwEnabled()
+        val isAuthenticated = SettingsPrefs.getIsAuthenticated()
+
+        val apiCalls = mutableMapOf(MultiApiCallType.TopAiring to suspend {
+            repository.getTopAnime(
+                animeType, AnimeFilter.AIRING, ageRating, sfw, page, limit
+            )
+        }, MultiApiCallType.TopPopular to suspend {
+            repository.getTopAnime(
+                animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
+            )
+        }, MultiApiCallType.TopFavourite to suspend {
+            repository.getTopAnime(
+                animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
+            )
+        }, MultiApiCallType.TopUpcoming to suspend {
+            repository.getTopAnime(
+                animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
+            )
+        })
+        if (isAuthenticated) {
+            val offset = 0
+            val fields = "alternative_titles,media_type,mean"
+            apiCalls[MultiApiCallType.TopRecommended] to suspend {
+                malRepository.getRecommendedAnime(
+                    limit, offset, fields
                 )
             }
-        )
+            apiCalls[MultiApiCallType.TopRanked] to suspend {
+                malRepository.getAnimeRanking(
+                    MalAnimeType.ALL, limit, offset, fields
+                )
+            }
+        }
         _animeAllApiResponse.fetchMultiData(getApplication(), apiCalls)
+    }
+
+    private val _animeAuthenticatedApiResponse =
+        MutableLiveData<Event<Map<MultiApiCallType, Resource<MalMyAnimeListResponse>>>>()
+    val animeAuthenticatedApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<MalMyAnimeListResponse>>>> =
+        _animeAuthenticatedApiResponse
+
+
+    fun getAuthenticatedAnimeData() = viewModelScope.launch {
+        val limit = 10
+        val offset = 0
+        val fields = "alternative_titles,media_type,mean"
+
+        val apiCalls = mutableMapOf(MultiApiCallType.TopRecommended to suspend {
+            malRepository.getRecommendedAnime(
+                limit, offset, fields
+            )
+        }, MultiApiCallType.TopRanked to suspend {
+            malRepository.getAnimeRanking(
+                MalAnimeType.ALL, limit, offset, fields
+            )
+        })
+
+        _animeAuthenticatedApiResponse.fetchMultiData(getApplication(), apiCalls)
     }
 }

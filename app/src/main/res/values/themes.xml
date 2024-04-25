@@ -94,6 +94,10 @@
         <item name="android:clipToPadding">false</item>
     </style>
 
+    <style name="TopPaddingStyle">
+        <item name="android:paddingTop">30dp</item>
+    </style>
+
     <style name="RootLayoutStyle" parent="BaseLayoutAttributes">
         <item name="android:background">@color/primary</item>
     </style>
@@ -142,18 +146,48 @@
         <item name="android:focusable">true</item>
         <item name="android:visibility">visible</item>
         <item name="android:paddingStart">@dimen/_12sdp</item>
+        <item name="android:foreground">@drawable/bg_ripple_effect_accent_rounded</item>
         <item name="android:elevation">@dimen/_3sdp</item>
         <item name="android:paddingTop">@dimen/_6sdp</item>
         <item name="android:paddingEnd">@dimen/_12sdp</item>
         <item name="android:paddingBottom">@dimen/_6sdp</item>
     </style>
 
+    <style name="CustomPrimaryButton" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:elevation">@dimen/_3sdp</item>
+        <item name="android:insetTop">@dimen/_8sdp</item>
+        <item name="android:insetBottom">@dimen/_8sdp</item>
+        <item name="android:insetLeft">@dimen/_8sdp</item>
+        <item name="android:insetRight">@dimen/_8sdp</item>
+        <item name="android:paddingTop">@dimen/_6sdp</item>
+        <item name="android:paddingBottom">@dimen/_6sdp</item>
+        <item name="android:paddingStart">@dimen/_8sdp</item>
+        <item name="android:paddingEnd">@dimen/_8sdp</item>
+        <item name="android:theme">@style/FontMedium500</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:textColor">@color/onPrimary</item>
+    </style>
+
     <style name="CustomAccentButtonLL" parent="CustomPrimaryButtonLL">
         <item name="android:background">@drawable/bg_accent_button</item>
+        <item name="android:foreground">@drawable/bg_ripple_effect_white_rounded</item>
     </style>
 
     <style name="CustomPrimaryButtonLL.Bordered" parent="CustomPrimaryButtonLL">
         <item name="android:background">@drawable/bg_primary_button_bor_accent</item>
+    </style>
+
+    <style name="CustomAccentButton" parent="CustomPrimaryButton">
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:textColor">@color/onAccent</item>
+    </style>
+
+    <style name="CustomPrimaryButton.Bordered" parent="CustomPrimaryButton">
+        <item name="strokeWidth">@dimen/_1sdp</item>
+        <item name="strokeColor">@color/accent</item>
     </style>
 
     <style name="DialogBaseStyle">
@@ -193,6 +227,52 @@
         <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
         <item name="tabSelectedTextColor">@color/primary</item>
         <item name="tabTextColor">@color/muted7_7B7A7A</item>
+    </style>
+
+    <!--    more page styles-->
+
+    <style name="MoreItemLLStyle">
+        <item name="android:layout_height">@dimen/_50sdp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingStart">@dimen/_16sdp</item>
+        <item name="android:paddingEnd">@dimen/_11sdp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:foreground">@drawable/bg_ripple_effect_accent</item>
+    </style>
+
+    <style name="MoreEndImageView">
+        <item name="android:layout_width">@dimen/_10sdp</item>
+        <item name="android:layout_height">@dimen/_10sdp</item>
+    </style>
+
+    <style name="MoreImageView">
+        <item name="android:layout_width">@dimen/_28sdp</item>
+        <item name="android:layout_height">@dimen/_28sdp</item>
+        <item name="android:padding">@dimen/_6sdp</item>
+    </style>
+
+    <style name="MoreTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/_11sdp</item>
+        <item name="android:textColor">@color/fontTextBlack</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:theme">@style/FontRegular400</item>
+    </style>
+
+    <style name="MoreInsideView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="MoreDLView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@drawable/bg_dash_line</item>
     </style>
 
     <!--    Font styles-->

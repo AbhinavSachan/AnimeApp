@@ -117,7 +117,7 @@ interface AnimeRepository {
         unapproved: Boolean,
         page: Int,
         limit: Int,
-        q: String,
+        query: String,
         type: AnimeType,
         score: Int,
         minScore: Int,

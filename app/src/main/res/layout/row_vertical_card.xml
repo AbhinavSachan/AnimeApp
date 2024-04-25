@@ -67,6 +67,24 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
+            <View
+                android:id="@+id/view_top_right_fade"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_black_trans_fade_top_right"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible" />
+
+            <View
+                android:id="@+id/view_bottom_left_fade"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_black_trans_fade_bottom_left"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:visibility="visible" />
+
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_rating"
                 style="@style/TextStyleFont500"
@@ -80,15 +98,6 @@
                 app:layout_constraintStart_toStartOf="@id/guide_start"
                 app:layout_constraintTop_toTopOf="@id/guide_top"
                 tools:text="9.8" />
-
-            <View
-                android:id="@+id/view_top_right_fade"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_black_trans_fade_top_right"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:visibility="visible" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_type"
@@ -104,21 +113,12 @@
                 app:layout_constraintTop_toTopOf="@id/guide_top"
                 tools:text="Movie" />
 
-            <View
-                android:id="@+id/view_bottom_left_fade"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_black_trans_fade_bottom_left"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:visibility="visible" />
-
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_ranking"
                 style="@style/TextStyleFont800"
                 android:textColor="@color/fontTextWhite"
-                android:textSize="@dimen/text_size_28"
+                android:textSize="@dimen/text_size_26"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guide_start"

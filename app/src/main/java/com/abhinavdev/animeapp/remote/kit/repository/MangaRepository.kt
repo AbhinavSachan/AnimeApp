@@ -61,7 +61,7 @@ interface MangaRepository {
         unapproved: Boolean,
         page: Int,
         limit: Int,
-        q: String,
+        query: String,
         type: MangaType,
         score: Int,
         minScore: Int,

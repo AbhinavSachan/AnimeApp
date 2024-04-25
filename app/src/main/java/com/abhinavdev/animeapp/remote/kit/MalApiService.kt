@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.remote.mal
+package com.abhinavdev.animeapp.remote.kit
 
 import androidx.annotation.IntRange
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
@@ -41,6 +41,9 @@ interface MalApiService {
         @Path("anime_id") animeId: Int
     ): Response<Any>
 
+    /**
+     * fields = "my_list_status{priority,comments},alternative_titles,media_type,mean"
+     */
     @GET(Const.Mal.USERS + "/@me/" + Const.Mal.ANIME_LIST)
     suspend fun getMyAnimeList(
         @Query("status") status: String,
@@ -73,6 +76,9 @@ interface MalApiService {
         @Path("manga_id") mangaId: Int
     ): Response<Any>
 
+    /**
+     * fields = "my_list_status{priority,comments},alternative_titles,media_type,mean"
+     */
     @GET(Const.Mal.USERS + "/@me/" + Const.Mal.MANGA_LIST)
     suspend fun getMyMangaList(
         @Query("status") status: String,
@@ -84,5 +90,28 @@ interface MalApiService {
 
     @GET(Const.Mal.USERS + "/@me")
     suspend fun getProfile(): Response<MalProfileResponse>
+
+    @GET(Const.Mal.ANIME + "/" + Const.Mal.SUGGESTIONS)
+    suspend fun getRecommendedAnime(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("fields") fields: String,
+    ): Response<MalMyAnimeListResponse>
+
+    @GET(Const.Mal.ANIME + "/" + Const.Mal.RANKING)
+    suspend fun getAnimeRanking(
+        @Query("ranking_type") rankingType: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("fields") fields: String,
+    ): Response<MalMyAnimeListResponse>
+
+    @GET(Const.Mal.MANGA + "/" + Const.Mal.RANKING)
+    suspend fun getMangaRanking(
+        @Query("ranking_type") rankingType: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("fields") fields: String,
+    ): Response<MalMyMangaListResponse>
 
 }

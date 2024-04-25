@@ -2,11 +2,14 @@ package com.abhinavdev.animeapp.remote.kit.repository
 
 import androidx.annotation.IntRange
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.enums.MalSortType
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
+import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MangaListStatus
 import retrofit2.Response
 
@@ -65,4 +68,28 @@ interface MalRepository {
         offset: Int,
         fields: String,
     ): Response<MalMyMangaListResponse>
+
+    suspend fun getProfile(): Response<MalProfileResponse>
+
+
+    suspend fun getRecommendedAnime(
+        limit: Int,
+        offset: Int,
+        fields: String,
+    ): Response<MalMyAnimeListResponse>
+
+    suspend fun getAnimeRanking(
+        rankingType: MalAnimeType,
+        limit: Int,
+        offset: Int,
+        fields: String,
+    ): Response<MalMyAnimeListResponse>
+
+    suspend fun getMangaRanking(
+        rankingType: MalMangaType,
+        limit: Int,
+        offset: Int,
+        fields: String,
+    ): Response<MalMyMangaListResponse>
+
 }
