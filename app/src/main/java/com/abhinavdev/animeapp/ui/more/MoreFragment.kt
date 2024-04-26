@@ -14,6 +14,7 @@ import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.LoginUtil.showLoginDialog
 import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
 import com.abhinavdev.animeapp.util.extension.hide
+import com.abhinavdev.animeapp.util.extension.nonClickable
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -58,7 +59,17 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initComponents() {
+        //setting clickable from xml is not working
+        binding.switchSfw.nonClickable()
+        val enableSfw = SettingsPrefs.getSfwEnabled()
+        val language = SettingsPrefs.getAppLanguage().showName
+        val titleType = SettingsPrefs.getPreferredTitleType().showName
+        val theme = SettingsPrefs.getAppTheme().stringRes
 
+        binding.tvTheme.text = getString(theme)
+        binding.tvLanguage.text = language
+        binding.tvTitleType.text = titleType
+        binding.switchSfw.setChecked(enableSfw)
     }
 
     private fun setAdapters() {
@@ -69,8 +80,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         binding.llMyProfile.setOnClickListener(this)
         binding.llMyAnimeList.setOnClickListener(this)
         binding.llMyMangaList.setOnClickListener(this)
-        binding.llSettings.setOnClickListener(this)
-        binding.llMySettings.setOnClickListener(this)
+        binding.llTheme.setOnClickListener(this)
+        binding.llTitleType.setOnClickListener(this)
+        binding.llLanguage.setOnClickListener(this)
+        binding.llSfw.setOnClickListener(this)
         binding.llLogout.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
     }
@@ -80,11 +93,19 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             binding.llMyProfile -> parentActivity?.navigateToFragment(ProfileFragment.newInstance())
             binding.llMyAnimeList -> {}
             binding.llMyMangaList -> {}
-            binding.llSettings -> {}
-            binding.llMySettings -> {}
+            binding.llTheme -> {}
+            binding.llTitleType -> {}
+            binding.llLanguage -> {}
+            binding.llSfw -> onSfwClick()
             binding.llLogout -> onLogoutClick()
             binding.btnLogin -> context?.showLoginDialog()
         }
+    }
+
+    private fun onSfwClick() {
+        val isChecked = binding.switchSfw.isChecked
+        binding.switchSfw.setChecked(!isChecked,true)
+        SettingsPrefs.setIsSfwEnabled(!isChecked)
     }
 
     private fun onLogoutClick() {

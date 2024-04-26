@@ -1,7 +1,6 @@
 package com.abhinavdev.animeapp.remote.models.anime
 
 
-import android.os.Parcelable
 import com.abhinavdev.animeapp.remote.models.BaseModelWithMal
 import com.abhinavdev.animeapp.remote.models.BaseResponse
 import com.abhinavdev.animeapp.remote.models.common.AiredOnData
@@ -25,7 +24,6 @@ import com.abhinavdev.animeapp.remote.models.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.Season
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
 class AnimeFullResponse : BaseResponse<AnimeData>()
 

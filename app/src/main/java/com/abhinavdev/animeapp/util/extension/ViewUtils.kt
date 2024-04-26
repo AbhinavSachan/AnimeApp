@@ -90,6 +90,16 @@ fun View.hide() {
     visibility = View.GONE
 }
 
+fun View.nonClickable() {
+    isClickable = false
+    isFocusable = false
+}
+
+fun View.clickable() {
+    isClickable = true
+    isFocusable = true
+}
+
 fun View.show() {
     visibility = View.VISIBLE
 }

@@ -38,6 +38,7 @@
     <color name="bgGrey">#7B7B7B</color>
     <color name="bgLightGrey">#D3D3D3</color>
     <color name="bgRed">#FF0000</color>
+    <color name="bgGreen">#48ea8b</color>
     <color name="bgBlue">#6B53F9</color>
     <color name="bgYellow">#FFC244</color>
     <color name="bgLightBlue">#F6EEF7</color>

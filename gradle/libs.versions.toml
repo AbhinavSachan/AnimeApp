@@ -28,6 +28,7 @@ paletteKtx = "1.0.0"
 retrofitVersion = "2.11.0"
 shimmer = "0.5.0"
 swiperefreshlayout = "1.1.0"
+switcherVersion = "1.1.2"
 workRuntime = "2.9.0"
 
 [libraries]
@@ -66,5 +67,6 @@ sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "dimensionV
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 ssp-android = { module = "com.intuit.ssp:ssp-android", version.ref = "dimensionVersion" }
 swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+switcher = { module = "io.github.bitvale:switcher", version.ref = "switcherVersion" }
 work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }

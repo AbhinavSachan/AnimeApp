@@ -47,4 +47,15 @@
     <string name="msg_okay">Okay</string>
     <string name="msg_top_recommended">Top Recommended</string>
     <string name="msg_top_ranked">Top Ranked</string>
+    <string name="msg_language">Language</string>
+    <string name="msg_app_theme">App Theme</string>
+    <string name="msg_enable_sfw">Enable SFW</string>
+    <string name="msg_title_language">Title Language</string>
+    <string name="msg_sfw_description">If Enabled this feature ensures content is safe, by filtering out potentially sensitive or explicit material.</string>
+    <string name="msg_language_description">Select preferred app language</string>
+    <string name="msg_title_lang_description">Select preferred title language\n(this doesn\'t depend on app language)</string>
+    <string name="msg_theme_description">Select the app theme you like</string>
+    <string name="msg_my_manga_description">See all the manga you saved on MAL</string>
+    <string name="msg_my_anime_description">See all the anime you saved on MAL</string>
+    <string name="msg_mal_profile_decription">View your MAL profile</string>
 </resources>

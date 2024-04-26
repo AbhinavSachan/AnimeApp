@@ -200,6 +200,7 @@ dependencies {
     implementation(libs.palette.ktx)
     //shimmer loading library
     implementation(libs.shimmer)
-    //auto image slider library
+    //some fancy switch
+    implementation(libs.switcher)
 }
 //https://docs.consumet.org/#tag/anilist

@@ -129,11 +129,24 @@
     </style>
 
     <style name="CustomClickableIcon">
-        <item name="android:layout_width">@dimen/_25sdp</item>
-        <item name="android:layout_height">@dimen/_25sdp</item>
-        <item name="contentPadding">@dimen/_2sdp</item>
+        <item name="android:layout_width">@dimen/_35sdp</item>
+        <item name="android:layout_height">@dimen/_35sdp</item>
+        <item name="contentPadding">@dimen/_8sdp</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
+        <item name="android:foreground">@drawable/bg_ripple_effect_accent_rounded</item>
+    </style>
+
+    <style name="CustomClickableText" parent="TextStyleFont600">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:paddingStart">@dimen/_10sdp</item>
+        <item name="android:paddingEnd">@dimen/_10sdp</item>
+        <item name="android:paddingTop">@dimen/_4sdp</item>
+        <item name="android:paddingBottom">@dimen/_4sdp</item>
+        <item name="android:foreground">@drawable/bg_ripple_effect_accent_rounded</item>
     </style>
 
     <style name="CustomPrimaryButtonLL">
@@ -185,6 +198,15 @@
         <item name="android:textColor">@color/onAccent</item>
     </style>
 
+    <style name="CustomNiceSwitch">
+        <item name="switcher_icon_color">@color/primary</item>
+        <item name="switcher_off_color">@color/bgRed</item>
+        <item name="switcher_on_color">@color/bgGreen</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:checked">false</item>
+    </style>
+
     <style name="CustomPrimaryButton.Bordered" parent="CustomPrimaryButton">
         <item name="strokeWidth">@dimen/_1sdp</item>
         <item name="strokeColor">@color/accent</item>
@@ -231,16 +253,26 @@
 
     <!--    more page styles-->
 
-    <style name="MoreItemLLStyle">
-        <item name="android:layout_height">@dimen/_50sdp</item>
+    <style name="MoreMainLLStyle">
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:paddingStart">@dimen/_16sdp</item>
+        <item name="android:paddingTop">@dimen/_8sdp</item>
         <item name="android:paddingEnd">@dimen/_11sdp</item>
+        <item name="android:paddingBottom">@dimen/_8sdp</item>
+        <item name="android:clipToPadding">false</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:gravity">center</item>
         <item name="android:foreground">@drawable/bg_ripple_effect_accent</item>
+    </style>
+
+    <style name="MoreInnerLLStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/_11sdp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="MoreEndImageView">
@@ -249,24 +281,28 @@
     </style>
 
     <style name="MoreImageView">
-        <item name="android:layout_width">@dimen/_28sdp</item>
-        <item name="android:layout_height">@dimen/_28sdp</item>
-        <item name="android:padding">@dimen/_6sdp</item>
+        <item name="android:layout_width">@dimen/_25sdp</item>
+        <item name="android:layout_height">@dimen/_25sdp</item>
+        <item name="contentPadding">@dimen/_4sdp</item>
     </style>
 
-    <style name="MoreTextView">
+    <style name="MoreTitleTextView" parent="TextStyleFont500">
+        <item name="android:textSize">@dimen/text_size_15</item>
+    </style>
+
+    <style name="MoreDescriptionTextView" parent="TextStyleFont400">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">@dimen/_11sdp</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="MoreHintTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/_11sdp</item>
-        <item name="android:textColor">@color/fontTextBlack</item>
-        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:layout_marginEnd">@dimen/_8sdp</item>
+        <item name="android:textColor">@color/fontTextSecondary</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
         <item name="android:theme">@style/FontRegular400</item>
-    </style>
-
-    <style name="MoreInsideView">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="MoreDLView">

@@ -37,42 +37,35 @@
                 app:layout_constraintStart_toStartOf="@id/sv_top_airing"
                 app:layout_constraintTop_toTopOf="@id/sv_top_airing" />
 
-            <include
-                android:id="@+id/group_popular_anime"
-                layout="@layout/custom_rv_horizontal"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ll_list_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_18sdp"
-                app:layout_constraintTop_toBottomOf="@id/sv_top_airing" />
+                android:layout_marginTop="@dimen/_15sdp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/sv_top_airing">
 
-            <include
-                android:id="@+id/group_favourite_anime"
-                layout="@layout/custom_rv_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/group_popular_anime" />
+                <include
+                    android:id="@+id/group_popular_anime"
+                    layout="@layout/custom_rv_horizontal" />
 
-            <include
-                android:id="@+id/group_upcoming_anime"
-                layout="@layout/custom_rv_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/group_favourite_anime" />
+                <include
+                    android:id="@+id/group_top_ranked_anime"
+                    layout="@layout/custom_rv_horizontal" />
 
-            <include
-                android:id="@+id/group_recommended_anime"
-                layout="@layout/custom_rv_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/group_upcoming_anime" />
+                <include
+                    android:id="@+id/group_favourite_anime"
+                    layout="@layout/custom_rv_horizontal" />
 
-            <include
-                android:id="@+id/group_top_ranked_anime"
-                layout="@layout/custom_rv_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/group_recommended_anime" />
+                <include
+                    android:id="@+id/group_upcoming_anime"
+                    layout="@layout/custom_rv_horizontal" />
 
+                <include
+                    android:id="@+id/group_recommended_anime"
+                    layout="@layout/custom_rv_horizontal" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
