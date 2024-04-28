@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_6sdp"
+    android:layout_marginEnd="@dimen/_6sdp"
+    android:layout_marginBottom="@dimen/_2sdp"
+    android:foreground="@drawable/bg_ripple_effect_accent_bor_8">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_item"
+        style="@style/TextStyleFont500"
+        android:layout_width="0dp"
+        android:paddingStart="@dimen/_11sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_11sdp"
+        android:paddingBottom="@dimen/_8sdp"
+        android:textSize="@dimen/text_size_13"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Selected item" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,9 +3,8 @@ package com.abhinavdev.animeapp.core
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.LocaleHelper
-import com.abhinavdev.animeapp.util.PrefUtils
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -13,10 +12,7 @@ abstract class BaseActivity : AppCompatActivity() {
     internal var lang: String = ""
 
     override fun attachBaseContext(base: Context) {
-        PrefUtils.getStringWithContext(base, Const.SharedPrefs.SELECTED_LANGUAGE_CODE)?.let {
-            lang = it
-        }
-        if (lang.isEmpty()) lang = Const.Language.ENGLISH_LANG_CODE
+        SettingsHelper.getAppLanguageString().let { lang = it }
         super.attachBaseContext(LocaleHelper.onAttach(base, lang))
     }
 

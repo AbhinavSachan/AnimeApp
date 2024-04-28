@@ -2,87 +2,103 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/RootLayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.manga.MangaFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
+    <androidx.core.widget.NestedScrollView
+        style="@style/BaseNestedScrollViewAttributes"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_main"
+            <com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderView
+                android:id="@+id/sv_top_airing"
+                style="@style/CustomSliderView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="@dimen/_210sdp"
+                android:visibility="invisible"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vp_top_airing"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_210sdp"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_pager"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/shimmer_color"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@id/sv_top_airing"
+                app:layout_constraintEnd_toEndOf="@id/sv_top_airing"
+                app:layout_constraintStart_toStartOf="@id/sv_top_airing"
+                app:layout_constraintTop_toTopOf="@id/sv_top_airing" />
 
-                <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                    android:id="@+id/pageIndicatorView"
-                    style="@style/DotIndicatorColorStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:layout_marginBottom="@dimen/_15sdp"
-                    app:dotsSize="@dimen/_6sdp"
-                    app:layout_constraintBottom_toBottomOf="@id/vp_top_airing"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintVertical_bias="0" />
-
-                <include
-                    android:id="@+id/group_popular_anime"
-                    layout="@layout/custom_rv_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_18sdp"
-                    app:layout_constraintTop_toBottomOf="@id/vp_top_airing" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ll_list_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/sv_top_airing">
 
                 <include
-                    android:id="@+id/group_recommended_anime"
-                    layout="@layout/custom_rv_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/group_popular_anime" />
+                    android:id="@+id/group_popular"
+                    layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_favourite_anime"
-                    layout="@layout/custom_rv_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/group_recommended_anime" />
+                    android:id="@+id/group_top_ranked"
+                    layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_upcoming_anime"
-                    layout="@layout/custom_rv_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/group_favourite_anime" />
+                    android:id="@+id/group_favourite"
+                    layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_random_anime"
-                    layout="@layout/custom_rv_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/group_upcoming_anime" />
+                    android:id="@+id/group_upcoming"
+                    layout="@layout/custom_rv_horizontal" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="30dp">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_top_fade">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_search"
+                style="@style/CustomClickableIcon"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:src="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_refresh"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_refresh"
+                style="@style/CustomClickableIcon"
+                android:layout_marginEnd="@dimen/safe_zone_anime_page"
+                android:src="@drawable/ic_refresh"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

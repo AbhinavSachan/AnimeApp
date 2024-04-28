@@ -42,13 +42,13 @@
         android:paddingEnd="@dimen/safe_zone_anime_page"
         android:textColor="@color/fontTextWhite"
         android:textSize="@dimen/text_size_16"
-        app:layout_constraintBottom_toTopOf="@id/rl_details"
+        app:layout_constraintBottom_toTopOf="@id/btn_details"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Tensei shitara Slime Datta Ken 3rd Season" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/rl_details"
+        android:id="@+id/btn_details"
         style="@style/CustomPrimaryButtonLL"
         android:layout_marginStart="@dimen/safe_zone_anime_page"
         android:layout_marginBottom="@dimen/safe_zone_anime_page"

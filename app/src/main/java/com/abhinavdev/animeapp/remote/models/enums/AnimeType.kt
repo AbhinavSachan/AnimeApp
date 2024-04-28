@@ -34,7 +34,8 @@ enum class AnimeType(
     MUSIC("music", "Music");
 
     companion object {
-        val list = entries.filter { it.showName != "Unknown" }.map { it.showName }
+        fun valueOfOrDefault(value: AnimeType?) = entries.find { it.search == value?.search } ?: UNKNOWN
+
+        val list = entries.filter { it.showName != UNKNOWN.showName }.map { it.showName }
     }
-//    "cm" "pv" "tv_special"
 }

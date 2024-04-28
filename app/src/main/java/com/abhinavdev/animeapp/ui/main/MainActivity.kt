@@ -12,10 +12,12 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseActivity
 import com.abhinavdev.animeapp.databinding.ActivityMainBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
+import com.abhinavdev.animeapp.remote.models.malmodels.AccessToken
 import com.abhinavdev.animeapp.ui.main.adapters.MainFragmentAdapter
 import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
@@ -98,9 +100,9 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun setObservers() {
-        val accessToken = SettingsPrefs.getAccessToken()?.accessToken
-        SettingsPrefs.onAccessTokenChange {
-            if (it?.accessToken != null && it.accessToken != accessToken){
+        val accessToken = SettingsHelper.getAccessToken()?.accessToken
+        PrefUtils.onObjectChange(Const.PrefKeys.ACCESS_TOKEN_KEY,AccessToken::class.java) {
+            if (it?.accessToken != null && it.accessToken != accessToken) {
                 getProfile()
             }
         }
@@ -109,7 +111,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let {
-                            SettingsPrefs.setAccessToken(it)
+                            PrefUtils.setObject(Const.PrefKeys.ACCESS_TOKEN_KEY,it)
                         }
                         isLoaderVisible(false)
                     }
@@ -130,8 +132,8 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let {
-                            SettingsPrefs.setMalProfile(it)
-                            SettingsPrefs.setIsAuthenticated(true)
+                            PrefUtils.setObject(Const.PrefKeys.MAL_PROFILE_KEY,it)
+                            PrefUtils.setBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY,true)
                         }
                         isLoaderVisible(false)
                     }
@@ -209,6 +211,6 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     fun logout() {
-        SettingsPrefs.clearMalCredentials()
+        SettingsHelper.logout()
     }
 }

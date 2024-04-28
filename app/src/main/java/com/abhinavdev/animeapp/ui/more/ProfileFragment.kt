@@ -11,7 +11,7 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.users.UserFullProfileResponse
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.toast
 
@@ -112,7 +112,7 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun getProfile() {
-        val userName = SettingsPrefs.getMalProfile()?.name
+        val userName = SettingsHelper.getMalProfile()?.name
         userName?.let { viewModel.getUserFullProfile(it) }
     }
 

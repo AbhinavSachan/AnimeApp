@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -33,6 +34,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.FontRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
@@ -60,6 +62,14 @@ fun Context.applyDrawable(@DrawableRes resId: Int): Drawable? {
 
 fun Fragment.applyDrawable(@DrawableRes resId: Int): Drawable? {
     return ResourcesCompat.getDrawable(resources, resId, null)
+}
+
+fun Context.applyFont(@FontRes resId: Int): Typeface? {
+    return ResourcesCompat.getFont(this, resId)
+}
+
+fun Fragment.applyFont(@FontRes resId: Int): Typeface? {
+    return ResourcesCompat.getFont(requireContext(), resId)
 }
 
 fun Bitmap.getCircularBitmap(): Bitmap {
@@ -388,4 +398,24 @@ fun BottomSheetBehavior<*>.isCollapsed(): Boolean {
 
 fun BottomSheetBehavior<*>.isExpanded(): Boolean {
     return this.state == BottomSheetBehavior.STATE_EXPANDED
+}
+fun Context.getRegularFont(@FontRes resId: Int): Typeface? {
+    val lang =
+    return ResourcesCompat.getFont(this, resId)
+}
+
+fun Context.getMediumFont(@FontRes resId: Int): Typeface? {
+    return ResourcesCompat.getFont(this, resId)
+}
+
+fun Context.getSemiBoldFont(@FontRes resId: Int): Typeface? {
+    return ResourcesCompat.getFont(this, resId)
+}
+
+fun Context.getBoldFont(@FontRes resId: Int): Typeface? {
+    return ResourcesCompat.getFont(this, resId)
+}
+
+fun Context.getExtraBoldFont(@FontRes resId: Int): Typeface? {
+    return ResourcesCompat.getFont(this, resId)
 }

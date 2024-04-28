@@ -266,7 +266,7 @@
 
                             <com.google.android.material.textview.MaterialTextView
                                 style="@style/MoreTitleTextView"
-                                android:text="@string/msg_enable_sfw" />
+                                android:text="@string/msg_sfw" />
 
                             <com.google.android.material.textview.MaterialTextView
                                 style="@style/MoreDescriptionTextView"

@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.kit.repository.OAuthRepository
 import com.abhinavdev.animeapp.remote.kit.sources.OAuthRepositoryImpl
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.hasInternetConnection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,12 +34,12 @@ suspend fun <T> Response<T>.handleResponse(application: Application): Event<Reso
     }
     if (code == 401) {
         val repo: OAuthRepository = OAuthRepositoryImpl()
-        val refreshToken = SettingsPrefs.getAccessToken()?.refreshToken
+        val refreshToken = SettingsHelper.getAccessToken()?.refreshToken
         errorMessage = if (refreshToken != null) {
             val refreshTokenResponse = repo.getRefreshAccessToken(refreshToken)
             if (refreshTokenResponse.isSuccessful) {
                 refreshTokenResponse.body()?.let { accessToken ->
-                    SettingsPrefs.setAccessToken(accessToken)
+                    PrefUtils.setObject(Const.PrefKeys.ACCESS_TOKEN_KEY,accessToken)
                 }
                 application.getString(R.string.error_request_refresh_page)
             } else {
@@ -54,7 +56,7 @@ suspend fun <T> Response<T>.handleResponse(application: Application): Event<Reso
 }
 
 private fun handleRefreshTokenFailure(application: Application): String {
-    SettingsPrefs.clearMalCredentials()
+    SettingsHelper.logout()
     return application.getString(R.string.error_login_again)
 }
 

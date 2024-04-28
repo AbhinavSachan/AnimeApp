@@ -1,11 +1,7 @@
 package com.abhinavdev.animeapp
 
 import android.app.Application
-import android.content.Context
 import com.abhinavdev.animeapp.remote.kit.ApiClient
-import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.LocaleHelper
-import com.abhinavdev.animeapp.util.PrefUtils
 import com.google.firebase.crashlytics.BuildConfig
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
@@ -88,11 +84,11 @@ class ApplicationClass : Application() {
             }
         })
     }*/
-
-    override fun attachBaseContext(base: Context) {
-        var lang = PrefUtils.getStringWithContext(base, Const.SharedPrefs.SELECTED_LANGUAGE_CODE)
-        if (lang.isBlank())
-            lang = Const.Language.ENGLISH_LANG_CODE
-        super.attachBaseContext(LocaleHelper.onAttach(base, lang))
-    }
+//
+//    override fun attachBaseContext(base: Context) {
+//        var lang = PrefUtils.getAppLanguageWithContext(base).search
+//        if (lang.isBlank())
+//            lang = Const.Language.ENGLISH_LANG_CODE
+//        super.attachBaseContext(LocaleHelper.onAttach(base, lang))
+//    }
 }

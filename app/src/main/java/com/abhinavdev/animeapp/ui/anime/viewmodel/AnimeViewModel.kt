@@ -21,7 +21,7 @@ import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.launch
 
 class AnimeViewModel(application: Application) : AndroidViewModel(application) {
@@ -58,8 +58,7 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         val ageRating = AgeRating.NONE
         val page = 1
         val limit = 10
-        val sfw = SettingsPrefs.getSfwEnabled()
-        val isAuthenticated = SettingsPrefs.getIsAuthenticated()
+        val sfw = SettingsHelper.getSfwEnabled()
 
         val apiCalls = mutableMapOf(MultiApiCallType.TopAiring to suspend {
             repository.getTopAnime(
@@ -78,20 +77,6 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
                 animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
             )
         })
-        if (isAuthenticated) {
-            val offset = 0
-            val fields = "alternative_titles,media_type,mean"
-            apiCalls[MultiApiCallType.TopRecommended] to suspend {
-                malRepository.getRecommendedAnime(
-                    limit, offset, fields
-                )
-            }
-            apiCalls[MultiApiCallType.TopRanked] to suspend {
-                malRepository.getAnimeRanking(
-                    MalAnimeType.ALL, limit, offset, fields
-                )
-            }
-        }
         _animeAllApiResponse.fetchMultiData(getApplication(), apiCalls)
     }
 
@@ -104,15 +89,14 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     fun getAuthenticatedAnimeData() = viewModelScope.launch {
         val limit = 10
         val offset = 0
-        val fields = "alternative_titles,media_type,mean"
 
         val apiCalls = mutableMapOf(MultiApiCallType.TopRecommended to suspend {
             malRepository.getRecommendedAnime(
-                limit, offset, fields
+                limit, offset
             )
         }, MultiApiCallType.TopRanked to suspend {
             malRepository.getAnimeRanking(
-                MalAnimeType.ALL, limit, offset, fields
+                MalAnimeType.ALL, limit, offset
             )
         })
 

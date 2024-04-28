@@ -3,6 +3,7 @@ package com.abhinavdev.animeapp.remote.models.malmodels
 import com.abhinavdev.animeapp.remote.models.BaseModel
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
+import com.abhinavdev.animeapp.remote.models.enums.MalNsfwCategories
 import com.google.gson.annotations.SerializedName
 
 
@@ -20,6 +21,8 @@ data class MalMangaNode(
     @SerializedName("main_picture") val mainPicture: MainPicture?,
     @SerializedName("alternative_titles") val alternativeTitles: MalAlternativeTitles?,
     @SerializedName("media_type") val mediaType: MalMangaType?,
+    @SerializedName("mean") val mean: Float?,
+    @SerializedName("nsfw") val nsfw: MalNsfwCategories?,
 ) : BaseModel()
 
 data class MangaListStatus(

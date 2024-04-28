@@ -25,7 +25,11 @@
     <color name="primaryA30">#4DFFFFFF</color>
     <color name="accent">#FF6B6B</color>
     <color name="accentA50">#80FF6B6B</color>
+    <color name="accentA80">#CCFF6B6B</color>
+    <color name="accentA60">#99FF6B6B</color>
     <color name="accentA30">#4DFF6B6B</color>
+    <color name="accentA10">#1AFF6B6B</color>
+    <color name="accentA20">#33FF6B6B</color>
     <color name="muted">#686868</color>
     <color name="muted2_454855">#454855</color>
     <color name="muted3_686464">#686464</color>

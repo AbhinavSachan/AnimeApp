@@ -1,5 +1,5 @@
 package com.abhinavdev.animeapp.ui.common.listeners
 
-interface CustomClickCallback {
+interface CustomClickMultiTypeCallback {
     fun <T> onItemClick(position: Int, type: T)
 }

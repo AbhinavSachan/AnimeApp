@@ -11,8 +11,10 @@ import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
 import com.abhinavdev.animeapp.databinding.FragmentMoreBinding
 import com.abhinavdev.animeapp.ui.main.MainActivity
+import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.LoginUtil.showLoginDialog
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.nonClickable
 import com.abhinavdev.animeapp.util.extension.showOrHide
@@ -61,10 +63,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     private fun initComponents() {
         //setting clickable from xml is not working
         binding.switchSfw.nonClickable()
-        val enableSfw = SettingsPrefs.getSfwEnabled()
-        val language = SettingsPrefs.getAppLanguage().showName
-        val titleType = SettingsPrefs.getPreferredTitleType().showName
-        val theme = SettingsPrefs.getAppTheme().stringRes
+        val theme = SettingsHelper.getAppTheme().stringRes
+        val language = SettingsHelper.getAppLanguage().showName
+        val titleType = SettingsHelper.getPreferredTitleType().showName
+        val enableSfw = SettingsHelper.getSfwEnabled()
 
         binding.tvTheme.text = getString(theme)
         binding.tvLanguage.text = language
@@ -105,7 +107,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     private fun onSfwClick() {
         val isChecked = binding.switchSfw.isChecked
         binding.switchSfw.setChecked(!isChecked,true)
-        SettingsPrefs.setIsSfwEnabled(!isChecked)
+        PrefUtils.setBoolean(Const.PrefKeys.SFW_ENABLE_KEY,!isChecked)
     }
 
     private fun onLogoutClick() {
@@ -134,7 +136,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setObservers() {
-        SettingsPrefs.onAuthenticationChange { authenticated ->
+        PrefUtils.onBooleanChange(Const.PrefKeys.IS_AUTHENTICATED_KEY) { authenticated ->
             binding.flLoginLayer.showOrHide(!authenticated)
             binding.viewStatusBar.showOrHide(!authenticated)
         }

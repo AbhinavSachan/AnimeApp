@@ -14,6 +14,8 @@ enum class MalMangaType(
     @SerializedName("manga")
     MANGA("manga", "Manga"),
 
+    UNKNOWN("", "Unknown"),
+
     @SerializedName("novel")
     NOVELS("novels", "Novels"),
 
@@ -36,6 +38,8 @@ enum class MalMangaType(
     FAVORITE("favorite", "Favorite");
 
     companion object {
+        fun valueOfOrDefault(value:MalMangaType?) = entries.find { it.search == value?.search } ?: UNKNOWN
+
         val list = entries.map { it.showName }
     }
 }

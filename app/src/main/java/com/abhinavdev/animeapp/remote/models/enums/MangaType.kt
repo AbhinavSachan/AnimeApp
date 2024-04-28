@@ -13,6 +13,8 @@ enum class MangaType(
     @SerializedName("All")
     ALL("", "All"),
 
+    UNKNOWN("", "Unknown"),
+
     @SerializedName("Manga")
     MANGA("manga", "Manga"),
 
@@ -39,6 +41,8 @@ enum class MangaType(
     OEL("oel", "OEL");
 
     companion object {
+        fun valueOfOrDefault(value: MangaType?) = entries.find { it.search == value?.search } ?: UNKNOWN
+
         val list = entries.map { it.showName }
     }
 }

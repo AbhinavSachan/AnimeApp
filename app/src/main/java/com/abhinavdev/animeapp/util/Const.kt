@@ -1,5 +1,9 @@
 package com.abhinavdev.animeapp.util
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+
 object Const {
     interface TimeOut {
         companion object {
@@ -10,9 +14,29 @@ object Const {
         }
     }
 
-    interface SharedPrefs {
+    interface PrefKeys {
         companion object {
-            const val SELECTED_LANGUAGE_CODE = "selected_language_code"
+            //key to save sfw in settings
+            val SFW_ENABLE_KEY = booleanPreferencesKey("settings_sfw_enable_key")
+
+            //key to save app theme in settings
+            val APP_THEME_KEY = stringPreferencesKey("settings_app_theme_key")
+
+            //key to save title language type in settings
+            val PREFERRED_TITLE_TYPE_KEY = stringPreferencesKey("settings_preferred_title_type_key")
+
+            //key to save language in settings
+            val APP_LANGUAGE_KEY = stringPreferencesKey("settings_app_language_key")
+
+            //key to save access token when logged in by user
+            val ACCESS_TOKEN_KEY = stringPreferencesKey("settings_access_token_key")
+
+            //key to save id and username fetched by mal profile which we use to get profile from jikan
+            val MAL_PROFILE_KEY = stringPreferencesKey("settings_mal_profile_key")
+
+            //key to save if user is logged in or not
+            val IS_AUTHENTICATED_KEY = booleanPreferencesKey("settings_is_authenticated_key")
+            val GRID_OR_LIST_KEY = intPreferencesKey("settings_grid_or_list_key")
         }
     }
 
@@ -23,6 +47,7 @@ object Const {
             const val JAPANESE_LANG_CODE = "ja"
         }
     }
+
     interface Mal {
         companion object {
             const val STATE = "FairyTaleState123"

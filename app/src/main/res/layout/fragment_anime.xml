@@ -46,24 +46,25 @@
                 app:layout_constraintTop_toBottomOf="@id/sv_top_airing">
 
                 <include
-                    android:id="@+id/group_popular_anime"
+                    android:id="@+id/group_top_ranked"
                     layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_top_ranked_anime"
+                    android:id="@+id/group_recommended"
                     layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_favourite_anime"
+                    android:id="@+id/group_popular"
                     layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_upcoming_anime"
+                    android:id="@+id/group_favourite"
                     layout="@layout/custom_rv_horizontal" />
 
                 <include
-                    android:id="@+id/group_recommended_anime"
+                    android:id="@+id/group_upcoming"
                     layout="@layout/custom_rv_horizontal" />
+
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

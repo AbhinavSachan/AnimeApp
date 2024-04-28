@@ -34,11 +34,11 @@ enum class MalSortType(
     companion object {
         fun valueOf(value: String) = entries.firstOrNull { it.search == value }
 
-        var animeListSortItems = arrayListOf(
+        var animeSortList = arrayListOf(
             ANIME_TITLE.showName, SCORE.showName, UPDATED.showName, ANIME_START_DATE.showName
         )
 
-        var mangaListSortItems = arrayListOf(
+        var mangaSortList = arrayListOf(
             MANGA_TITLE.showName, SCORE.showName, UPDATED.showName, MANGA_START_DATE.showName
         )
     }

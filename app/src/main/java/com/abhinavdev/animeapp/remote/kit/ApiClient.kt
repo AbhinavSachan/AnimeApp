@@ -1,7 +1,7 @@
 package com.abhinavdev.animeapp.remote.kit
 
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -110,7 +110,7 @@ object ApiClient {
     class AuthInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val requestBuilder = chain.request().newBuilder()
-            val token = SettingsPrefs.getAccessToken()?.accessToken
+            val token = SettingsHelper.getAccessToken()?.accessToken
 
             if (!token.isNullOrEmpty()) {
                 requestBuilder.addHeader("Authorization", "Bearer $token")

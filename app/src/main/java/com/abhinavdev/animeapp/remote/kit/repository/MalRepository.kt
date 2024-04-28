@@ -36,9 +36,8 @@ interface MalRepository {
     suspend fun getMyAnimeList(
         status: MalAnimeStatus,
         sort: MalSortType,
-        limit: Int,
+        @IntRange(0, 1000) limit: Int,
         offset: Int,
-        fields: String,
     ): Response<MalMyAnimeListResponse>
 
     suspend fun updateMangaListStatus(
@@ -64,32 +63,28 @@ interface MalRepository {
     suspend fun getMyMangaList(
         status: MalMangaStatus,
         sort: MalSortType,
-        limit: Int,
+        @IntRange(0, 1000) limit: Int,
         offset: Int,
-        fields: String,
     ): Response<MalMyMangaListResponse>
 
     suspend fun getProfile(): Response<MalProfileResponse>
 
 
     suspend fun getRecommendedAnime(
-        limit: Int,
+        @IntRange(0, 100) limit: Int,
         offset: Int,
-        fields: String,
     ): Response<MalMyAnimeListResponse>
 
     suspend fun getAnimeRanking(
         rankingType: MalAnimeType,
-        limit: Int,
+        @IntRange(0, 500) limit: Int,
         offset: Int,
-        fields: String,
     ): Response<MalMyAnimeListResponse>
 
     suspend fun getMangaRanking(
         rankingType: MalMangaType,
-        limit: Int,
+        @IntRange(0, 500) limit: Int,
         offset: Int,
-        fields: String,
     ): Response<MalMyMangaListResponse>
 
 }

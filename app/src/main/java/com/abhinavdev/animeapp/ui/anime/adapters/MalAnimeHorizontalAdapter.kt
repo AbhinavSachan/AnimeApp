@@ -4,49 +4,42 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
-import com.abhinavdev.animeapp.databinding.RowVerticalCardBinding
-import com.abhinavdev.animeapp.remote.models.anime.AnimeData
-import com.abhinavdev.animeapp.remote.models.enums.AnimeType
+import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
+import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickCallback
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
-import com.abhinavdev.animeapp.util.extension.formatToOneDigitAfterDecimal
+import com.abhinavdev.animeapp.ui.anime.misc.PresentableMalAnimeData
+import com.abhinavdev.animeapp.ui.common.listeners.CustomClickMultiTypeCallback
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
-class AnimeVerticalCardAdapter(
-    private val list: List<AnimeData>,
+class MalAnimeHorizontalAdapter(
+    private val list: List<MalAnimeData>,
     private val type: MultiApiCallType,
-    private val listener: CustomClickCallback
-) : RecyclerView.Adapter<AnimeVerticalCardAdapter.ViewHolder>() {
+    private val listener: CustomClickMultiTypeCallback
+) : RecyclerView.Adapter<MalAnimeHorizontalAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            RowVerticalCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RowGridListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val data = PresentableMalAnimeData(holder.adapterPosition,list[position])
+        val image = data.getImage()
+        val rating = data.getRating()
+        val rank = data.getRank()
+        val animeType = data.getType()
+        val animeName = data.getName()
+
         with(holder) {
             with(binding) {
-                ivPoster.loadImageWithAnime(
-                    item.images?.webp?.largeImageUrl, R.color.bgLightGrey, true
-                )
-
-                tvRating.text = item.score?.formatToOneDigitAfterDecimal()
-
-                val rank = (adapterPosition + 1).toString()
+                ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
+                tvRating.text = rating
                 tvRanking.text = rank
-
-                tvType.text = item.type?.showName.takeIf { !it.isNullOrBlank() } ?: AnimeType.UNKNOWN.showName
-
-
-                val userPreferredType = SettingsPrefs.getPreferredTitleType()
-                val animeName =
-                    item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
+                tvType.text = animeType
                 vtvAnimeName.text = animeName
 
                 when (type) {
@@ -74,6 +67,7 @@ class AnimeVerticalCardAdapter(
                         tvRating.show()
                         tvType.show()
                     }
+
                     MultiApiCallType.TopRanked -> {
                         tvRanking.show()
                         tvRating.show()
@@ -89,14 +83,14 @@ class AnimeVerticalCardAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return list[position].malId.toLong()
+        return list[position].node?.id?.toLong() ?: 0
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    inner class ViewHolder(val binding: RowVerticalCardBinding) :
+    inner class ViewHolder(val binding: RowGridListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
 }

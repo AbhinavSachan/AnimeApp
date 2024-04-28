@@ -33,15 +33,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
-import androidx.core.os.LocaleListCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.R
-import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -502,10 +501,4 @@ fun Context.copyToClipBoard(text: String) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
     clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
     toast(getString(R.string.copied))
-}
-
-fun changeLocale(language: String) {
-    val appLocale = if (language == "follow_system") LocaleListCompat.getEmptyLocaleList()
-    else LocaleListCompat.forLanguageTags(language)
-    AppCompatDelegate.setApplicationLocales(appLocale)
 }

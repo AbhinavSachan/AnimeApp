@@ -4,7 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 
 object TranslateUtils {
 
@@ -25,7 +25,7 @@ object TranslateUtils {
                 putExtra("key_text_input", text)
                 putExtra("key_text_output", "")
                 putExtra("key_language_from", "en")
-                putExtra("key_language_to", SettingsPrefs.getAppLanguage().search)
+                putExtra("key_language_to", SettingsHelper.getAppLanguageString())
                 putExtra("key_suggest_translation", "")
                 putExtra("key_from_floating_window", false)
                 component = ComponentName(

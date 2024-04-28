@@ -16,14 +16,16 @@ import com.abhinavdev.animeapp.remote.models.anime.AnimeSearchResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeBannerAdapter
-import com.abhinavdev.animeapp.ui.anime.adapters.AnimeVerticalCardAdapter
-import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalCardAdapter
+import com.abhinavdev.animeapp.ui.anime.adapters.AnimeHorizontalAdapter
+import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeHorizontalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickCallback
+import com.abhinavdev.animeapp.ui.common.listeners.CustomClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.util.appsettings.SettingsPrefs
+import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.hide
@@ -34,7 +36,7 @@ import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
 import com.facebook.shimmer.ShimmerFrameLayout
 
-class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback {
+class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiTypeCallback {
     private var _binding: FragmentAnimeBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -45,19 +47,19 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     private var airingAdapter: AnimeBannerAdapter? = null
 
     private val popularList: ArrayList<AnimeData> = arrayListOf()
-    private var popularAdapter: AnimeVerticalCardAdapter? = null
+    private var popularAdapter: AnimeHorizontalAdapter? = null
 
     private val favouriteList: ArrayList<AnimeData> = arrayListOf()
-    private var favouriteAdapter: AnimeVerticalCardAdapter? = null
+    private var favouriteAdapter: AnimeHorizontalAdapter? = null
 
     private val upcomingList: ArrayList<AnimeData> = arrayListOf()
-    private var upcomingAdapter: AnimeVerticalCardAdapter? = null
+    private var upcomingAdapter: AnimeHorizontalAdapter? = null
 
     private val recommendedList: ArrayList<MalAnimeData> = arrayListOf()
-    private var recommendedAdapter: MalAnimeVerticalCardAdapter? = null
+    private var recommendedAdapter: MalAnimeHorizontalAdapter? = null
 
     private val rankedList: ArrayList<MalAnimeData> = arrayListOf()
-    private var rankedAdapter: MalAnimeVerticalCardAdapter? = null
+    private var rankedAdapter: MalAnimeHorizontalAdapter? = null
 
     private var isLoading = false
     private var isRefreshed = false
@@ -104,25 +106,25 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     }
 
     private fun initComponents() {
-        isAuthenticated = SettingsPrefs.getIsAuthenticated()
+        isAuthenticated = SettingsHelper.getIsAuthenticated()
         setAllTitles()
         setTopViewPagerHeight()
     }
 
     private fun setAllTitles() {
-        binding.groupPopularAnime.tvHeading.text = getString(R.string.msg_most_popular)
-        binding.groupFavouriteAnime.tvHeading.text = getString(R.string.msg_top_favourite)
-        binding.groupUpcomingAnime.tvHeading.text = getString(R.string.msg_upcoming)
-        binding.groupRecommendedAnime.tvHeading.text = getString(R.string.msg_top_recommended)
-        binding.groupTopRankedAnime.tvHeading.text = getString(R.string.msg_top_ranked)
+        binding.groupPopular.tvHeading.text = getString(R.string.msg_most_popular)
+        binding.groupFavourite.tvHeading.text = getString(R.string.msg_top_favourite)
+        binding.groupUpcoming.tvHeading.text = getString(R.string.msg_upcoming)
+        binding.groupRecommended.tvHeading.text = getString(R.string.msg_top_recommended)
+        binding.groupTopRanked.tvHeading.text = getString(R.string.msg_top_ranked)
     }
 
     private fun setTopViewPagerHeight() {
         val screenSize = getDisplaySize(requireActivity())
         if (screenSize.width > screenSize.height) {
-            binding.svTopAiring.layoutParams.height = (screenSize.height * 8) / 9
+            binding.svTopAiring.layoutParams.height = (screenSize.height * 9) / 8
         } else {
-            binding.svTopAiring.layoutParams.height = (screenSize.width * 8) / 9
+            binding.svTopAiring.layoutParams.height = (screenSize.width * 9) / 8
         }
     }
 
@@ -133,46 +135,41 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
         binding.svTopAiring.setSliderAdapter(airingAdapter!!)
 
         //second rv
-        popularAdapter = AnimeVerticalCardAdapter(popularList, MultiApiCallType.TopPopular, this)
+        popularAdapter = AnimeHorizontalAdapter(popularList, MultiApiCallType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
-        binding.groupPopularAnime.rvItems.setHasFixedSize(true)
-        binding.groupPopularAnime.rvItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.groupPopularAnime.rvItems.adapter = popularAdapter
+        binding.groupPopular.rvItems.setHasFixedSize(true)
+        binding.groupPopular.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupPopular.rvItems.adapter = popularAdapter
 
         //third rv
         favouriteAdapter =
-            AnimeVerticalCardAdapter(favouriteList, MultiApiCallType.TopFavourite, this)
+            AnimeHorizontalAdapter(favouriteList, MultiApiCallType.TopFavourite, this)
         favouriteAdapter?.setHasStableIds(true)
-        binding.groupFavouriteAnime.rvItems.setHasFixedSize(true)
-        binding.groupFavouriteAnime.rvItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.groupFavouriteAnime.rvItems.adapter = favouriteAdapter
+        binding.groupFavourite.rvItems.setHasFixedSize(true)
+        binding.groupFavourite.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupFavourite.rvItems.adapter = favouriteAdapter
 
         //fourth rv
-        upcomingAdapter = AnimeVerticalCardAdapter(upcomingList, MultiApiCallType.TopUpcoming, this)
+        upcomingAdapter = AnimeHorizontalAdapter(upcomingList, MultiApiCallType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
-        binding.groupUpcomingAnime.rvItems.setHasFixedSize(true)
-        binding.groupUpcomingAnime.rvItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.groupUpcomingAnime.rvItems.adapter = upcomingAdapter
+        binding.groupUpcoming.rvItems.setHasFixedSize(true)
+        binding.groupUpcoming.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupUpcoming.rvItems.adapter = upcomingAdapter
 
         //fifth rv
         recommendedAdapter =
-            MalAnimeVerticalCardAdapter(recommendedList, MultiApiCallType.TopRecommended, this)
+            MalAnimeHorizontalAdapter(recommendedList, MultiApiCallType.TopRecommended, this)
         recommendedAdapter?.setHasStableIds(true)
-        binding.groupRecommendedAnime.rvItems.setHasFixedSize(true)
-        binding.groupRecommendedAnime.rvItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.groupRecommendedAnime.rvItems.adapter = recommendedAdapter
+        binding.groupRecommended.rvItems.setHasFixedSize(true)
+        binding.groupRecommended.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupRecommended.rvItems.adapter = recommendedAdapter
 
         //sixth rv
-        rankedAdapter = MalAnimeVerticalCardAdapter(rankedList, MultiApiCallType.TopRanked, this)
+        rankedAdapter = MalAnimeHorizontalAdapter(rankedList, MultiApiCallType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
-        binding.groupTopRankedAnime.rvItems.setHasFixedSize(true)
-        binding.groupTopRankedAnime.rvItems.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.groupTopRankedAnime.rvItems.adapter = rankedAdapter
+        binding.groupTopRanked.rvItems.setHasFixedSize(true)
+        binding.groupTopRanked.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupTopRanked.rvItems.adapter = rankedAdapter
     }
 
     private fun setListeners() {
@@ -195,17 +192,17 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     }
 
     private fun setAuthenticationView() {
-        if (!isAuthenticated && binding.groupRecommendedAnime.group.isVisible()) {
-            binding.groupRecommendedAnime.root.hide()
-            binding.groupTopRankedAnime.root.hide()
-        } else if (isAuthenticated && binding.groupRecommendedAnime.root.isHidden()) {
-            binding.groupRecommendedAnime.root.show()
-            binding.groupTopRankedAnime.root.show()
+        if (!isAuthenticated && binding.groupRecommended.group.isVisible()) {
+            binding.groupRecommended.root.hide()
+            binding.groupTopRanked.root.hide()
+        } else if (isAuthenticated && binding.groupRecommended.root.isHidden()) {
+            binding.groupRecommended.root.show()
+            binding.groupTopRanked.root.show()
         }
     }
 
     private fun setObservers() {
-        SettingsPrefs.onAuthenticationChange {
+        PrefUtils.onBooleanChange(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
             if (it != isAuthenticated) {
                 isAuthenticated = it
                 setAuthenticationView()
@@ -329,31 +326,31 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickCallback 
     }
 
     private fun popularLoading(isLoading: Boolean) {
-        with(binding.groupPopularAnime) {
+        with(binding.groupPopular) {
             showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun favouriteLoading(isLoading: Boolean) {
-        with(binding.groupFavouriteAnime) {
+        with(binding.groupFavourite) {
             showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun upcomingLoading(isLoading: Boolean) {
-        with(binding.groupUpcomingAnime) {
+        with(binding.groupUpcoming) {
             showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun recommendedLoading(isLoading: Boolean) {
-        with(binding.groupRecommendedAnime) {
+        with(binding.groupRecommended) {
             showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun rankedLoading(isLoading: Boolean) {
-        with(binding.groupTopRankedAnime) {
+        with(binding.groupTopRanked) {
             showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
         }
     }

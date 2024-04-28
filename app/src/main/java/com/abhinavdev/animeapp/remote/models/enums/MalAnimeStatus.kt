@@ -28,13 +28,7 @@ enum class MalAnimeStatus(
     companion object {
         fun valueOf(value: String) = entries.firstOrNull { it.search == value }
 
-        var animeStatusItems = arrayListOf(
-            WATCHING.showName,
-            COMPLETED.showName,
-            ON_HOLD.showName,
-            DROPPED.showName,
-            PLAN_TO_WATCH.showName,
-        )
+        var list = entries.map { it.showName }
 
     }
 }

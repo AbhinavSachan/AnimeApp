@@ -13,6 +13,8 @@ enum class MalAnimeType(
     @SerializedName("airing")
     AIRING("airing", "Airing"),
 
+    UNKNOWN("", "Unknown"),
+
     @SerializedName("upcoming")
     UPCOMING("upcoming", "Upcoming"),
 
@@ -35,6 +37,8 @@ enum class MalAnimeType(
     FAVORITE("favorite", "Favorite");
 
     companion object {
+        fun valueOfOrDefault(value:MalAnimeType?) = entries.find { it.search == value?.search } ?: UNKNOWN
+
         val list = entries.map { it.showName }
     }
 }

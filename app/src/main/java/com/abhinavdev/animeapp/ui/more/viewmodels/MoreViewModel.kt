@@ -8,9 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.abhinavdev.animeapp.remote.kit.Event
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.kit.fetchData
+import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
 import com.abhinavdev.animeapp.remote.kit.repository.UserRepository
+import com.abhinavdev.animeapp.remote.kit.sources.MalRepositoryImpl
 import com.abhinavdev.animeapp.remote.kit.sources.UserRepositoryImpl
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalSortType
 import com.abhinavdev.animeapp.remote.models.enums.UserGender
+import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
+import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.users.UserByIdResponse
 import com.abhinavdev.animeapp.remote.models.users.UserFullProfileResponse
 import com.abhinavdev.animeapp.remote.models.users.UsersSearchResponse
@@ -18,6 +25,7 @@ import kotlinx.coroutines.launch
 
 class MoreViewModel(application: Application) : AndroidViewModel(application) {
     private val userRepository: UserRepository = UserRepositoryImpl()
+    private val malRepository: MalRepository = MalRepositoryImpl()
 
     private val _userFullProfileResponse =
         MutableLiveData<Event<Resource<UserFullProfileResponse>>>()
@@ -30,11 +38,34 @@ class MoreViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _isAuthenticatedResponse = MutableLiveData<Boolean>()
-    val isAuthenticated: LiveData<Boolean> = _isAuthenticatedResponse
+    private val _myAnimeListResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
+    val myAnimeListResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> =
+        _myAnimeListResponse
 
-    fun setIsAuthenticated(isAuthenticated: Boolean) {
-        _isAuthenticatedResponse.value = isAuthenticated
+    fun getMyAnimeList(
+        status: MalAnimeStatus,
+        sort: MalSortType,
+        limit: Int,
+        offset: Int,
+    ) = viewModelScope.launch {
+        _myAnimeListResponse.fetchData(getApplication()) {
+            malRepository.getMyAnimeList(status, sort, limit, offset)
+        }
+    }
+
+    private val _myMangaListResponse = MutableLiveData<Event<Resource<MalMyMangaListResponse>>>()
+    val myMangaListResponse: LiveData<Event<Resource<MalMyMangaListResponse>>> =
+        _myMangaListResponse
+
+    fun getMyMangaList(
+        status: MalMangaStatus,
+        sort: MalSortType,
+        limit: Int,
+        offset: Int,
+    ) = viewModelScope.launch {
+        _myMangaListResponse.fetchData(getApplication()) {
+            malRepository.getMyMangaList(status, sort, limit, offset)
+        }
     }
 
     private val _userByIdResponse = MutableLiveData<Event<Resource<UserByIdResponse>>>()
