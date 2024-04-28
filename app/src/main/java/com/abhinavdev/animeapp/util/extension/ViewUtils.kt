@@ -43,6 +43,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.abhinavdev.animeapp.R
+import com.abhinavdev.animeapp.util.appsettings.AppLanguage
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
@@ -399,23 +402,47 @@ fun BottomSheetBehavior<*>.isCollapsed(): Boolean {
 fun BottomSheetBehavior<*>.isExpanded(): Boolean {
     return this.state == BottomSheetBehavior.STATE_EXPANDED
 }
-fun Context.getRegularFont(@FontRes resId: Int): Typeface? {
-    val lang =
-    return ResourcesCompat.getFont(this, resId)
+fun Context.getRegularFont(): Typeface? {
+    val lang = SettingsHelper.getAppLanguage()
+    return when(lang){
+        AppLanguage.ENGLISH -> applyFont(R.font.english_regular)
+        AppLanguage.JAPANESE -> applyFont(R.font.hindi_regular)
+        AppLanguage.HINDI -> applyFont(R.font.japanese_regular)
+    }
 }
 
-fun Context.getMediumFont(@FontRes resId: Int): Typeface? {
-    return ResourcesCompat.getFont(this, resId)
+fun Context.getMediumFont(): Typeface? {
+    val lang = SettingsHelper.getAppLanguage()
+    return when(lang){
+        AppLanguage.ENGLISH -> applyFont(R.font.english_medium)
+        AppLanguage.JAPANESE -> applyFont(R.font.hindi_medium)
+        AppLanguage.HINDI -> applyFont(R.font.japanese_medium)
+    }
 }
 
-fun Context.getSemiBoldFont(@FontRes resId: Int): Typeface? {
-    return ResourcesCompat.getFont(this, resId)
+fun Context.getSemiBoldFont(): Typeface? {
+    val lang = SettingsHelper.getAppLanguage()
+    return when(lang){
+        AppLanguage.ENGLISH -> applyFont(R.font.english_semi_bold)
+        AppLanguage.JAPANESE -> applyFont(R.font.hindi_semi_bold)
+        AppLanguage.HINDI -> applyFont(R.font.japanese_semi_bold)
+    }
 }
 
-fun Context.getBoldFont(@FontRes resId: Int): Typeface? {
-    return ResourcesCompat.getFont(this, resId)
+fun Context.getBoldFont(): Typeface? {
+    val lang = SettingsHelper.getAppLanguage()
+    return when(lang){
+        AppLanguage.ENGLISH -> applyFont(R.font.english_bold)
+        AppLanguage.JAPANESE -> applyFont(R.font.hindi_bold)
+        AppLanguage.HINDI -> applyFont(R.font.japanese_bold)
+    }
 }
 
-fun Context.getExtraBoldFont(@FontRes resId: Int): Typeface? {
-    return ResourcesCompat.getFont(this, resId)
+fun Context.getExtraBoldFont(): Typeface? {
+    val lang = SettingsHelper.getAppLanguage()
+    return when(lang){
+        AppLanguage.ENGLISH -> applyFont(R.font.english_extra_bold)
+        AppLanguage.JAPANESE -> applyFont(R.font.hindi_extra_bold)
+        AppLanguage.HINDI -> applyFont(R.font.japanese_extra_bold)
+    }
 }
