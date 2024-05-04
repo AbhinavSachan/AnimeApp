@@ -8,10 +8,11 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowItemSelectionBinding
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.misc.ItemSelectionType
-import com.abhinavdev.animeapp.util.extension.applyFont
+import com.abhinavdev.animeapp.util.extension.getMediumFont
+import com.abhinavdev.animeapp.util.extension.getRegularFont
 
 class ItemSelectionAdapter(
-    val list: ArrayList<ItemSelectionModelBase>, val listener: Callback, val type: ItemSelectionType
+    val list: List<ItemSelectionModelBase>, val listener: Callback, val type: ItemSelectionType
 ) : RecyclerView.Adapter<ItemSelectionAdapter.ViewHolder>() {
 
     private var regularTypeFace: Typeface? = null
@@ -19,8 +20,8 @@ class ItemSelectionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
-        regularTypeFace = context.applyFont(R.font.english_regular)
-        mediumTypeFace = context.applyFont(R.font.english_medium)
+        regularTypeFace = context.getRegularFont()
+        mediumTypeFace = context.getMediumFont()
 
         val view =
             RowItemSelectionBinding.inflate(LayoutInflater.from(context), parent, false)
@@ -33,9 +34,11 @@ class ItemSelectionAdapter(
             with(binding) {
                 tvItem.text = item.name
                 if (item.isSelected) {
-
+                    root.setBackgroundResource(R.drawable.bg_item_selected)
+                    tvItem.typeface = mediumTypeFace
                 } else {
-
+                    root.setBackgroundResource(R.color.transparent)
+                    tvItem.typeface = regularTypeFace
                 }
                 cvMain.setOnClickListener { listener.onItemClick(adapterPosition, type) }
             }

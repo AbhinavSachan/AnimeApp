@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/RootLayoutStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_empty_icon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_220sdp"
+        app:layout_constraintBottom_toTopOf="@id/tv_empty_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:src="@drawable/bg_empty_list" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_empty_title"
+        style="@style/TextStyleFont600"
+        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:gravity="center"
+        android:text="@string/msg_your_list_empty"
+        android:textAllCaps="true"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintBottom_toTopOf="@id/tv_empty_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_empty_icon"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_empty_desc"
+        style="@style/TextStyleFont400"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:gravity="center"
+        android:textColor="@color/fontTextSecondary"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@id/btn_empty_action"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_empty_title"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Oops! It seems you haven't added any anime to the list." />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_empty_action"
+        style="@style/CustomAccentButton"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:paddingStart="@dimen/_24sdp"
+        android:paddingEnd="@dimen/_24sdp"
+        android:text="@string/action_explore"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_empty_desc"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:visibility="visible" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,14 +103,9 @@ fun View.hide() {
     visibility = View.GONE
 }
 
-fun View.nonClickable() {
-    isClickable = false
-    isFocusable = false
-}
-
-fun View.clickable() {
-    isClickable = true
-    isFocusable = true
+fun View.clickable(clickable: Boolean) {
+    isClickable = clickable
+    isFocusable = clickable
 }
 
 fun View.show() {
@@ -444,5 +439,14 @@ fun Context.getExtraBoldFont(): Typeface? {
         AppLanguage.ENGLISH -> applyFont(R.font.english_extra_bold)
         AppLanguage.JAPANESE -> applyFont(R.font.hindi_extra_bold)
         AppLanguage.HINDI -> applyFont(R.font.japanese_extra_bold)
+    }
+}
+/**
+ * removes all recyclerview item decorations
+ *
+ */
+fun RecyclerView.removeItemDecorations() {
+    while (this.itemDecorationCount > 0) {
+        this.removeItemDecorationAt(0)
     }
 }

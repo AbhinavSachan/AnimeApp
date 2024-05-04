@@ -3,7 +3,7 @@ package com.abhinavdev.animeapp.util.appsettings
 import com.abhinavdev.animeapp.R
 
 enum class AppTheme(val stringRes: Int) {
-    DEFAULT(R.string.msg_default), DARK(R.string.theme_light), LIGHT(R.string.theme_dark);
+    DEFAULT(R.string.msg_default), DARK(R.string.theme_dark), LIGHT(R.string.theme_light);
 
     companion object {
         fun valueOfOrDefault(value: String?) = try {
@@ -16,6 +16,6 @@ enum class AppTheme(val stringRes: Int) {
             DEFAULT
         }
 
-        val resList = entries.associateWith { it.stringRes }
+        val resList = entries.associate { it.name to it.stringRes }
     }
 }

@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_50sdp"
-    tools:background="@color/primary">
+    android:elevation="@dimen/_4sdp"
+    style="@style/RootLayoutStyle"
+    android:layout_height="@dimen/tool_bar_size">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"

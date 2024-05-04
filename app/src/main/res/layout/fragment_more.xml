@@ -7,15 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.more.MoreFragment">
 
-    <View
-        android:id="@+id/view_status_bar"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/blackA70"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/TopPaddingStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -35,87 +27,17 @@
                     android:orientation="vertical"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_my_profile"
-                        style="@style/MoreMainLLStyle">
+                    <include
+                        android:id="@+id/group_my_profile"
+                        layout="@layout/more_click_item_layout" />
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_profile" />
+                    <include
+                        android:id="@+id/group_my_anime"
+                        layout="@layout/more_click_item_layout" />
 
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_my_profile" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_mal_profile_decription" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_my_anime_list"
-                        style="@style/MoreMainLLStyle">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_anime_list" />
-
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_my_anime_list" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_my_anime_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_my_manga_list"
-                        style="@style/MoreMainLLStyle">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_manga_list" />
-
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_my_manga_list" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_my_manga_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
+                    <include
+                        android:id="@+id/group_my_manga"
+                        layout="@layout/more_click_item_layout" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -123,7 +45,9 @@
                     android:id="@+id/fl_login_layer"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@color/blackA70"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:background="@drawable/bg_login_layer_cor_12"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
@@ -138,6 +62,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/TextStyleFont500"
                         android:layout_marginBottom="@dimen/_6sdp"
                         android:gravity="center"
                         android:text="@string/msg_login_to_access_des"
@@ -158,128 +83,17 @@
                     android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@id/ll_authenticated_features">
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_theme"
-                        style="@style/MoreMainLLStyle">
+                    <include layout="@layout/more_select_item_layout"
+                        android:id="@+id/group_app_theme"/>
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_day" />
+                    <include layout="@layout/more_select_item_layout"
+                        android:id="@+id/group_title_type"/>
 
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
+                    <include layout="@layout/more_select_item_layout"
+                        android:id="@+id/group_app_language"/>
 
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_app_theme" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_theme_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_theme"
-                            style="@style/MoreHintTextView"
-                            tools:text="Light" />
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_title_type"
-                        style="@style/MoreMainLLStyle">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_language" />
-
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_title_language" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_title_lang_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_title_type"
-                            style="@style/MoreHintTextView"
-                            tools:text="Romaji" />
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_language"
-                        style="@style/MoreMainLLStyle">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_global_language" />
-
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_language" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_language_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tv_language"
-                            style="@style/MoreHintTextView"
-                            tools:text="English" />
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_sfw"
-                        style="@style/MoreMainLLStyle">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_sfw" />
-
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_sfw" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_sfw_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.bitvale.switcher.SwitcherX
-                            android:id="@+id/switch_sfw"
-                            style="@style/CustomNiceSwitch" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <View style="@style/MoreDLView" />
+                    <include layout="@layout/more_switch_item_layout"
+                        android:id="@+id/group_sfw"/>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/ll_logout"
@@ -299,7 +113,7 @@
 
                             <com.google.android.material.textview.MaterialTextView
                                 style="@style/MoreDescriptionTextView"
-                                android:text="Only from within the app, you will still be logged into MAL." />
+                                android:text="@string/msg_logout_description" />
 
                         </androidx.appcompat.widget.LinearLayoutCompat>
 

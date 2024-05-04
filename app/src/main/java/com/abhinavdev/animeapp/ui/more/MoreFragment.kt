@@ -1,30 +1,49 @@
 package com.abhinavdev.animeapp.ui.more
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
+import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
 import com.abhinavdev.animeapp.databinding.FragmentMoreBinding
 import com.abhinavdev.animeapp.ui.main.MainActivity
+import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
+import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
+import com.abhinavdev.animeapp.ui.more.misc.ItemSelectionType
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.LoginUtil.showLoginDialog
-import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.PrefUtils
+import com.abhinavdev.animeapp.util.appsettings.AppLanguage
+import com.abhinavdev.animeapp.util.appsettings.AppTheme
+import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.nonClickable
+import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.showOrHide
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.Job
 
-class MoreFragment : BaseFragment(), View.OnClickListener {
+class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.Callback {
+    private var optionBottomSheetDialog: BottomSheetDialog? = null
+    private var optionAdapter: ItemSelectionAdapter? = null
     private var logoutDialog: AlertDialog? = null
     private var _binding: FragmentMoreBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
+
+    private var languageList: List<ItemSelectionModelBase> = arrayListOf()
+    private var titleTypeList: List<ItemSelectionModelBase> = arrayListOf()
+    private var themeList: List<ItemSelectionModelBase> = arrayListOf()
+
+    private var authCheckJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,21 +76,84 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         initComponents()
         setAdapters()
         setListeners()
-        setObservers()
     }
 
     private fun initComponents() {
+        languageList = AppLanguage.list.map { ItemSelectionModelBase(it.key, it.value) }
+        titleTypeList = AppTitleType.list.map { ItemSelectionModelBase(it.key, it.value) }
+        themeList = AppTheme.resList.map { ItemSelectionModelBase(it.key, getString(it.value)) }
+
         //setting clickable from xml is not working
-        binding.switchSfw.nonClickable()
+        //if switch is non clickable then user where ever clicks only linearlayout will be triggered
+        binding.groupSfw.switchItem.clickable(false)
         val theme = SettingsHelper.getAppTheme().stringRes
         val language = SettingsHelper.getAppLanguage().showName
         val titleType = SettingsHelper.getPreferredTitleType().showName
         val enableSfw = SettingsHelper.getSfwEnabled()
 
-        binding.tvTheme.text = getString(theme)
-        binding.tvLanguage.text = language
-        binding.tvTitleType.text = titleType
-        binding.switchSfw.setChecked(enableSfw)
+        with(binding.groupMyProfile) {
+            tvTitle.text = getString(R.string.msg_my_profile)
+            tvDescription.text = getString(R.string.msg_mal_profile_decription)
+            ivStartIcon.setImageResource(R.drawable.ic_profile)
+        }
+        with(binding.groupMyAnime) {
+            tvTitle.text = getString(R.string.msg_my_anime_list)
+            tvDescription.text = getString(R.string.msg_my_anime_description)
+            ivStartIcon.setImageResource(R.drawable.ic_anime_list)
+        }
+        with(binding.groupMyManga) {
+            tvTitle.text = getString(R.string.msg_my_manga_list)
+            tvDescription.text = getString(R.string.msg_my_manga_description)
+            ivStartIcon.setImageResource(R.drawable.ic_manga_list)
+        }
+        with(binding.groupAppTheme) {
+            tvTitle.text = getString(R.string.msg_app_theme)
+            tvDescription.text = getString(R.string.msg_theme_description)
+            ivStartIcon.setImageResource(R.drawable.ic_day)
+            tvHint.text = getString(theme)
+        }
+        with(binding.groupTitleType) {
+            tvTitle.text = getString(R.string.msg_title_language)
+            tvDescription.text = getString(R.string.msg_title_lang_description)
+            ivStartIcon.setImageResource(R.drawable.ic_language)
+            tvHint.text = titleType
+        }
+        with(binding.groupAppLanguage) {
+            tvTitle.text = getString(R.string.msg_language)
+            tvDescription.text = getString(R.string.msg_language_description)
+            ivStartIcon.setImageResource(R.drawable.ic_global_language)
+            tvHint.text = language
+        }
+        with(binding.groupSfw) {
+            tvTitle.text = getString(R.string.msg_sfw)
+            tvDescription.text = getString(R.string.msg_sfw_description)
+            ivStartIcon.setImageResource(R.drawable.ic_sfw)
+            switchItem.setChecked(enableSfw)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //set layout first time we arrive on fragment
+        setAuthLayout(PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY))
+        //set layout when while being in fragment value changes
+        PrefUtils.setBooleanObserver(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
+            setAuthLayout(it)
+        }
+    }
+
+    private fun setAuthLayout(authenticated: Boolean) {
+        with(binding) {
+            groupMyProfile.llItem.clickable(authenticated)
+            groupMyAnime.llItem.clickable(authenticated)
+            groupMyManga.llItem.clickable(authenticated)
+            flLoginLayer.showOrHide(!authenticated)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PrefUtils.removeObserver()
     }
 
     private fun setAdapters() {
@@ -79,67 +161,150 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        binding.llMyProfile.setOnClickListener(this)
-        binding.llMyAnimeList.setOnClickListener(this)
-        binding.llMyMangaList.setOnClickListener(this)
-        binding.llTheme.setOnClickListener(this)
-        binding.llTitleType.setOnClickListener(this)
-        binding.llLanguage.setOnClickListener(this)
-        binding.llSfw.setOnClickListener(this)
+        binding.groupMyProfile.llItem.setOnClickListener(this)
+        binding.groupMyAnime.llItem.setOnClickListener(this)
+        binding.groupMyManga.llItem.setOnClickListener(this)
+        binding.groupAppTheme.llItem.setOnClickListener(this)
+        binding.groupTitleType.llItem.setOnClickListener(this)
+        binding.groupAppLanguage.llItem.setOnClickListener(this)
+        binding.groupSfw.llItem.setOnClickListener(this)
         binding.llLogout.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.llMyProfile -> parentActivity?.navigateToFragment(ProfileFragment.newInstance())
-            binding.llMyAnimeList -> {}
-            binding.llMyMangaList -> {}
-            binding.llTheme -> {}
-            binding.llTitleType -> {}
-            binding.llLanguage -> {}
-            binding.llSfw -> onSfwClick()
+            binding.groupMyProfile.llItem -> parentActivity?.navigateToFragment(ProfileFragment.newInstance())
+            binding.groupMyAnime.llItem -> parentActivity?.navigateToFragment(MyAnimeListFragment.newInstance())
+            binding.groupMyManga.llItem -> parentActivity?.navigateToFragment(MyMangaListFragment.newInstance())
+            binding.groupAppTheme.llItem -> openOptionDialog(themeList, ItemSelectionType.THEME)
+            binding.groupTitleType.llItem -> openOptionDialog(
+                titleTypeList,
+                ItemSelectionType.TITLE_LANGUAGE
+            )
+
+            binding.groupAppLanguage.llItem -> openOptionDialog(
+                languageList,
+                ItemSelectionType.APP_LANGUAGE
+            )
+
+            binding.groupSfw.llItem -> onSfwClick()
             binding.llLogout -> onLogoutClick()
             binding.btnLogin -> context?.showLoginDialog()
         }
     }
 
+    private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ItemSelectionType) {
+        optionBottomSheetDialog =
+            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+        val view = DialogOptionsBinding.inflate(layoutInflater)
+
+        with(view) {
+            val title = when (type) {
+                ItemSelectionType.APP_LANGUAGE -> {
+                    list.find { it.id == SettingsHelper.getAppLanguage().search }?.isSelected = true
+                    R.string.msg_choose_app_language
+                }
+
+                ItemSelectionType.TITLE_LANGUAGE -> {
+                    list.find { it.id == SettingsHelper.getPreferredTitleType().search }?.isSelected =
+                        true
+                    R.string.msg_choose_title_language
+                }
+
+                ItemSelectionType.THEME -> {
+                    list.find { it.id == SettingsHelper.getAppTheme().name }?.isSelected = true
+                    R.string.msg_choose_app_theme
+                }
+            }
+            tvTitle.text = getString(title)
+            optionAdapter = ItemSelectionAdapter(list, this@MoreFragment, type)
+            rvItems.setHasFixedSize(true)
+            rvItems.layoutManager = LinearLayoutManager(context)
+            rvItems.adapter = optionAdapter
+        }
+
+        optionBottomSheetDialog?.setContentView(view.root)
+        optionBottomSheetDialog?.show()
+    }
+
     private fun onSfwClick() {
-        val isChecked = binding.switchSfw.isChecked
-        binding.switchSfw.setChecked(!isChecked,true)
-        PrefUtils.setBoolean(Const.PrefKeys.SFW_ENABLE_KEY,!isChecked)
+        val isChecked = binding.groupSfw.switchItem.isChecked
+        binding.groupSfw.switchItem.setChecked(!isChecked, true)
+        PrefUtils.setBoolean(Const.PrefKeys.SFW_ENABLE_KEY, !isChecked)
     }
 
     private fun onLogoutClick() {
-        val builder = MaterialAlertDialogBuilder(requireContext())
+        val dialog = BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
         val view = DialogLoginBinding.inflate(layoutInflater)
-        builder.setView(view.root)
 
         with(view) {
-            tvTitle.text =  getString(R.string.msg_logout)
+            tvTitle.text = getString(R.string.msg_logout)
             tvDescription.text = getString(R.string.msg_logout_des)
-            btnNegative.text =  getString(R.string.msg_cancel)
-            btnPositive.text =  getString(R.string.msg_okay)
+            btnNegative.text = getString(R.string.msg_cancel)
+            btnPositive.text = getString(R.string.msg_okay)
             checkbox.hide()
         }
 
         view.btnNegative.setOnClickListener {
-            logoutDialog?.cancel()
+            dialog.cancel()
         }
         view.btnPositive.setOnClickListener {
-            logoutDialog?.cancel()
+            dialog.cancel()
             parentActivity?.logout()
         }
-
-        logoutDialog = builder.create()
-        logoutDialog?.show()
+        dialog.setContentView(view.root)
+        dialog.show()
     }
 
-    private fun setObservers() {
-        PrefUtils.onBooleanChange(Const.PrefKeys.IS_AUTHENTICATED_KEY) { authenticated ->
-            binding.flLoginLayer.showOrHide(!authenticated)
-            binding.viewStatusBar.showOrHide(!authenticated)
+    override fun onItemClick(position: Int, type: ItemSelectionType) {
+        when (type) {
+            ItemSelectionType.APP_LANGUAGE -> {
+                setOptionSelected(languageList,position){
+                    binding.groupAppLanguage.tvHint.text = it.name
+                    runCommonOptionFunction()
+                    PrefUtils.setString(Const.PrefKeys.APP_LANGUAGE_KEY, it.id)
+                    parentActivity?.navigateToHome()
+                }
+            }
+
+            ItemSelectionType.TITLE_LANGUAGE -> {
+                setOptionSelected(titleTypeList,position){
+                    binding.groupTitleType.tvHint.text = it.name
+                    runCommonOptionFunction()
+                    PrefUtils.setString(Const.PrefKeys.PREFERRED_TITLE_TYPE_KEY, it.id)
+                    parentActivity?.navigateToHome()
+                }
+            }
+
+            ItemSelectionType.THEME -> {
+                setOptionSelected(themeList,position){
+                    binding.groupAppTheme.tvHint.text = it.name
+                    runCommonOptionFunction()
+                    PrefUtils.setString(Const.PrefKeys.APP_THEME_KEY, it.id)
+                    activity?.setTheme(AppTheme.valueOfOrDefault(it.id))
+                }
+            }
         }
+    }
+
+    private fun setOptionSelected(
+        list: List<ItemSelectionModelBase>,
+        currentPosition: Int,
+        onOptionSelect: (ItemSelectionModelBase) -> Unit
+    ) {
+        //find if any item is selected then deselect it
+        list.find { it.isSelected }?.isSelected = false
+        val currentItem = list[currentPosition]
+        //now select on which user just clicked
+        currentItem.isSelected = true
+        onOptionSelect(currentItem)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun runCommonOptionFunction() {
+        optionAdapter?.notifyDataSetChanged()
+        optionBottomSheetDialog?.cancel()
     }
 
     companion object {

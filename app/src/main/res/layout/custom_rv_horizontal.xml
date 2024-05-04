@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_heading"
         tools:itemCount="3"
         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/row_grid_list_item"
+        tools:listitem="@layout/row_horizontal_list_item"
         tools:orientation="horizontal"
         tools:visibility="visible" />
 

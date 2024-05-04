@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
-import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
+import com.abhinavdev.animeapp.databinding.RowHorizontalListItemBinding
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableAnimeData
@@ -22,7 +22,7 @@ class AnimeHorizontalAdapter(
 ) : RecyclerView.Adapter<AnimeHorizontalAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            RowGridListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RowHorizontalListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(view)
     }
 
@@ -45,7 +45,7 @@ class AnimeHorizontalAdapter(
                 when (type) {
                     MultiApiCallType.TopAiring -> {}
                     MultiApiCallType.TopPopular -> {
-                        tvRanking.show()
+                        tvRanking.hide()
                         tvRating.show()
                         tvType.hide()
                     }
@@ -89,7 +89,7 @@ class AnimeHorizontalAdapter(
         return list.size
     }
 
-    inner class ViewHolder(val binding: RowGridListItemBinding) :
+    inner class ViewHolder(val binding: RowHorizontalListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
 }

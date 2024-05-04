@@ -12,21 +12,22 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseActivity
 import com.abhinavdev.animeapp.databinding.ActivityMainBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
-import com.abhinavdev.animeapp.remote.models.malmodels.AccessToken
 import com.abhinavdev.animeapp.ui.main.adapters.MainFragmentAdapter
 import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
+import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
-import com.abhinavdev.animeapp.util.statusbar.setStatusBarIconsDark
-import com.abhinavdev.animeapp.util.statusbar.setTransparentForWindow
 import com.google.android.material.navigation.NavigationBarView
 
 class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
-    private lateinit var binding: ActivityMainBinding
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
     private val rootFragmentTypes: List<MainFragmentAdapter.PageType> = arrayListOf(
         MainFragmentAdapter.PageType.ANIME,
         MainFragmentAdapter.PageType.MANGA,
@@ -41,9 +42,8 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        setTheme(SettingsHelper.getAppTheme())
         setContentView(binding.root)
-        setTransparentForWindow()
 
         viewModel = createViewModel(MainViewModel::class.java)
 
@@ -100,18 +100,13 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun setObservers() {
-        val accessToken = SettingsHelper.getAccessToken()?.accessToken
-        PrefUtils.onObjectChange(Const.PrefKeys.ACCESS_TOKEN_KEY,AccessToken::class.java) {
-            if (it?.accessToken != null && it.accessToken != accessToken) {
-                getProfile()
-            }
-        }
         viewModel.getAccessTokenResponse.observe(this) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let {
-                            PrefUtils.setObject(Const.PrefKeys.ACCESS_TOKEN_KEY,it)
+                            PrefUtils.setObject(Const.PrefKeys.ACCESS_TOKEN_KEY, it)
+                            getProfile()
                         }
                         isLoaderVisible(false)
                     }
@@ -132,8 +127,8 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let {
-                            PrefUtils.setObject(Const.PrefKeys.MAL_PROFILE_KEY,it)
-                            PrefUtils.setBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY,true)
+                            PrefUtils.setObject(Const.PrefKeys.MAL_PROFILE_KEY, it)
+                            PrefUtils.setBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY, true)
                         }
                         isLoaderVisible(false)
                     }
@@ -156,7 +151,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun setUpStatusBarColor() {
-        setStatusBarIconsDark(currentPageType != MainFragmentAdapter.PageType.MORE)
+//        setStatusBarIconsDark(false)
     }
 
     @SuppressLint("MissingSuperCall")
@@ -196,6 +191,12 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
 
     fun navigateToFragment(fragment: Fragment) {
         addFragment(fragment, R.id.nav_host_fragment, true)
+    }
+
+    fun navigateToHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun updateSelectedItemId() {

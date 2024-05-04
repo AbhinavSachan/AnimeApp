@@ -10,6 +10,9 @@ import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableAnimeData
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.PrefUtils
+import com.abhinavdev.animeapp.util.extension.getSizeOfView
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
@@ -57,7 +60,7 @@ class AnimeVerticalAdapter(
                         vtvAnimeName.text = animeName
 
                         tvRanking.hide()
-                        tvRating.show()
+                        tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
                         viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
@@ -78,7 +81,7 @@ class AnimeVerticalAdapter(
                         vtvAnimeName.text = animeName
 
                         tvRanking.hide()
-                        tvRating.show()
+                        tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
                         viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
@@ -100,7 +103,21 @@ class AnimeVerticalAdapter(
     }
 
     inner class GridViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root){
-
+        init {
+            val savedItemHeight = PrefUtils.getInt(Const.PrefKeys.GRID_ITEM_HEIGHT_KEY)
+            if (savedItemHeight <= 0){
+                binding.root.getSizeOfView {
+                    val height = (it.width * 3)/2
+                    PrefUtils.setInt(Const.PrefKeys.GRID_ITEM_HEIGHT_KEY,height)
+                    setItemHeight(height)
+                }
+            }else{
+                setItemHeight(savedItemHeight)
+            }
+        }
+        private fun setItemHeight(height: Int){
+            binding.root.layoutParams.height = height
+        }
     }
 
     inner class ListViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root)

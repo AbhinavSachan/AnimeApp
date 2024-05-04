@@ -18,9 +18,7 @@ import retrofit2.Response
 class MalRepositoryImpl : MalRepository {
     private val apiService = ApiClient.getMalApiService()
 
-    private val myListFields = "my_list_status{priority,comments},alternative_titles,media_type,mean,nsfw"
-
-    private val fields = "alternative_titles,media_type,mean,nsfw"
+    private val fields = "my_list_status{priority,comments},alternative_titles,media_type,mean,nsfw,num_episodes,start_season,num_chapters,start_date,num_volumes,end_date,status"
 
     override suspend fun updateAnimeListStatus(
         animeId: Int,
@@ -59,7 +57,7 @@ class MalRepositoryImpl : MalRepository {
     override suspend fun getMyAnimeList(
         status: MalAnimeStatus, sort: MalSortType, limit: Int, offset: Int
     ): Response<MalMyAnimeListResponse> {
-        return apiService.getMyAnimeList(status.search, sort.search, limit, offset, myListFields)
+        return apiService.getMyAnimeList(status.search, sort.search, limit, offset, fields)
     }
 
     override suspend fun updateMangaListStatus(
@@ -101,7 +99,7 @@ class MalRepositoryImpl : MalRepository {
     override suspend fun getMyMangaList(
         status: MalMangaStatus, sort: MalSortType, limit: Int, offset: Int
     ): Response<MalMyMangaListResponse> {
-        return apiService.getMyMangaList(status.search, sort.search, limit, offset, myListFields)
+        return apiService.getMyMangaList(status.search, sort.search, limit, offset, fields)
     }
 
     override suspend fun getProfile(): Response<MalProfileResponse> {

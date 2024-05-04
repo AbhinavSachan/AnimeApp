@@ -2,17 +2,15 @@ package com.abhinavdev.animeapp.util
 
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import com.abhinavdev.animeapp.BuildConfig
+import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
 import com.abhinavdev.animeapp.util.extension.openCustomTab
 import com.abhinavdev.animeapp.util.extension.openLink
 import com.abhinavdev.animeapp.util.extension.toast
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 object LoginUtil {
-
-    private var dialog: AlertDialog? = null
 
     private fun getLoginUrl(): String {
         val baseUrl = Const.BaseUrls.O_AUTH
@@ -22,18 +20,17 @@ object LoginUtil {
         return "${baseUrl}authorize?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&state=${state}"
     }
 
-    fun Context.showLoginDialog(onCancel: (() -> Unit)? = null): AlertDialog {
-        val builder = MaterialAlertDialogBuilder(this)
+    fun Context.showLoginDialog(onCancel: (() -> Unit)? = null) {
+        val dialog = BottomSheetDialog(this, R.style.NoBackgroundDialogTheme)
         val view = DialogLoginBinding.inflate(LayoutInflater.from(this))
-        builder.setCancelable(false)
-        builder.setView(view.root)
+        dialog.setCancelable(false)
 
         view.btnNegative.setOnClickListener {
-            dialog?.cancel()
+            dialog.cancel()
             onCancel?.invoke()
         }
         view.btnPositive.setOnClickListener {
-            dialog?.cancel()
+            dialog.cancel()
             val loginUrl = getLoginUrl()
             val useExternalBrowser = view.checkbox.isChecked
             if (useExternalBrowser) {
@@ -46,10 +43,8 @@ object LoginUtil {
                 openCustomTab(loginUrl)
             }
         }
-
-        dialog = builder.create()
-        dialog?.show()
-        return dialog!!
+        dialog.setContentView(view.root)
+        dialog.show()
     }
 
     private var verifier = ""

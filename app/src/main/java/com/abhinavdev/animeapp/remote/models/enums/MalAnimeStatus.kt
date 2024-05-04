@@ -10,6 +10,8 @@ enum class MalAnimeStatus(
     val search: String,
     val showName: String,
 ) {
+    ALL("", "All"),
+
     @SerializedName("watching")
     WATCHING("watching", "Watching"),
 
@@ -26,7 +28,7 @@ enum class MalAnimeStatus(
     PLAN_TO_WATCH("plan_to_watch", "Plan To Watch");
 
     companion object {
-        fun valueOf(value: String) = entries.firstOrNull { it.search == value }
+        fun valueOfOrDefault(value: String) = entries.find { it.search == value } ?: ALL
 
         var list = entries.map { it.showName }
 

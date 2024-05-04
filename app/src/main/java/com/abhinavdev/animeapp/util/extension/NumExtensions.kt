@@ -50,4 +50,5 @@ object NumExtensions {
         if (this.isGreaterThanZero()) this.toStringOrUnknown() else UNKNOWN_CHAR
 
     private fun Float?.isGreaterThanZero() = this != null && this > 0f
+
 }

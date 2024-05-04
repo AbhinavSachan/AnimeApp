@@ -156,8 +156,8 @@ fun Fragment.setStatusBarColorAndIconDark(color: Int) {
     }
 }
 
-fun Activity.setStatusBarColorAndIconDark(color: Int) {
-    setStatusBarColor(color)
+fun Activity.setStatusBarColorAndIconDark(color: Int,@IntRange(0,255)alpha: Int = 0) {
+    setStatusBarColor(color,alpha)
     setStatusBarIconsDark(DesignColors.Util.isDarkColor(color))
 }
 

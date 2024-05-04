@@ -6,7 +6,7 @@ sealed class Resource<T>(
     val code: Int? = null,
 ) {
     class Success<T>(data: T) : Resource<T>(data)
-    class Error<T>(message: String, data: T? = null, code: Int? = null) :
+    class Error<T>(message: String?, data: T? = null, code: Int? = null) :
         Resource<T>(data, message, code)
 
     class Loading<T> : Resource<T>()

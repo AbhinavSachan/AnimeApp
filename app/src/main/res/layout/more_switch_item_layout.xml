@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_item"
+        style="@style/MoreMainLLStyle">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_start_icon"
+            style="@style/MoreImageView"
+            tools:src="@drawable/ic_about" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_title"
+                style="@style/MoreTitleTextView"
+                tools:text="Title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_description"
+                style="@style/MoreDescriptionTextView"
+                tools:text="This is a description for switch item." />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.bitvale.switcher.SwitcherX
+            android:id="@+id/switch_item"
+            style="@style/CustomNiceSwitch" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View style="@style/MoreDLView" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

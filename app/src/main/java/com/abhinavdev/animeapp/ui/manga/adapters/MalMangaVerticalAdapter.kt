@@ -1,6 +1,5 @@
 package com.abhinavdev.animeapp.ui.manga.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +9,9 @@ import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMalMangaData
+import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.PrefUtils
+import com.abhinavdev.animeapp.util.extension.getSizeOfView
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
@@ -32,10 +34,8 @@ class MalMangaVerticalAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setAdapterType(type: AdapterType) {
         adapterType = type
-        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -57,7 +57,7 @@ class MalMangaVerticalAdapter(
                         vtvAnimeName.text = mangaName
 
                         tvRanking.hide()
-                        tvRating.show()
+                        tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
                         viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
@@ -78,7 +78,7 @@ class MalMangaVerticalAdapter(
                         vtvAnimeName.text = mangaName
 
                         tvRanking.hide()
-                        tvRating.show()
+                        tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
                         viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
@@ -100,7 +100,21 @@ class MalMangaVerticalAdapter(
     }
 
     inner class GridViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root){
-
+        init {
+            val savedItemHeight = PrefUtils.getInt(Const.PrefKeys.GRID_ITEM_HEIGHT_KEY)
+            if (savedItemHeight <= 0){
+                binding.root.getSizeOfView {
+                    val height = (it.width * 3)/2
+                    PrefUtils.setInt(Const.PrefKeys.GRID_ITEM_HEIGHT_KEY,height)
+                    setItemHeight(height)
+                }
+            }else{
+                setItemHeight(savedItemHeight)
+            }
+        }
+        private fun setItemHeight(height: Int){
+            binding.root.layoutParams.height = height
+        }
     }
 
     inner class ListViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root)

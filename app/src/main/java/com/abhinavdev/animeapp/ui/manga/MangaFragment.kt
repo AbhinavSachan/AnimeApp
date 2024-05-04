@@ -24,7 +24,7 @@ import com.abhinavdev.animeapp.ui.manga.adapters.MangaBannerAdapter
 import com.abhinavdev.animeapp.ui.manga.adapters.MangaHorizontalAdapter
 import com.abhinavdev.animeapp.ui.manga.viewmodel.MangaViewModel
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
@@ -35,6 +35,8 @@ import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.Job
+import java.io.Serializable
 
 class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiTypeCallback {
     private var _binding: FragmentMangaBinding? = null
@@ -61,6 +63,8 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     private var isLoading = false
     private var isRefreshed = false
     private var isAuthenticated = false
+
+    private var authCheckJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -118,9 +122,9 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     private fun setTopViewPagerHeight() {
         val screenSize = getDisplaySize(requireActivity())
         if (screenSize.width > screenSize.height) {
-            binding.svTopAiring.layoutParams.height = (screenSize.height * 9) / 8
+            binding.svTopAiring.layoutParams.height = (screenSize.height * 8) / 9
         } else {
-            binding.svTopAiring.layoutParams.height = (screenSize.width * 9) / 8
+            binding.svTopAiring.layoutParams.height = (screenSize.width * 8) / 9
         }
     }
 
@@ -134,7 +138,8 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
         popularAdapter = MangaHorizontalAdapter(popularList, MultiApiCallType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
         binding.groupPopular.rvItems.setHasFixedSize(true)
-        binding.groupPopular.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupPopular.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupPopular.rvItems.adapter = popularAdapter
 
         //third rv
@@ -142,21 +147,24 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
             MangaHorizontalAdapter(favouriteList, MultiApiCallType.TopFavourite, this)
         favouriteAdapter?.setHasStableIds(true)
         binding.groupFavourite.rvItems.setHasFixedSize(true)
-        binding.groupFavourite.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupFavourite.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupFavourite.rvItems.adapter = favouriteAdapter
 
         //fourth rv
         upcomingAdapter = MangaHorizontalAdapter(upcomingList, MultiApiCallType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
         binding.groupUpcoming.rvItems.setHasFixedSize(true)
-        binding.groupUpcoming.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupUpcoming.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupUpcoming.rvItems.adapter = upcomingAdapter
 
         //fifth rv
         rankedAdapter = MalMangaHorizontalAdapter(rankedList, MultiApiCallType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
         binding.groupTopRanked.rvItems.setHasFixedSize(true)
-        binding.groupTopRanked.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupTopRanked.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupTopRanked.rvItems.adapter = rankedAdapter
     }
 
@@ -187,14 +195,30 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
         }
     }
 
-    private fun setObservers() {
-        PrefUtils.onBooleanChange(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
-            if (it != isAuthenticated) {
-                isAuthenticated = it
-                setAuthenticationView()
-                allApiCalls()
-            }
+    override fun onResume() {
+        super.onResume()
+        //set layout first time we arrive on fragment
+        setAuthLayout(PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY))
+        //set layout when while being in fragment value changes
+        PrefUtils.setBooleanObserver(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
+            setAuthLayout(it)
         }
+    }
+
+    private fun setAuthLayout(authenticated: Boolean) {
+        if (authenticated != isAuthenticated) {
+            isAuthenticated = authenticated
+            setAuthenticationView()
+            allApiCalls()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PrefUtils.removeObserver()
+    }
+
+    private fun setObservers() {
         viewModel.mangaAllApiResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { apiMap ->
                 apiMap.forEach { (key, response) ->
@@ -215,16 +239,7 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
                             key, response, ::upcomingLoading
                         )
 
-                        else -> {}
-                    }
-                }
-            }
-        }
-        viewModel.mangaAuthenticatedApiResponse.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { apiMap ->
-                apiMap.forEach { (key, response) ->
-                    when (key) {
-                        MultiApiCallType.TopRanked -> handleAnimeAuthenticatedResponse(
+                        MultiApiCallType.TopRanked -> handleAnimeSearchResponse(
                             key, response, ::rankedLoading
                         )
 
@@ -237,51 +252,17 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
 
     // Function to handle each type of response
     private inline fun handleAnimeSearchResponse(
-        key: MultiApiCallType,
-        response: Resource<MangaSearchResponse>,
-        loadingFunction: (Boolean) -> Unit
+        key: MultiApiCallType, response: Resource<Serializable>, loadingFunction: (Boolean) -> Unit
     ) {
         when (response) {
             is Resource.Success -> {
-                response.data?.data?.let {
-                    when (key) {
-                        MultiApiCallType.TopAiring -> setAiringData(it)
-                        MultiApiCallType.TopPopular -> setPopularData(it)
-                        MultiApiCallType.TopFavourite -> setFavouriteData(it)
-                        MultiApiCallType.TopUpcoming -> setUpcomingData(it)
-                        else -> {}
-                    }
-                }
-                isLoading = false
-                loadingFunction(false)
-            }
-
-            is Resource.Error -> {
-                isLoading = false
-                loadingFunction(false)
-                response.message?.let { message -> toast(message) }
-            }
-
-            is Resource.Loading -> {
-                isLoading = true
-                loadingFunction(true)
-            }
-        }
-    }
-
-    // Function to handle each type of response
-    private inline fun handleAnimeAuthenticatedResponse(
-        key: MultiApiCallType,
-        response: Resource<MalMyMangaListResponse>,
-        loadingFunction: (Boolean) -> Unit
-    ) {
-        when (response) {
-            is Resource.Success -> {
-                response.data?.data?.let {
-                    when (key) {
-                        MultiApiCallType.TopRanked -> setRankedData(it)
-                        else -> {}
-                    }
+                when (key) {
+                    MultiApiCallType.TopAiring -> setAiringData(response.data as MangaSearchResponse)
+                    MultiApiCallType.TopPopular -> setPopularData(response.data as MangaSearchResponse)
+                    MultiApiCallType.TopFavourite -> setFavouriteData(response.data as MangaSearchResponse)
+                    MultiApiCallType.TopUpcoming -> setUpcomingData(response.data as MangaSearchResponse)
+                    MultiApiCallType.TopRanked -> setRankedData(response.data as MalMyMangaListResponse)
+                    else -> {}
                 }
                 isLoading = false
                 loadingFunction(false)
@@ -343,45 +324,42 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setAiringData(animeData: ArrayList<MangaData>) {
+    private fun setAiringData(animeData: MangaSearchResponse) {
         airingList.clear()
-        airingList.addAll(animeData)
+        animeData.data?.let { airingList.addAll(it) }
         airingAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setPopularData(animeData: ArrayList<MangaData>) {
+    private fun setPopularData(animeData: MangaSearchResponse) {
         popularList.clear()
-        popularList.addAll(animeData)
+        animeData.data?.let { popularList.addAll(it) }
         popularAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setFavouriteData(animeData: ArrayList<MangaData>) {
+    private fun setFavouriteData(animeData: MangaSearchResponse) {
         favouriteList.clear()
-        favouriteList.addAll(animeData)
+        animeData.data?.let { favouriteList.addAll(it) }
         favouriteAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setUpcomingData(animeData: ArrayList<MangaData>) {
+    private fun setUpcomingData(animeData: MangaSearchResponse) {
         upcomingList.clear()
-        upcomingList.addAll(animeData)
+        animeData.data?.let { upcomingList.addAll(it) }
         upcomingAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setRankedData(animeData: ArrayList<MalMangaData>) {
+    private fun setRankedData(animeData: MalMyMangaListResponse) {
         rankedList.clear()
-        rankedList.addAll(animeData)
+        animeData.data?.let { rankedList.addAll(it) }
         rankedAdapter?.notifyDataSetChanged()
     }
 
     private fun allApiCalls() {
         viewModel.getAllMangaData()
-        if (isAuthenticated) {
-            viewModel.getAuthenticatedMangaData()
-        }
     }
 
     override fun <T> onItemClick(position: Int, type: T) {
@@ -392,7 +370,7 @@ class MangaFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
             MultiApiCallType.TopFavourite -> toast("Favourite")
             MultiApiCallType.TopUpcoming -> toast("Upcoming")
             MultiApiCallType.TopRanked -> toast("Ranked")
-            else->{}
+            else -> {}
         }
     }
 

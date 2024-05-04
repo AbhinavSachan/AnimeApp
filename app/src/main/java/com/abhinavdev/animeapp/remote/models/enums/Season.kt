@@ -7,21 +7,30 @@ import com.google.gson.annotations.SerializedName
  */
 enum class Season(
     /** Used in the search queries.  */
-    val search: String?,
+    val search: String,
+    val showName: String,
 ) {
     @SerializedName("summer")
-    SUMMER("summer"),
+    SUMMER("summer","Summer"),
 
     @SerializedName("spring")
-    SPRING("spring"),
+    SPRING("spring","Spring"),
 
     @SerializedName("fall")
-    FALL("fall"),
+    FALL("fall","Fall"),
 
     @SerializedName("winter")
-    WINTER("winter"),
+    WINTER("winter","Winter"),
 
     @SerializedName("later")
-    LATER("later"),
+    LATER("later","Later");
+
+
+    companion object {
+        fun valueOfOrNull(value: String?) = entries.find { it.search == value }
+
+        var list = entries.map { it.showName }
+
+    }
 
 }

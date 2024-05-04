@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/NoStrokeTransparentCardStyle.Elevated"
-    android:layout_width="@dimen/_136sdp"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/_180sdp"
-    android:layout_marginEnd="@dimen/_6sdp"
     app:cardCornerRadius="@dimen/_12sdp">
+<!--    adding margins programmatically-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -117,7 +117,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_ranking"
                 style="@style/TextStyleFont800"
-                android:textColor="@color/fontTextWhite"
+                android:textColor="@color/absolute_white"
                 android:textSize="@dimen/text_size_26"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -145,7 +145,7 @@
             android:ellipsize="end"
             android:gravity="bottom"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/onAccent"
             android:textSize="@dimen/text_size_12"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/view_name"

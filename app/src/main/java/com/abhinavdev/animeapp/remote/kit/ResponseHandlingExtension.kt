@@ -6,7 +6,7 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.kit.repository.OAuthRepository
 import com.abhinavdev.animeapp.remote.kit.sources.OAuthRepositoryImpl
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.hasInternetConnection
 import kotlinx.coroutines.Dispatchers
@@ -27,10 +27,10 @@ suspend fun <T> Response<T>.handleResponse(application: Application): Event<Reso
         400 -> application.getString(R.string.error_invalid_request)
         404 -> application.getString(R.string.error_resource_not_found)
         405 -> application.getString(R.string.error_only_get_request_allowed)
-        429 -> application.getString(R.string.error_rate_limit)
+//        429 -> application.getString(R.string.error_rate_limit) // added a rate limiter for this error
         500 -> application.getString(R.string.error_internal_server)
         503 -> application.getString(R.string.error_maintenance)
-        else -> application.getString(R.string.error_something_went_wrong)
+        else -> null
     }
     if (code == 401) {
         val repo: OAuthRepository = OAuthRepositoryImpl()

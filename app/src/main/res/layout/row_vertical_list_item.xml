@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/PrimaryStrokeAccentCardStyle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_151sdp"
+    android:layout_marginBottom="@dimen/_8sdp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/safe_zone_vertical_card" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/safe_zone_vertical_card" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/safe_zone_vertical_card" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/safe_zone_vertical_card" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_poster"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_135sdp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="@id/guide_start"
+            app:layout_constraintTop_toTopOf="@id/guide_top"
+            app:shapeAppearanceOverlay="@style/CircleImageViewRadius16"
+            tools:src="@drawable/placeholder" />
+
+        <View
+            android:id="@+id/view_top_left_fade"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_black_trans_fade_top_left_cor_16"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_poster"
+            app:layout_constraintEnd_toEndOf="@id/iv_poster"
+            app:layout_constraintStart_toStartOf="@id/iv_poster"
+            app:layout_constraintTop_toTopOf="@id/iv_poster"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_ranking"
+            style="@style/TextStyleFont800"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textColor="@color/absolute_white"
+            android:textSize="@dimen/text_size_20"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/iv_poster"
+            app:layout_constraintTop_toTopOf="@id/iv_poster"
+            tools:text="#1"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/poster_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="end"
+            app:barrierMargin="@dimen/_8sdp"
+            app:constraint_referenced_ids="iv_poster" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_black_adjustment_layer" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_name"
+            style="@style/TextStyleFont600"
+            android:layout_width="0dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintEnd_toEndOf="@id/guide_end"
+            app:layout_constraintStart_toStartOf="@id/poster_barrier"
+            app:layout_constraintTop_toTopOf="@id/guide_top"
+            tools:text="Kiki's Delivery Service" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_type"
+            style="@style/TextStyleFont400"
+            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintEnd_toEndOf="@id/guide_end"
+            app:layout_constraintStart_toStartOf="@id/poster_barrier"
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            tools:text="TV (12 Episodes)" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_rating"
+            style="@style/CustomLabelImageView"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:src="@drawable/ic_filled_star"
+            app:layout_constraintStart_toStartOf="@id/poster_barrier"
+            app:layout_constraintTop_toBottomOf="@id/tv_type" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_rating"
+            style="@style/TextStyleFont600"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:textSize="@dimen/text_size_13"
+            app:layout_constraintBottom_toBottomOf="@id/iv_rating"
+            app:layout_constraintStart_toEndOf="@id/iv_rating"
+            app:layout_constraintTop_toTopOf="@id/iv_rating"
+            tools:text="9.8" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_season"
+            style="@style/CustomLabelImageView"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:src="@drawable/ic_season"
+            app:layout_constraintStart_toStartOf="@id/poster_barrier"
+            app:layout_constraintTop_toBottomOf="@id/iv_rating" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_season"
+            style="@style/TextStyleFont500"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintBottom_toBottomOf="@id/iv_season"
+            app:layout_constraintEnd_toEndOf="@id/guide_end"
+            app:layout_constraintStart_toEndOf="@id/iv_season"
+            app:layout_constraintTop_toTopOf="@id/iv_season"
+            tools:text="Winter (2022)" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_status"
+            style="@style/CustomLabelImageView"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:src="@drawable/ic_status"
+            app:layout_constraintStart_toStartOf="@id/poster_barrier"
+            app:layout_constraintTop_toBottomOf="@id/iv_season" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_status"
+            style="@style/TextStyleFont500"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintBottom_toBottomOf="@id/iv_status"
+            app:layout_constraintEnd_toEndOf="@id/guide_end"
+            app:layout_constraintStart_toEndOf="@id/iv_status"
+            app:layout_constraintTop_toTopOf="@id/iv_status"
+            tools:text="Not Yet Aired" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_date"
+            style="@style/CustomLabelImageView"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:src="@drawable/ic_date"
+            app:layout_constraintStart_toStartOf="@id/poster_barrier"
+            app:layout_constraintTop_toBottomOf="@id/iv_status" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_date"
+            style="@style/TextStyleFont500"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintBottom_toBottomOf="@id/iv_date"
+            app:layout_constraintEnd_toEndOf="@id/guide_end"
+            app:layout_constraintStart_toEndOf="@id/iv_date"
+            app:layout_constraintTop_toTopOf="@id/iv_date"
+            tools:text="25 Oct 2022 to 16 Mar 2023" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

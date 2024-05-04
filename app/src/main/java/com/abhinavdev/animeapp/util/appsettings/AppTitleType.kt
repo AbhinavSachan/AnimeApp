@@ -13,6 +13,6 @@ enum class AppTitleType(val search: String, val showName: String) {
     companion object {
         fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: ROMAJI
 
-        val list = entries.map { it.showName }
+        val list = entries.associate { it.search to it.showName }
     }
 }

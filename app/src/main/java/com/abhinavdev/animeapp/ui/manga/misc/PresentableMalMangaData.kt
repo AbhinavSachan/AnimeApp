@@ -4,7 +4,7 @@ import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
-import com.abhinavdev.animeapp.util.extension.formatToOneDigitAfterDecimal
+import com.abhinavdev.animeapp.util.extension.formatToOneDigitAfterDecimalOrNull
 
 class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
 
@@ -17,11 +17,11 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
     }
 
     fun getRank(): String {
-        return (position + 1).toString()
+        return "#${position + 1}"
     }
 
     fun getRating(): String? {
-        return item.node?.mean?.formatToOneDigitAfterDecimal()
+        return item.node?.mean?.formatToOneDigitAfterDecimalOrNull()
     }
 
     fun getName(): String? {

@@ -16,12 +16,13 @@ import com.abhinavdev.animeapp.remote.kit.sources.MangaRepositoryImpl
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.enums.MangaFilter
 import com.abhinavdev.animeapp.remote.models.enums.MangaType
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.io.Serializable
 
 class MangaViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MangaRepository = MangaRepositoryImpl()
@@ -48,52 +49,53 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val _mangaAllApiResponse =
-        MutableLiveData<Event<Map<MultiApiCallType, Resource<MangaSearchResponse>>>>()
-    val mangaAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<MangaSearchResponse>>>> =
+        MutableLiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>>()
+    val mangaAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>> =
         _mangaAllApiResponse
 
     fun getAllMangaData() = viewModelScope.launch {
         val animeType = MangaType.MANGA
         val page = 1
         val limit = 10
+        val offset = 0
+        val isAuthenticated = SettingsHelper.getIsAuthenticated()
 
-        val apiCalls = mutableMapOf(MultiApiCallType.TopAiring to suspend {
+        val apiCalls = mutableMapOf<MultiApiCallType, suspend () -> Response<Serializable>>()
+
+        apiCalls[MultiApiCallType.TopAiring] = suspend {
             repository.getTopManga(
                 animeType, MangaFilter.PUBLISHING, page, limit
-            )
-        }, MultiApiCallType.TopPopular to suspend {
+            ) as Response<Serializable>
+        }
+
+        apiCalls[MultiApiCallType.TopPopular] = suspend {
             repository.getTopManga(
                 animeType, MangaFilter.BY_POPULARITY, page, limit
-            )
-        }, MultiApiCallType.TopFavourite to suspend {
+            ) as Response<Serializable>
+        }
+
+        apiCalls[MultiApiCallType.TopFavourite] = suspend {
             repository.getTopManga(
                 animeType, MangaFilter.FAVORITE, page, limit
-            )
-        }, MultiApiCallType.TopUpcoming to suspend {
+            ) as Response<Serializable>
+        }
+
+        apiCalls[MultiApiCallType.TopUpcoming] = suspend {
             repository.getTopManga(
                 animeType, MangaFilter.UPCOMING, page, limit
-            )
-        })
+            ) as Response<Serializable>
+        }
+
+        // Add TopRanked only if authenticated
+        if (isAuthenticated) {
+            apiCalls[MultiApiCallType.TopRanked] = suspend {
+                malRepository.getMangaRanking(
+                    MalMangaType.ALL, limit, offset
+                ) as Response<Serializable>
+            }
+        }
+
         _mangaAllApiResponse.fetchMultiData(getApplication(), apiCalls)
     }
 
-    private val _mangaAuthenticatedApiResponse =
-        MutableLiveData<Event<Map<MultiApiCallType, Resource<MalMyMangaListResponse>>>>()
-    val mangaAuthenticatedApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<MalMyMangaListResponse>>>> =
-        _mangaAuthenticatedApiResponse
-
-
-    fun getAuthenticatedMangaData() = viewModelScope.launch {
-        val limit = 10
-        val offset = 0
-
-        val apiCalls: MutableMap<MultiApiCallType, suspend () -> Response<MalMyMangaListResponse>> =
-            mutableMapOf(MultiApiCallType.TopRanked to suspend {
-                malRepository.getMangaRanking(
-                    MalMangaType.ALL, limit, offset
-                )
-            })
-
-        _mangaAuthenticatedApiResponse.fetchMultiData(getApplication(), apiCalls)
-    }
 }

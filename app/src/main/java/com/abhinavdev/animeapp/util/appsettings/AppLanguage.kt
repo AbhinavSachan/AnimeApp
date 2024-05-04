@@ -7,7 +7,7 @@ enum class AppLanguage(val search: String, val showName: String) {
     companion object {
         fun valueOfOrDefault(isoTag: String?) = entries.find { it.search == isoTag } ?: ENGLISH
 
-        val list = entries.map { it.showName }
+        val list = entries.associate { it.search to it.showName }
     }
 
 }

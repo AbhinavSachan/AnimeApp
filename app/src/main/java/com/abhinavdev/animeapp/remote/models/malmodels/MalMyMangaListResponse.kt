@@ -1,6 +1,7 @@
 package com.abhinavdev.animeapp.remote.models.malmodels
 
 import com.abhinavdev.animeapp.remote.models.BaseModel
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaMediaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.enums.MalNsfwCategories
@@ -23,6 +24,11 @@ data class MalMangaNode(
     @SerializedName("media_type") val mediaType: MalMangaType?,
     @SerializedName("mean") val mean: Float?,
     @SerializedName("nsfw") val nsfw: MalNsfwCategories?,
+    @SerializedName("num_chapters") val numChapters: Int?,
+    @SerializedName("start_date") val startDate: String?,
+    @SerializedName("end_date") val endDate: String?,
+    @SerializedName("status") val status: MalMangaMediaStatus?,
+    @SerializedName("num_volumes") val numVolumes: Int?,
 ) : BaseModel()
 
 data class MangaListStatus(

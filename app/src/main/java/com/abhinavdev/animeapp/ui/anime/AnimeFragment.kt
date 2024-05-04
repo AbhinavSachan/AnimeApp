@@ -24,7 +24,7 @@ import com.abhinavdev.animeapp.ui.common.listeners.CustomClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.appsettings.PrefUtils
+import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
@@ -35,6 +35,9 @@ import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.Job
+import java.io.Serializable
+
 
 class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiTypeCallback {
     private var _binding: FragmentAnimeBinding? = null
@@ -64,6 +67,8 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     private var isLoading = false
     private var isRefreshed = false
     private var isAuthenticated = false
+
+    private var authCheckJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -122,9 +127,9 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     private fun setTopViewPagerHeight() {
         val screenSize = getDisplaySize(requireActivity())
         if (screenSize.width > screenSize.height) {
-            binding.svTopAiring.layoutParams.height = (screenSize.height * 9) / 8
+            binding.svTopAiring.layoutParams.height = (screenSize.height * 8) / 9
         } else {
-            binding.svTopAiring.layoutParams.height = (screenSize.width * 9) / 8
+            binding.svTopAiring.layoutParams.height = (screenSize.width * 8) / 9
         }
     }
 
@@ -138,7 +143,8 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
         popularAdapter = AnimeHorizontalAdapter(popularList, MultiApiCallType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
         binding.groupPopular.rvItems.setHasFixedSize(true)
-        binding.groupPopular.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupPopular.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupPopular.rvItems.adapter = popularAdapter
 
         //third rv
@@ -146,14 +152,16 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
             AnimeHorizontalAdapter(favouriteList, MultiApiCallType.TopFavourite, this)
         favouriteAdapter?.setHasStableIds(true)
         binding.groupFavourite.rvItems.setHasFixedSize(true)
-        binding.groupFavourite.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupFavourite.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupFavourite.rvItems.adapter = favouriteAdapter
 
         //fourth rv
         upcomingAdapter = AnimeHorizontalAdapter(upcomingList, MultiApiCallType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
         binding.groupUpcoming.rvItems.setHasFixedSize(true)
-        binding.groupUpcoming.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupUpcoming.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupUpcoming.rvItems.adapter = upcomingAdapter
 
         //fifth rv
@@ -161,14 +169,16 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
             MalAnimeHorizontalAdapter(recommendedList, MultiApiCallType.TopRecommended, this)
         recommendedAdapter?.setHasStableIds(true)
         binding.groupRecommended.rvItems.setHasFixedSize(true)
-        binding.groupRecommended.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupRecommended.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupRecommended.rvItems.adapter = recommendedAdapter
 
         //sixth rv
         rankedAdapter = MalAnimeHorizontalAdapter(rankedList, MultiApiCallType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
         binding.groupTopRanked.rvItems.setHasFixedSize(true)
-        binding.groupTopRanked.rvItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.groupTopRanked.rvItems.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupTopRanked.rvItems.adapter = rankedAdapter
     }
 
@@ -201,8 +211,31 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        //set layout first time we arrive on fragment
+        setAuthLayout(PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY))
+        //set layout when while being in fragment value changes
+        PrefUtils.setBooleanObserver(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
+            setAuthLayout(it)
+        }
+    }
+
+    private fun setAuthLayout(authenticated: Boolean) {
+        if (authenticated != isAuthenticated) {
+            isAuthenticated = authenticated
+            setAuthenticationView()
+            allApiCalls()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PrefUtils.removeObserver()
+    }
+
     private fun setObservers() {
-        PrefUtils.onBooleanChange(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
+        PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY).let {
             if (it != isAuthenticated) {
                 isAuthenticated = it
                 setAuthenticationView()
@@ -229,24 +262,13 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
                             key, response, ::upcomingLoading
                         )
 
-                        else -> {}
-                    }
-                }
-            }
-        }
-        viewModel.animeAuthenticatedApiResponse.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { apiMap ->
-                apiMap.forEach { (key, response) ->
-                    when (key) {
-                        MultiApiCallType.TopRanked -> handleAnimeAuthenticatedResponse(
+                        MultiApiCallType.TopRanked -> handleAnimeSearchResponse(
                             key, response, ::rankedLoading
                         )
 
-                        MultiApiCallType.TopRecommended -> handleAnimeAuthenticatedResponse(
+                        MultiApiCallType.TopRecommended -> handleAnimeSearchResponse(
                             key, response, ::recommendedLoading
                         )
-
-                        else -> {}
                     }
                 }
             }
@@ -256,51 +278,18 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     // Function to handle each type of response
     private inline fun handleAnimeSearchResponse(
         key: MultiApiCallType,
-        response: Resource<AnimeSearchResponse>,
+        response: Resource<Serializable>,
         loadingFunction: (Boolean) -> Unit
     ) {
         when (response) {
             is Resource.Success -> {
-                response.data?.data?.let {
-                    when (key) {
-                        MultiApiCallType.TopAiring -> setAiringData(it)
-                        MultiApiCallType.TopPopular -> setPopularData(it)
-                        MultiApiCallType.TopFavourite -> setFavouriteData(it)
-                        MultiApiCallType.TopUpcoming -> setUpcomingData(it)
-                        else -> {}
-                    }
-                }
-                isLoading = false
-                loadingFunction(false)
-            }
-
-            is Resource.Error -> {
-                isLoading = false
-                loadingFunction(false)
-                response.message?.let { message -> toast(message) }
-            }
-
-            is Resource.Loading -> {
-                isLoading = true
-                loadingFunction(true)
-            }
-        }
-    }
-
-    // Function to handle each type of response
-    private inline fun handleAnimeAuthenticatedResponse(
-        key: MultiApiCallType,
-        response: Resource<MalMyAnimeListResponse>,
-        loadingFunction: (Boolean) -> Unit
-    ) {
-        when (response) {
-            is Resource.Success -> {
-                response.data?.data?.let {
-                    when (key) {
-                        MultiApiCallType.TopRecommended -> setRecommendedData(it)
-                        MultiApiCallType.TopRanked -> setRankedData(it)
-                        else -> {}
-                    }
+                when (key) {
+                    MultiApiCallType.TopAiring -> setAiringData(response.data as AnimeSearchResponse)
+                    MultiApiCallType.TopPopular -> setPopularData(response.data as AnimeSearchResponse)
+                    MultiApiCallType.TopFavourite -> setFavouriteData(response.data as AnimeSearchResponse)
+                    MultiApiCallType.TopUpcoming -> setUpcomingData(response.data as AnimeSearchResponse)
+                    MultiApiCallType.TopRecommended -> setRecommendedData(response.data as MalMyAnimeListResponse)
+                    MultiApiCallType.TopRanked -> setRankedData(response.data as MalMyAnimeListResponse)
                 }
                 isLoading = false
                 loadingFunction(false)
@@ -368,52 +357,49 @@ class AnimeFragment : BaseFragment(), View.OnClickListener, CustomClickMultiType
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setAiringData(animeData: ArrayList<AnimeData>) {
+    private fun setAiringData(animeData: AnimeSearchResponse) {
         airingList.clear()
-        airingList.addAll(animeData)
+        animeData.data?.let { airingList.addAll(it) }
         airingAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setPopularData(animeData: ArrayList<AnimeData>) {
+    private fun setPopularData(animeData: AnimeSearchResponse) {
         popularList.clear()
-        popularList.addAll(animeData)
+        animeData.data?.let { popularList.addAll(it) }
         popularAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setFavouriteData(animeData: ArrayList<AnimeData>) {
+    private fun setFavouriteData(animeData: AnimeSearchResponse) {
         favouriteList.clear()
-        favouriteList.addAll(animeData)
+        animeData.data?.let { favouriteList.addAll(it) }
         favouriteAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setUpcomingData(animeData: ArrayList<AnimeData>) {
+    private fun setUpcomingData(animeData: AnimeSearchResponse) {
         upcomingList.clear()
-        upcomingList.addAll(animeData)
+        animeData.data?.let { upcomingList.addAll(it) }
         upcomingAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setRecommendedData(animeData: ArrayList<MalAnimeData>) {
+    private fun setRecommendedData(animeData: MalMyAnimeListResponse) {
         recommendedList.clear()
-        recommendedList.addAll(animeData)
+        animeData.data?.let { recommendedList.addAll(it) }
         recommendedAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setRankedData(animeData: ArrayList<MalAnimeData>) {
+    private fun setRankedData(animeData: MalMyAnimeListResponse) {
         rankedList.clear()
-        rankedList.addAll(animeData)
+        animeData.data?.let { rankedList.addAll(it) }
         rankedAdapter?.notifyDataSetChanged()
     }
 
     private fun allApiCalls() {
         viewModel.getAllAnimeData()
-        if (isAuthenticated) {
-            viewModel.getAuthenticatedAnimeData()
-        }
     }
 
     override fun <T> onItemClick(position: Int, type: T) {

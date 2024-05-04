@@ -1,9 +1,5 @@
 package com.abhinavdev.animeapp.util
 
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-
 object Const {
     interface TimeOut {
         companion object {
@@ -17,26 +13,39 @@ object Const {
     interface PrefKeys {
         companion object {
             //key to save sfw in settings
-            val SFW_ENABLE_KEY = booleanPreferencesKey("settings_sfw_enable_key")
+            const val SFW_ENABLE_KEY = "settings_sfw_enable_key"
 
             //key to save app theme in settings
-            val APP_THEME_KEY = stringPreferencesKey("settings_app_theme_key")
+            const val APP_THEME_KEY = "settings_app_theme_key"
 
             //key to save title language type in settings
-            val PREFERRED_TITLE_TYPE_KEY = stringPreferencesKey("settings_preferred_title_type_key")
+            const val PREFERRED_TITLE_TYPE_KEY = "settings_preferred_title_type_key"
 
             //key to save language in settings
-            val APP_LANGUAGE_KEY = stringPreferencesKey("settings_app_language_key")
+            const val APP_LANGUAGE_KEY = "settings_app_language_key"
 
             //key to save access token when logged in by user
-            val ACCESS_TOKEN_KEY = stringPreferencesKey("settings_access_token_key")
+            const val ACCESS_TOKEN_KEY = "settings_access_token_key"
 
             //key to save id and username fetched by mal profile which we use to get profile from jikan
-            val MAL_PROFILE_KEY = stringPreferencesKey("settings_mal_profile_key")
+            const val MAL_PROFILE_KEY = "settings_mal_profile_key"
 
             //key to save if user is logged in or not
-            val IS_AUTHENTICATED_KEY = booleanPreferencesKey("settings_is_authenticated_key")
-            val GRID_OR_LIST_KEY = intPreferencesKey("settings_grid_or_list_key")
+            const val IS_AUTHENTICATED_KEY = "settings_is_authenticated_key"
+            //key to save if user selected grid or list for anime list show style
+            const val GRID_OR_LIST_KEY = "settings_grid_or_list_key"
+            //grid item will have 2:3 size
+            const val GRID_ITEM_HEIGHT_KEY = "settings_grid_item_height_key"
+
+            //keys to save item limit per reload
+            //0 to 1000
+            const val MY_LIST_LIMIT_KEY = "settings_my_list_limit_key"
+            //0 to 500
+            const val RANKING_LIST_LIMIT_KEY = "settings_ranking_list_limit_key"
+            //0 to 100
+            const val RECOMMENDED_LIST_LIMIT_KEY = "settings_recommended_list_limit_key"
+            //0 to 25
+            const val JIKAN_LIST_LIMIT_KEY = "settings_recommended_list_limit_key"
         }
     }
 
@@ -87,7 +96,7 @@ object Const {
             const val SERVER_FORMAT_DATE = "yyyy-MM-dd"
             const val SERVER_FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm"
             const val SERVER_FORMAT_TIME = "HH:mm"
-            const val IN_APP_SHOW_FORMAT_DATE = "MMM dd, yyyy"
+            const val IN_APP_SHOW_FORMAT_DATE = "dd MMM yyyy"
             const val IN_APP_SHOW_FORMAT_DATE_TIME = "MMM dd, yyyy hh:mm a"
             const val IN_APP_SHOW_FORMAT_TIME = "hh:mm a"
         }

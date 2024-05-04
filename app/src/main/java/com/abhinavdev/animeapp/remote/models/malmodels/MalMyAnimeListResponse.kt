@@ -1,9 +1,11 @@
 package com.abhinavdev.animeapp.remote.models.malmodels
 
 import com.abhinavdev.animeapp.remote.models.BaseModel
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeMediaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalNsfwCategories
+import com.abhinavdev.animeapp.remote.models.enums.Season
 import com.google.gson.annotations.SerializedName
 
 
@@ -23,11 +25,21 @@ data class MalAnimeNode(
     @SerializedName("media_type") val mediaType: MalAnimeType?,
     @SerializedName("mean") val mean: Float?,
     @SerializedName("nsfw") val nsfw: MalNsfwCategories?,
+    @SerializedName("start_season") val startSeason: StartSeason?,
+    @SerializedName("start_date") val startDate: String?,
+    @SerializedName("end_date") val endDate: String?,
+    @SerializedName("status") val status: MalAnimeMediaStatus?,
+    @SerializedName("num_episodes") val numEpisodes: Int?,
 ) : BaseModel()
 
 data class MainPicture(
     @SerializedName("medium") val medium: String?,
     @SerializedName("large") val large: String?
+) : BaseModel()
+
+data class StartSeason(
+    @SerializedName("year") val year: String?,
+    @SerializedName("season") val season: Season?
 ) : BaseModel()
 
 data class AnimeListStatus(

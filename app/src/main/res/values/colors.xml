@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="absolute_black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="absolute_white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="whiteA15">#26FFFFFF</color>
     <color name="whiteA17">#2CFFFFFF</color>
     <color name="whiteA30">#4DFFFFFF</color>
     <color name="whiteA60">#99FFFFFF</color>
+    <color name="whiteA70">#B3FFFFFF</color>
     <color name="whiteA80">#CCFFFFFF</color>
     <color name="whiteA50">#80FFFFFF</color>
     <color name="blackA5">#0D000000</color>
     <color name="blackA30">#4D000000</color>
+    <color name="blackA60">#99000000</color>
     <color name="blackA70">#B3000000</color>
     <color name="blackA80">#CC000000</color>
     <color name="blackA90">#E6000000</color>
@@ -28,6 +32,7 @@
     <color name="accentA80">#CCFF6B6B</color>
     <color name="accentA60">#99FF6B6B</color>
     <color name="accentA30">#4DFF6B6B</color>
+    <color name="ripple">#4DFF6B6B</color>
     <color name="accentA10">#1AFF6B6B</color>
     <color name="accentA20">#33FF6B6B</color>
     <color name="muted">#686868</color>

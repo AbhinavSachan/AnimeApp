@@ -81,6 +81,4 @@ abstract class BaseFragment : Fragment() {
         }
         fragmentTransaction.commit()
     }
-
-
 }

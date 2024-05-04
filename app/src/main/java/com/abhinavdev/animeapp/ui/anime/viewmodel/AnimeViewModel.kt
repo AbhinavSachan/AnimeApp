@@ -19,10 +19,11 @@ import com.abhinavdev.animeapp.remote.models.enums.AgeRating
 import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import java.io.Serializable
 
 class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: AnimeRepository = AnimeRepositoryImpl()
@@ -49,8 +50,8 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val _animeAllApiResponse =
-        MutableLiveData<Event<Map<MultiApiCallType, Resource<AnimeSearchResponse>>>>()
-    val animeAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<AnimeSearchResponse>>>> =
+        MutableLiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>>()
+    val animeAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>> =
         _animeAllApiResponse
 
     fun getAllAnimeData() = viewModelScope.launch {
@@ -58,48 +59,50 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         val ageRating = AgeRating.NONE
         val page = 1
         val limit = 10
+        val offset = 0
         val sfw = SettingsHelper.getSfwEnabled()
+        val isAuthenticated = SettingsHelper.getIsAuthenticated()
 
-        val apiCalls = mutableMapOf(MultiApiCallType.TopAiring to suspend {
+        val apiCalls = mutableMapOf<MultiApiCallType, suspend () -> Response<Serializable>>()
+
+        apiCalls[MultiApiCallType.TopAiring] = suspend {
             repository.getTopAnime(
                 animeType, AnimeFilter.AIRING, ageRating, sfw, page, limit
-            )
-        }, MultiApiCallType.TopPopular to suspend {
+            ) as Response<Serializable>
+        }
+
+        apiCalls[MultiApiCallType.TopPopular] = suspend {
             repository.getTopAnime(
                 animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
-            )
-        }, MultiApiCallType.TopFavourite to suspend {
+            ) as Response<Serializable>
+        }
+
+        apiCalls[MultiApiCallType.TopFavourite] = suspend {
             repository.getTopAnime(
                 animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
-            )
-        }, MultiApiCallType.TopUpcoming to suspend {
+            ) as Response<Serializable>
+        }
+
+        apiCalls[MultiApiCallType.TopUpcoming] = suspend {
             repository.getTopAnime(
                 animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
-            )
-        })
+            ) as Response<Serializable>
+        }
+
+        // Add TopRanked,TopRecommended only if authentication is done
+        if (isAuthenticated) {
+            apiCalls[MultiApiCallType.TopRanked] = suspend {
+                malRepository.getAnimeRanking(
+                    MalAnimeType.ALL, limit, offset
+                ) as Response<Serializable>
+            }
+            apiCalls[MultiApiCallType.TopRecommended] = suspend {
+                malRepository.getRecommendedAnime(
+                    limit, offset
+                ) as Response<Serializable>
+            }
+        }
         _animeAllApiResponse.fetchMultiData(getApplication(), apiCalls)
     }
 
-    private val _animeAuthenticatedApiResponse =
-        MutableLiveData<Event<Map<MultiApiCallType, Resource<MalMyAnimeListResponse>>>>()
-    val animeAuthenticatedApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<MalMyAnimeListResponse>>>> =
-        _animeAuthenticatedApiResponse
-
-
-    fun getAuthenticatedAnimeData() = viewModelScope.launch {
-        val limit = 10
-        val offset = 0
-
-        val apiCalls = mutableMapOf(MultiApiCallType.TopRecommended to suspend {
-            malRepository.getRecommendedAnime(
-                limit, offset
-            )
-        }, MultiApiCallType.TopRanked to suspend {
-            malRepository.getAnimeRanking(
-                MalAnimeType.ALL, limit, offset
-            )
-        })
-
-        _animeAuthenticatedApiResponse.fetchMultiData(getApplication(), apiCalls)
-    }
 }

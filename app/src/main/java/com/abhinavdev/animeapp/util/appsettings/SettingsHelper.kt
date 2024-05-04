@@ -3,6 +3,7 @@ package com.abhinavdev.animeapp.util.appsettings
 import com.abhinavdev.animeapp.remote.models.malmodels.AccessToken
 import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
 import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.PrefUtils
 
 object SettingsHelper {
     fun getAppLanguageString(): String {
@@ -15,6 +16,22 @@ object SettingsHelper {
 
     fun getAppTitleTypeString(): String {
         return AppTitleType.valueOfOrDefault(PrefUtils.getString(Const.PrefKeys.PREFERRED_TITLE_TYPE_KEY)).search
+    }
+
+    fun getMyListLimit(): Int {
+        return PrefUtils.getInt(Const.PrefKeys.MY_LIST_LIMIT_KEY,50)
+    }
+
+    fun getRankingListLimit(): Int {
+        return PrefUtils.getInt(Const.PrefKeys.RANKING_LIST_LIMIT_KEY,24)
+    }
+
+    fun getRecommendedListLimit(): Int {
+        return PrefUtils.getInt(Const.PrefKeys.RECOMMENDED_LIST_LIMIT_KEY,24)
+    }
+
+    fun getJikanListLimit(): Int {
+        return PrefUtils.getInt(Const.PrefKeys.JIKAN_LIST_LIMIT_KEY,24)
     }
 
     fun getPreferredTitleType(): AppTitleType {
@@ -42,8 +59,8 @@ object SettingsHelper {
     }
 
     fun logout(){
-        PrefUtils.clearKey(Const.PrefKeys.ACCESS_TOKEN_KEY)
-        PrefUtils.clearKey(Const.PrefKeys.MAL_PROFILE_KEY)
-        PrefUtils.clearKey(Const.PrefKeys.IS_AUTHENTICATED_KEY)
+        PrefUtils.removeKey(Const.PrefKeys.ACCESS_TOKEN_KEY)
+        PrefUtils.removeKey(Const.PrefKeys.MAL_PROFILE_KEY)
+        PrefUtils.removeKey(Const.PrefKeys.IS_AUTHENTICATED_KEY)
     }
 }

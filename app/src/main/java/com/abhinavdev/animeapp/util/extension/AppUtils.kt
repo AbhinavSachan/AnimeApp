@@ -28,11 +28,13 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -41,12 +43,19 @@ import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTheme
+import com.abhinavdev.animeapp.util.statusbar.setStatusBarColorAndIconDark
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -57,6 +66,7 @@ import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 import java.util.regex.Pattern
+import kotlin.coroutines.coroutineContext
 import kotlin.math.min
 
 
@@ -79,14 +89,22 @@ fun String.formatPriceWithoutCurrency(): String {
     else num.toString()
 }
 
-fun String.formatToOneDigitAfterDecimal(): String {
+fun String.formatToOneDigitAfterDecimalOrNull(): String? {
     val num = this.toFloat()
 
-    return "%.1f".format(Locale.ENGLISH, num)
+    return  try {
+        "%.1f".format(Locale.ENGLISH, num)
+    }catch (_:Exception){
+        null
+    }
 }
 
-fun Float.formatToOneDigitAfterDecimal(): String {
-    return "%.1f".format(Locale.ENGLISH, this)
+fun Float.formatToOneDigitAfterDecimalOrNull(): String? {
+    return try {
+        "%.1f".format(Locale.ENGLISH, this)
+    }catch (_:Exception){
+        null
+    }
 }
 
 fun String.isEmailValid(): Boolean {
@@ -286,21 +304,22 @@ fun getNonNullNumValue(value: String?): String {
     }
 }
 
-fun Window.setTheme(theme: AppTheme) {
-    this.setWindowAnimations(R.style.FadeAnimationDark)
+fun Activity.setTheme(theme: AppTheme) {
+    this.window.setWindowAnimations(R.style.FadeAnimationDark)
     when (theme) {
         AppTheme.DARK -> {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            setSystemBarColor(this, theme)
+            setSystemBarColor(this.window, theme)
         }
 
         AppTheme.LIGHT -> {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            setSystemBarColor(this, theme)
+            setSystemBarColor(this.window, theme)
         }
 
         AppTheme.DEFAULT -> {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            setStatusBarColorAndIconDark(applyColor(R.color.primary))
         }
     }
 }
@@ -383,7 +402,7 @@ fun getDisplaySize(activity: Activity): Size {
 /**
  * default placeholder is "-"
  */
-fun String?.placeholder(placeholder: String = "-"): String {
+fun String?.placeholder(placeholder: String = Const.Other.UNKNOWN_CHAR): String {
     return if (this.isNullOrBlank()) {
         placeholder
     } else {
@@ -501,4 +520,50 @@ fun Context.copyToClipBoard(text: String) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
     clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
     toast(getString(R.string.copied))
+}
+
+fun Window.hideStatusBar(hide:Boolean){
+    if (hide) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            insetsController?.hide(WindowInsetsCompat.Type.statusBars())
+        }else{
+            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
+    }else{
+        clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            insetsController?.show(WindowInsetsCompat.Type.statusBars())
+        }
+    }
+}
+
+fun Window.hideNavigationBar(hide:Boolean){
+    if (hide){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            insetsController?.hide(WindowInsetsCompat.Type.navigationBars())
+        }else{
+            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
+    }else{
+        clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            insetsController?.show(WindowInsetsCompat.Type.navigationBars())
+        }
+    }
+}
+/**
+ * Only proceed with the given action if the coroutine has not been cancelled.
+ * Necessary because Flow.collect receives items even after coroutine was cancelled
+ * https://github.com/Kotlin/kotlinx.coroutines/issues/1265
+ */
+suspend inline fun <T> Flow<T>.safeCollect(crossinline action: (T) -> Unit) {
+    this.cancellable().onEach { coroutineContext.ensureActive() }.collect {
+        CoroutineScope(Dispatchers.Main).launch {
+            action(it)
+        }
+    }
 }
