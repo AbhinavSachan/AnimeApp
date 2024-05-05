@@ -158,10 +158,12 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
-            finish()
-        } else if (fragment != null) {
+        if (fragment != null) {
+            //first if there is any fragment open close it
             supportFragmentManager.popBackStackImmediate()
+        } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
+            //if home page just finish activity
+            finish()
         } else {
             //if its not home page then back pressing will bring us on home page
             navigateToPosition(MainFragmentAdapter.PageType.ANIME)

@@ -10,6 +10,7 @@ dotsindicator = "5.0"
 firebaseAnalytics = "21.6.2"
 firebaseCrashlytics = "18.6.4"
 firebaseCrashlyticsGradle = "2.9.9"
+flexboxVersion = "3.0.0"
 glideVersion = "4.16.0"
 googleServices = "4.4.1"
 gradle = "8.3.2"
@@ -44,6 +45,7 @@ dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindi
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexboxVersion" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }

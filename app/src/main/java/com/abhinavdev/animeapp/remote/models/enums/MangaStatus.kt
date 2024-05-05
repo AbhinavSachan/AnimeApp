@@ -14,10 +14,10 @@ enum class MangaStatus(
     PUBLISHING("publishing","Publishing"),
 
     @SerializedName("Completed", alternate = ["Complete", "Finished"])
-    COMPLETED("complete","Complete"),
+    COMPLETED("complete","Finished"),
 
     @SerializedName("Hiatus", alternate = ["On Hiatus"])
-    HIATUS("hiatus","Hiatus"),
+    HIATUS("hiatus","On Hiatus"),
 
     @SerializedName("Discontinued")
     DISCONTINUED("discontinued","Discontinued"),

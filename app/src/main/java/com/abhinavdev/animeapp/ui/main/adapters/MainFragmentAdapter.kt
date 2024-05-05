@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.abhinavdev.animeapp.core.BaseFragment
-import com.abhinavdev.animeapp.ui.anime.AnimeFragment
-import com.abhinavdev.animeapp.ui.manga.MangaFragment
+import com.abhinavdev.animeapp.ui.anime.AnimeHomeFragment
+import com.abhinavdev.animeapp.ui.manga.MangaHomeFragment
 import com.abhinavdev.animeapp.ui.more.MoreFragment
 
 class MainFragmentAdapter(
@@ -32,8 +32,8 @@ class MainFragmentAdapter(
         val type = list[position]
 
         val fragment = when (type) {
-            PageType.ANIME -> AnimeFragment.newInstance()
-            PageType.MANGA -> MangaFragment.newInstance()
+            PageType.ANIME -> AnimeHomeFragment.newInstance()
+            PageType.MANGA -> MangaHomeFragment.newInstance()
             PageType.MORE -> MoreFragment.newInstance()
         }
 

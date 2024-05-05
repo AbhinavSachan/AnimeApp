@@ -6,13 +6,13 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowBannerAnimeBinding
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickMultiTypeCallback
+import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderViewAdapter
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
 
 class MangaBannerAdapter(
-    private val list: ArrayList<MangaData>, private val listener: CustomClickMultiTypeCallback
+    private val list: ArrayList<MangaData>, private val listener: OnClickMultiTypeCallback
 ) : SliderViewAdapter<MangaBannerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {

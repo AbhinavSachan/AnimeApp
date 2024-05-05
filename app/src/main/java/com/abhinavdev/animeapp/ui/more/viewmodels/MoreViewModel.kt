@@ -12,9 +12,10 @@ import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
 import com.abhinavdev.animeapp.remote.kit.repository.UserRepository
 import com.abhinavdev.animeapp.remote.kit.sources.MalRepositoryImpl
 import com.abhinavdev.animeapp.remote.kit.sources.UserRepositoryImpl
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
-import com.abhinavdev.animeapp.remote.models.enums.MalSortType
 import com.abhinavdev.animeapp.remote.models.enums.UserGender
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
@@ -44,7 +45,7 @@ class MoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getMyAnimeList(
         status: MalAnimeStatus,
-        sort: MalSortType,
+        sort: MalAnimeSortType,
         limit: Int,
         offset: Int,
     ) = viewModelScope.launch {
@@ -59,7 +60,7 @@ class MoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getMyMangaList(
         status: MalMangaStatus,
-        sort: MalSortType,
+        sort: MalMangaSortType,
         limit: Int,
         offset: Int,
     ) = viewModelScope.launch {

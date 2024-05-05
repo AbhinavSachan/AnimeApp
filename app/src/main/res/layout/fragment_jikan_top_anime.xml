@@ -26,22 +26,31 @@
                 android:id="@+id/ll_filters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_11sdp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:layout_marginEnd="@dimen/_11sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/group_type"
+                    layout="@layout/filter_sort_item_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_6sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
 
                 <include
                     android:id="@+id/group_status"
                     layout="@layout/filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
                     android:layout_weight="1"
                     android:orientation="vertical" />
 
                 <include
-                    android:id="@+id/group_sort"
+                    android:id="@+id/group_age_rating"
                     layout="@layout/filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -76,8 +85,10 @@
                 android:paddingBottom="@dimen/_8sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="@id/barrier"
-                tools:itemCount="3"
-                tools:listitem="@layout/row_vertical_list_item" />
+                tools:itemCount="5"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/row_grid_list_item"
+                tools:spanCount="2" />
 
             <include
                 android:id="@+id/empty_layout"
@@ -90,5 +101,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

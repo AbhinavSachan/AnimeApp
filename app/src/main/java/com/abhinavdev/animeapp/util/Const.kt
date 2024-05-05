@@ -57,6 +57,14 @@ object Const {
         }
     }
 
+    interface BundleExtras {
+        companion object {
+            const val EXTRA_DATA = "extra_data"
+            const val EXTRA_ID = "extra_id"
+            const val EXTRA_STRING = "extra_string"
+        }
+    }
+
     interface Mal {
         companion object {
             const val STATE = "FairyTaleState123"

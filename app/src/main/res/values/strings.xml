@@ -67,4 +67,15 @@
     <string name="msg_logout_description">Only from within the app, you will still be logged into MAL.</string>
     <string name="msg_rating">Rating</string>
     <string name="msg_episodes">Episodes</string>
+    <string name="msg_chapters">Chapters</string>
+    <string name="msg_volumes">Volumes</string>
+    <string name="msg_status">Status</string>
+    <string name="msg_sort_by">Sort By</string>
+    <string name="msg_filter_by_status">Filter By Status</string>
+    <string name="msg_choose_status">Choose Status</string>
+    <string name="msg_filter_by_type">Filter By Type</string>
+    <string name="msg_filter_by_age">Filter By Age</string>
+    <string name="msg_top_anime">Top Anime</string>
+    <string name="msg_choose_age_rating">Choose Age Rating</string>
+    <string name="msg_choose_type">Choose Type</string>
 </resources>

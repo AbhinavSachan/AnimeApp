@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowItemSelectionBinding
+import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
-import com.abhinavdev.animeapp.ui.more.misc.ItemSelectionType
 import com.abhinavdev.animeapp.util.extension.getMediumFont
 import com.abhinavdev.animeapp.util.extension.getRegularFont
 
-class ItemSelectionAdapter(
-    val list: List<ItemSelectionModelBase>, val listener: Callback, val type: ItemSelectionType
-) : RecyclerView.Adapter<ItemSelectionAdapter.ViewHolder>() {
+class ItemSelectionAdapter<T>(
+    val list: List<ItemSelectionModelBase>, val listener: OnClickMultiTypeCallback, val type: T
+) : RecyclerView.Adapter<ItemSelectionAdapter<T>.ViewHolder>() {
 
     private var regularTypeFace: Typeface? = null
     private var mediumTypeFace: Typeface? = null
@@ -51,8 +51,15 @@ class ItemSelectionAdapter(
 
     inner class ViewHolder(val binding: RowItemSelectionBinding) :
         RecyclerView.ViewHolder(binding.root)
-
-    interface Callback {
-        fun onItemClick(position: Int, type: ItemSelectionType)
-    }
+}
+fun List<ItemSelectionModelBase>.setOptionSelected(
+    currentPosition: Int,
+    onOptionSelect: (ItemSelectionModelBase) -> Unit
+) {
+    //find if any item is selected then deselect it
+    find { it.isSelected }?.isSelected = false
+    val currentItem = get(currentPosition)
+    //now select on which user just clicked
+    currentItem.isSelected = true
+    onOptionSelect(currentItem)
 }

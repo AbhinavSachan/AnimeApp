@@ -1,10 +1,12 @@
 package com.abhinavdev.animeapp.ui.manga.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
+import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
@@ -15,6 +17,7 @@ import com.abhinavdev.animeapp.util.extension.getSizeOfView
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
@@ -24,13 +27,17 @@ class MangaVerticalAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var adapterType: AdapterType = AdapterType.GRID
+    private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view =
-            RowGridListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        context = parent.context
+        val gridView =
+            RowGridListItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        val verticalView =
+            RowVerticalListItemBinding.inflate(LayoutInflater.from(context), parent, false)
         return when (adapterType) {
-            AdapterType.GRID -> GridViewHolder(view)
-            AdapterType.LIST -> ListViewHolder(view)
+            AdapterType.GRID -> GridViewHolder(gridView)
+            AdapterType.LIST -> ListViewHolder(verticalView)
         }
     }
 
@@ -41,10 +48,13 @@ class MangaVerticalAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val data = PresentableMangaData(holder.adapterPosition,list[position])
         val image = data.getImage()
-        val mangaName = data.getName()
+        val mangaName = data.getName().placeholder()
         val mangaType = data.getType()
         val rating = data.getRating()
         val rank = data.getRank()
+        val status = data.getStatus()
+        val airedOn = data.getDate()
+        val typeWithChapters = data.getTypeWithChapter(context)
 
         when (holder) {
             is GridViewHolder -> {
@@ -74,16 +84,16 @@ class MangaVerticalAdapter(
                         ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
                         tvRating.text = rating
                         tvRanking.text = rank
-                        tvType.text = mangaType
-                        vtvAnimeName.text = mangaName
+                        tvType.text = typeWithChapters
+                        tvName.text = mangaName
+                        tvStatus.text = status.placeholder()
+                        tvDate.text = airedOn
 
+                        groupSeason.hide()
                         tvRanking.hide()
-                        tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
-                        viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
                         viewTopLeftFade.showOrHide(!tvRating.isHidden())
-                        viewTopRightFade.showOrHide(!tvType.isHidden())
                         root.setOnClickListener { listener.onItemClick(position) }
                     }
                 }
@@ -117,6 +127,6 @@ class MangaVerticalAdapter(
         }
     }
 
-    inner class ListViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ListViewHolder(val binding: RowVerticalListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 }

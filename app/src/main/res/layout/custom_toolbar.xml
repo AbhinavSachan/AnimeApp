@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:elevation="@dimen/_4sdp"
     style="@style/RootLayoutStyle"
-    android:layout_height="@dimen/tool_bar_size">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/tool_bar_size"
+    android:elevation="@dimen/_4sdp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
@@ -28,13 +28,37 @@
         app:tint="@color/onPrimary" />
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_extra_three"
+        style="@style/CustomClickableIcon"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_extra_two"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/onPrimary"
+        tools:src="@drawable/ic_filter"
+        tools:visibility="visible" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_extra_two"
+        style="@style/CustomClickableIcon"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_extra"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/onPrimary"
+        tools:src="@drawable/ic_edit"
+        tools:visibility="visible" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_extra"
         style="@style/CustomClickableIcon"
         android:layout_marginEnd="@dimen/_8sdp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/onPrimary"
-        tools:src="@drawable/ic_share" />
+        tools:src="@drawable/ic_share"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

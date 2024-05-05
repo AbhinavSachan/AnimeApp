@@ -54,7 +54,7 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
         _mangaAllApiResponse
 
     fun getAllMangaData() = viewModelScope.launch {
-        val animeType = MangaType.MANGA
+        val animeType = MangaType.ALL
         val page = 1
         val limit = 10
         val offset = 0

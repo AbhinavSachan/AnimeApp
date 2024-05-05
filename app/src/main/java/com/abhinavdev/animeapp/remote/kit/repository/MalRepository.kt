@@ -1,11 +1,12 @@
 package com.abhinavdev.animeapp.remote.kit.repository
 
 import androidx.annotation.IntRange
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
-import com.abhinavdev.animeapp.remote.models.enums.MalSortType
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
@@ -35,7 +36,7 @@ interface MalRepository {
 
     suspend fun getMyAnimeList(
         status: MalAnimeStatus,
-        sort: MalSortType,
+        sort: MalAnimeSortType,
         @IntRange(0, 1000) limit: Int,
         offset: Int,
     ): Response<MalMyAnimeListResponse>
@@ -62,7 +63,7 @@ interface MalRepository {
 
     suspend fun getMyMangaList(
         status: MalMangaStatus,
-        sort: MalSortType,
+        sort: MalMangaSortType,
         @IntRange(0, 1000) limit: Int,
         offset: Int,
     ): Response<MalMyMangaListResponse>

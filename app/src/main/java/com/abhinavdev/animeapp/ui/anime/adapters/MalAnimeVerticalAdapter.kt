@@ -48,7 +48,7 @@ class MalAnimeVerticalAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val data = PresentableMalAnimeData(holder.adapterPosition,list[position])
         val image = data.getImage()
-        val animeName = data.getName()
+        val animeName = data.getName().placeholder()
         val animeType = data.getType()
         val rating = data.getRating()
         val rank = data.getRank()

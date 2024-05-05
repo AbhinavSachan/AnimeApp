@@ -6,17 +6,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
 import com.abhinavdev.animeapp.databinding.FragmentMoreBinding
+import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
-import com.abhinavdev.animeapp.ui.more.misc.ItemSelectionType
+import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
+import com.abhinavdev.animeapp.ui.more.misc.SettingsItemSelectionType
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.LoginUtil.showLoginDialog
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -29,12 +30,8 @@ import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.Job
 
-class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.Callback {
-    private var optionBottomSheetDialog: BottomSheetDialog? = null
-    private var optionAdapter: ItemSelectionAdapter? = null
-    private var logoutDialog: AlertDialog? = null
+class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallback {
     private var _binding: FragmentMoreBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -43,7 +40,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
     private var titleTypeList: List<ItemSelectionModelBase> = arrayListOf()
     private var themeList: List<ItemSelectionModelBase> = arrayListOf()
 
-    private var authCheckJob: Job? = null
+    private var optionAdapter: ItemSelectionAdapter<SettingsItemSelectionType>? = null
+    private var optionBottomSheetDialog: BottomSheetDialog? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,9 +77,21 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
     }
 
     private fun initComponents() {
-        languageList = AppLanguage.list.map { ItemSelectionModelBase(it.key, it.value) }
-        titleTypeList = AppTitleType.list.map { ItemSelectionModelBase(it.key, it.value) }
-        themeList = AppTheme.resList.map { ItemSelectionModelBase(it.key, getString(it.value)) }
+        languageList = AppLanguage.list.map {
+            ItemSelectionModelBase(it.search, it.showName).apply {
+                isSelected = SettingsHelper.getAppLanguage() == it
+            }
+        }
+        titleTypeList = AppTitleType.list.map {
+            ItemSelectionModelBase(it.search, it.showName).apply {
+                isSelected = SettingsHelper.getPreferredTitleType() == it
+            }
+        }
+        themeList = AppTheme.list.map {
+            ItemSelectionModelBase(it.search, getString(it.stringRes)).apply {
+                isSelected = SettingsHelper.getAppTheme() == it
+            }
+        }
 
         //setting clickable from xml is not working
         //if switch is non clickable then user where ever clicks only linearlayout will be triggered
@@ -177,15 +187,16 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
             binding.groupMyProfile.llItem -> parentActivity?.navigateToFragment(ProfileFragment.newInstance())
             binding.groupMyAnime.llItem -> parentActivity?.navigateToFragment(MyAnimeListFragment.newInstance())
             binding.groupMyManga.llItem -> parentActivity?.navigateToFragment(MyMangaListFragment.newInstance())
-            binding.groupAppTheme.llItem -> openOptionDialog(themeList, ItemSelectionType.THEME)
+            binding.groupAppTheme.llItem -> openOptionDialog(
+                themeList, SettingsItemSelectionType.THEME
+            )
+
             binding.groupTitleType.llItem -> openOptionDialog(
-                titleTypeList,
-                ItemSelectionType.TITLE_LANGUAGE
+                titleTypeList, SettingsItemSelectionType.TITLE_LANGUAGE
             )
 
             binding.groupAppLanguage.llItem -> openOptionDialog(
-                languageList,
-                ItemSelectionType.APP_LANGUAGE
+                languageList, SettingsItemSelectionType.APP_LANGUAGE
             )
 
             binding.groupSfw.llItem -> onSfwClick()
@@ -194,26 +205,24 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
         }
     }
 
-    private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ItemSelectionType) {
+    private fun openOptionDialog(
+        list: List<ItemSelectionModelBase>, type: SettingsItemSelectionType
+    ) {
         optionBottomSheetDialog =
             BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
         val view = DialogOptionsBinding.inflate(layoutInflater)
 
         with(view) {
             val title = when (type) {
-                ItemSelectionType.APP_LANGUAGE -> {
-                    list.find { it.id == SettingsHelper.getAppLanguage().search }?.isSelected = true
+                SettingsItemSelectionType.APP_LANGUAGE -> {
                     R.string.msg_choose_app_language
                 }
 
-                ItemSelectionType.TITLE_LANGUAGE -> {
-                    list.find { it.id == SettingsHelper.getPreferredTitleType().search }?.isSelected =
-                        true
+                SettingsItemSelectionType.TITLE_LANGUAGE -> {
                     R.string.msg_choose_title_language
                 }
 
-                ItemSelectionType.THEME -> {
-                    list.find { it.id == SettingsHelper.getAppTheme().name }?.isSelected = true
+                SettingsItemSelectionType.THEME -> {
                     R.string.msg_choose_app_theme
                 }
             }
@@ -257,10 +266,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
         dialog.show()
     }
 
-    override fun onItemClick(position: Int, type: ItemSelectionType) {
-        when (type) {
-            ItemSelectionType.APP_LANGUAGE -> {
-                setOptionSelected(languageList,position){
+    override fun <T> onItemClick(position: Int, type: T) {
+        when (type as SettingsItemSelectionType) {
+            SettingsItemSelectionType.APP_LANGUAGE -> {
+                languageList.setOptionSelected(position) {
                     binding.groupAppLanguage.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.APP_LANGUAGE_KEY, it.id)
@@ -268,8 +277,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
                 }
             }
 
-            ItemSelectionType.TITLE_LANGUAGE -> {
-                setOptionSelected(titleTypeList,position){
+            SettingsItemSelectionType.TITLE_LANGUAGE -> {
+                titleTypeList.setOptionSelected(position) {
                     binding.groupTitleType.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.PREFERRED_TITLE_TYPE_KEY, it.id)
@@ -277,8 +286,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
                 }
             }
 
-            ItemSelectionType.THEME -> {
-                setOptionSelected(themeList,position){
+            SettingsItemSelectionType.THEME -> {
+                themeList.setOptionSelected(position) {
                     binding.groupAppTheme.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.APP_THEME_KEY, it.id)
@@ -286,19 +295,6 @@ class MoreFragment : BaseFragment(), View.OnClickListener, ItemSelectionAdapter.
                 }
             }
         }
-    }
-
-    private fun setOptionSelected(
-        list: List<ItemSelectionModelBase>,
-        currentPosition: Int,
-        onOptionSelect: (ItemSelectionModelBase) -> Unit
-    ) {
-        //find if any item is selected then deselect it
-        list.find { it.isSelected }?.isSelected = false
-        val currentItem = list[currentPosition]
-        //now select on which user just clicked
-        currentItem.isSelected = true
-        onOptionSelect(currentItem)
     }
 
     @SuppressLint("NotifyDataSetChanged")

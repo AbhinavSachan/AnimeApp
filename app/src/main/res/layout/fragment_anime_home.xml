@@ -5,7 +5,7 @@
     style="@style/RootLayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.anime.AnimeFragment">
+    tools:context=".ui.anime.AnimeHomeFragment">
 
     <androidx.core.widget.NestedScrollView
         style="@style/BaseNestedScrollViewAttributes"

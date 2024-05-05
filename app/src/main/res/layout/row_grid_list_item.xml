@@ -5,8 +5,11 @@
     style="@style/NoStrokeTransparentCardStyle.Elevated"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_180sdp"
-    app:cardCornerRadius="@dimen/_12sdp">
-<!--    adding margins programmatically-->
+    app:cardCornerRadius="@dimen/_12sdp"
+    tools:layout_marginBottom="@dimen/_8sdp"
+    tools:layout_marginEnd="@dimen/_4sdp"
+    tools:layout_marginStart="@dimen/_4sdp">
+    <!--    adding margins programmatically-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,28 +26,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="@dimen/safe_zone_vertical_card" />
+                app:layout_constraintGuide_end="@dimen/safe_zone_grid_list_card" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guide_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="@dimen/safe_zone_vertical_card" />
+                app:layout_constraintGuide_begin="@dimen/safe_zone_grid_list_card" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guide_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="@dimen/safe_zone_vertical_card" />
+                app:layout_constraintGuide_begin="@dimen/safe_zone_grid_list_card" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guide_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_end="@dimen/safe_zone_vertical_card" />
+                app:layout_constraintGuide_end="@dimen/safe_zone_grid_list_card" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_poster"

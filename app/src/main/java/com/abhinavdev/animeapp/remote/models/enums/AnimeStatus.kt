@@ -11,13 +11,13 @@ enum class AnimeStatus(
     val showName: String,
 ) {
     @SerializedName("Airing", alternate = ["Currently Airing"])
-    AIRING("airing","Airing"),
+    AIRING("airing","Currently Airing"),
 
     @SerializedName("Completed", alternate = ["Finished Airing", "Complete"])
-    COMPLETED("complete","Complete"),
+    COMPLETED("complete","Finished Airing"),
 
     @SerializedName("Upcoming", alternate = ["tba", "to_be_aired", "to be aired", "Not yet aired"])
-    UPCOMING("upcoming","Upcoming");
+    UPCOMING("upcoming","Not Yet Aired");
 
     companion object {
         val list = entries.map { it.showName }

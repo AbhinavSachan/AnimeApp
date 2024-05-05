@@ -17,7 +17,7 @@ data class MalAnimeData(
 ) : BaseModel()
 
 data class MalAnimeNode(
-    @SerializedName("id") val id: Int?,
+    @SerializedName("id") val id: Int,
     @SerializedName("title") val title: String?,
     @SerializedName("main_picture") val mainPicture: MainPicture?,
     @SerializedName("alternative_titles") val alternativeTitles: MalAlternativeTitles?,

@@ -88,6 +88,15 @@ fun Date.formatToViewTimeDefaults(): String {
     return sdf.format(this)
 }
 
+fun Date.formatTo(format: String = Const.DateFormats.IN_APP_SHOW_FORMAT_DATE): String? {
+    val sdf = SimpleDateFormat(format, Locale.getDefault())
+    return try {
+        sdf.format(this)
+    } catch (e: Exception) {
+        null
+    }
+}
+
 /**
  * Add field date to current date
  */

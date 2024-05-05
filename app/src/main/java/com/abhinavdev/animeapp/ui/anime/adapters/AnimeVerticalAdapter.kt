@@ -1,11 +1,12 @@
 package com.abhinavdev.animeapp.ui.anime.adapters
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
+import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableAnimeData
@@ -16,6 +17,7 @@ import com.abhinavdev.animeapp.util.extension.getSizeOfView
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
@@ -25,29 +27,36 @@ class AnimeVerticalAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var adapterType: AdapterType = AdapterType.GRID
+    private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view =
-            RowGridListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        context = parent.context
+        val gridView =
+            RowGridListItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        val verticalView =
+            RowVerticalListItemBinding.inflate(LayoutInflater.from(context), parent, false)
         return when (adapterType) {
-            AdapterType.GRID -> GridViewHolder(view)
-            AdapterType.LIST -> ListViewHolder(view)
+            AdapterType.GRID -> GridViewHolder(gridView)
+            AdapterType.LIST -> ListViewHolder(verticalView)
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setAdapterType(type: AdapterType) {
         adapterType = type
-        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val data = PresentableAnimeData(holder.adapterPosition,list[position])
         val image = data.getImage()
+        val animeName = data.getName()
+        val animeType = data.getType()
         val rating = data.getRating()
         val rank = data.getRank()
-        val animeType = data.getType()
-        val animeName = data.getName()
+        val status = data.getStatus()
+        val airedOn = data.getDate()
+        val season = data.getSeasonWithYear()
+        val typeWithEpisodes = data.getTypeWithEpisode(context)
+
 
         when (holder) {
             is GridViewHolder -> {
@@ -75,18 +84,18 @@ class AnimeVerticalAdapter(
                 with(holder) {
                     with(binding) {
                         ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
-                        tvRating.text = rating
+                        tvRating.text = rating.placeholder()
                         tvRanking.text = rank
-                        tvType.text = animeType
-                        vtvAnimeName.text = animeName
+                        tvType.text = typeWithEpisodes
+                        tvName.text = animeName
+                        tvStatus.text = status.placeholder()
+                        tvSeason.text = season
+                        tvDate.text = airedOn
 
                         tvRanking.hide()
-                        tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
-                        viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
                         viewTopLeftFade.showOrHide(!tvRating.isHidden())
-                        viewTopRightFade.showOrHide(!tvType.isHidden())
                         root.setOnClickListener { listener.onItemClick(position) }
                     }
                 }
@@ -120,6 +129,6 @@ class AnimeVerticalAdapter(
         }
     }
 
-    inner class ListViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ListViewHolder(val binding: RowVerticalListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 }

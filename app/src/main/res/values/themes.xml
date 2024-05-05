@@ -255,6 +255,18 @@
         <item name="tint">@color/onPrimary</item>
     </style>
 
+    <style name="CustomDropdownLL">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/_8sdp</item>
+        <item name="android:paddingTop">@dimen/_4sdp</item>
+        <item name="android:paddingEnd">@dimen/_8sdp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingBottom">@dimen/_4sdp</item>
+        <item name="android:background">@drawable/bg_primary_bor_accent_cor_8</item>
+        <item name="android:foreground">@drawable/bg_ripple_effect_accent_bor_8</item>
+    </style>
+
     <style name="BottomSheetDialogBaseStyle">
         <item name="android:background">@drawable/bg_custom_bottom_sheet_dialog</item>
     </style>

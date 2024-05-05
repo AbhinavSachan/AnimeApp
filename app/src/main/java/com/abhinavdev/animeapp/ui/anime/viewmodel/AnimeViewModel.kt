@@ -55,7 +55,7 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         _animeAllApiResponse
 
     fun getAllAnimeData() = viewModelScope.launch {
-        val animeType = AnimeType.TV
+        val animeType = AnimeType.ALL
         val ageRating = AgeRating.NONE
         val page = 1
         val limit = 10

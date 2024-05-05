@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_item_label"
+        style="@style/TextStyleFont500"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/text_size_14"
+        tools:text="Filter label" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_item"
+        style="@style/CustomDropdownLL"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_2sdp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item"
+            style="@style/TextStyleFont500"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:paddingEnd="@dimen/_4sdp"
+            android:paddingStart="0dp"
+            android:ellipsize="marquee"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_size_14"
+            tools:text="None" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/CustomLabelImageView"
+            android:layout_width="@dimen/_8sdp"
+            android:layout_height="@dimen/_8sdp"
+            android:rotation="90"
+            android:src="@drawable/ic_forward" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

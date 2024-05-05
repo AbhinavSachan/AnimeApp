@@ -5,7 +5,7 @@
     style="@style/RootLayoutStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.manga.MangaFragment">
+    tools:context=".ui.manga.MangaHomeFragment">
 
     <androidx.core.widget.NestedScrollView
         style="@style/BaseNestedScrollViewAttributes"

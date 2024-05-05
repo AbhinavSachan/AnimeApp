@@ -3,7 +3,6 @@ package com.abhinavdev.animeapp.ui.anime.misc
 import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
-import com.abhinavdev.animeapp.remote.models.enums.Season
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
@@ -32,11 +31,12 @@ class PresentableMalAnimeData(val position: Int, val item: MalAnimeData) {
 
     fun getTypeWithEpisode(context: Context): String {
         val episodes = item.node?.numEpisodes
-        return if (episodes == null || episodes <= 0){
-            getType().uppercase()
-        }else{
-            "${getType().uppercase()} (${episodes.toStringOrUnknown()} ${context.getString(R.string.msg_episodes)})"
+        val result = StringBuilder()
+        result.append(getType().uppercase())
+        if (episodes == null || episodes <= 0){
+            result.append(" (${episodes.toStringOrUnknown()} ${context.getString(R.string.msg_episodes)})")
         }
+        return result.toString()
     }
 
     fun getStatus(): String? {
@@ -48,15 +48,15 @@ class PresentableMalAnimeData(val position: Int, val item: MalAnimeData) {
     }
 
     fun getSeasonWithYear(): String {
-        return "${Season.valueOfOrNull(item.node?.startSeason?.season?.search)?.showName.placeholder()} (${item.node?.startSeason?.year.placeholder()})"
+        return "${item.node?.startSeason?.season?.showName.placeholder()} (${item.node?.startSeason?.year.placeholder()})"
     }
 
     fun getName(): String? {
         val userPreferredType = SettingsHelper.getPreferredTitleType()
         return when (userPreferredType) {
             AppTitleType.ROMAJI -> item.node?.title
-            AppTitleType.JAPANESE -> item.node?.alternativeTitles?.ja
-            AppTitleType.ENGLISH -> item.node?.alternativeTitles?.en
+            AppTitleType.JAPANESE -> item.node?.alternativeTitles?.ja ?: item.node?.title
+            AppTitleType.ENGLISH -> item.node?.alternativeTitles?.en ?: item.node?.title
         }
     }
 }

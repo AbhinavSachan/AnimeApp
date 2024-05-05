@@ -5,13 +5,14 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import com.abhinavdev.animeapp.util.glide.GlideApp
 import com.abhinavdev.animeapp.util.glide.ImageModel
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 
 fun AppCompatImageView.loadImage(url: Any?, placeHolder: Int = 0) {
-    GlideApp.with(this)
+    Glide.with(this)
         .load(url)
         .placeholder(placeHolder)
         .error(placeHolder)
@@ -27,7 +28,7 @@ fun AppCompatImageView.loadImage(url: String?, placeHolder: Int = 0) {
 }
 
 fun CustomTarget<Drawable>.loadBlurImage(context: Context, image: Int = 0) {
-    GlideApp.with(context)
+    Glide.with(context)
         .load(image)
         .override(3, 3)
         .into(this)
@@ -49,7 +50,7 @@ fun AppCompatImageView.loadImageWithAnime(
             placeholderImage
         ).error(placeholderImage)
     )
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
         .skipMemoryCache(false)
         .transition(drawableTransitionOptions)
         .into(this)

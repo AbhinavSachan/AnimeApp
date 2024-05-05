@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentProfileBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
@@ -13,6 +14,8 @@ import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
+import com.abhinavdev.animeapp.util.extension.hide
+import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.toast
 
 class ProfileFragment : BaseFragment(), View.OnClickListener {
@@ -20,6 +23,8 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
     private lateinit var viewModel: MoreViewModel
+
+    private var isFromSwipe = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -58,11 +63,15 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
         setAdapters()
         setListeners()
         setObservers()
-        getProfile()
+        getProfile(false)
     }
 
     private fun initComponents() {
-
+        with(binding.emptyLayout) {
+            tvEmptyTitle.text = getString(R.string.error_something_went_wrong)
+            tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
+            binding.emptyLayout.ivEmptyIcon.setImageResource(R.drawable.bg_error)
+        }
     }
 
     private fun setAdapters() {
@@ -71,6 +80,9 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
 
     private fun setListeners() {
 
+        binding.swipeRefresh.setOnRefreshListener {
+            getProfile(true)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -88,10 +100,12 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
                             setData(it)
                         }
                         isLoaderVisible(false)
+                        hideErrorLayout()
                     }
 
                     is Resource.Error -> {
                         isLoaderVisible(false)
+                        showErrorLayout()
                         response.message?.let { message -> toast(message) }
                     }
 
@@ -108,10 +122,25 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun isLoaderVisible(b: Boolean) {
-        parentActivity?.isLoaderVisible(b)
+        if (isFromSwipe && !b) {
+            binding.swipeRefresh.isRefreshing = false
+        } else if (!isFromSwipe) {
+            parentActivity?.isLoaderVisible(b)
+        }
     }
 
-    private fun getProfile() {
+    private fun showErrorLayout(){
+        binding.clContent.hide()
+        binding.emptyLayout.root.show()
+    }
+
+    private fun hideErrorLayout(){
+        binding.clContent.show()
+        binding.emptyLayout.root.hide()
+    }
+
+    private fun getProfile(fromSwipe: Boolean){
+        isFromSwipe = fromSwipe
         val userName = SettingsHelper.getMalProfile()?.name
         userName?.let { viewModel.getUserFullProfile(it) }
     }

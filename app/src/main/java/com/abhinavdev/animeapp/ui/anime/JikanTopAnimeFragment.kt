@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.more
+package com.abhinavdev.animeapp.ui.anime
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,24 +11,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
-import com.abhinavdev.animeapp.databinding.FragmentMyMangaListBinding
+import com.abhinavdev.animeapp.databinding.FragmentJikanTopAnimeBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
-import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
-import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
+import com.abhinavdev.animeapp.remote.models.anime.AnimeData
+import com.abhinavdev.animeapp.remote.models.enums.AgeRating
+import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
+import com.abhinavdev.animeapp.remote.models.enums.AnimeType
+import com.abhinavdev.animeapp.ui.anime.adapters.AnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
-import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
-import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.LIST
+import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.ui.manga.adapters.MalMangaVerticalAdapter
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
-import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
@@ -44,27 +42,29 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
     OnClickMultiTypeCallback {
-    private var _binding: FragmentMyMangaListBinding? = null
+    private var _binding: FragmentJikanTopAnimeBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
-    private lateinit var viewModel: MoreViewModel
+    private lateinit var viewModel: AnimeViewModel
 
     private var isFromSwipe = false
 
-    private var gridOrList: AdapterType = GRID
+    private var gridOrList: AdapterType = AdapterType.GRID
 
-    private var status = MalMangaStatus.ALL
-    private var sort = MalMangaSortType.UPDATED
-    private var offset = 0
-    private var limit = SettingsHelper.getMyListLimit()
+    private var animeType: AnimeType = AnimeType.ALL
+    private var animeFilter: AnimeFilter = AnimeFilter.NONE
+    private var ageRating: AgeRating = AgeRating.NONE
+    private var page: Int = 1
+    private var limit: Int = SettingsHelper.getJikanListLimit()
 
-    private val mangaList: ArrayList<MalMangaData> = arrayListOf()
-    private var adapter: MalMangaVerticalAdapter? = null
+    private val animeList: ArrayList<AnimeData> = arrayListOf()
+    private var adapter: AnimeVerticalAdapter? = null
 
+    private var typeList: List<ItemSelectionModelBase> = arrayListOf()
     private var statusList: List<ItemSelectionModelBase> = arrayListOf()
-    private var sortList: List<ItemSelectionModelBase> = arrayListOf()
+    private var ageRatingList: List<ItemSelectionModelBase> = arrayListOf()
 
     private var optionAdapter: ItemSelectionAdapter<ListOptionsType>? = null
     private var optionBottomSheetDialog: BottomSheetDialog? = null
@@ -86,13 +86,15 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = createViewModel(MoreViewModel::class.java)
+        viewModel = createViewModel(AnimeViewModel::class.java)
+        animeFilter =
+            AnimeFilter.valueOfOrDefault(arguments?.getString(Const.BundleExtras.EXTRA_STRING))
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMyMangaListBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentJikanTopAnimeBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -111,37 +113,45 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun initComponents() {
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
-        sortList = MalMangaSortType.list.map {
+        typeList = AnimeType.list.map {
             ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = sort == it
+                isSelected = animeType == it
             }
         }
-        statusList = MalMangaStatus.list.map {
+        statusList = AnimeFilter.list.map {
             ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = status == it
+                isSelected = animeFilter == it
             }
         }
-
-        with(binding) {
-            groupStatus.tvItemLabel.text = getString(R.string.msg_filter_by_status)
-            groupSort.tvItemLabel.text = getString(R.string.msg_sort_by)
-            groupStatus.tvItem.text = status.showName
-            groupSort.tvItem.text = sort.showName
+        ageRatingList = AgeRating.list(SettingsHelper.getSfwEnabled()).map {
+            ItemSelectionModelBase(it.search, it.showName).apply {
+                isSelected = ageRating == it
+            }
         }
 
         with(binding.toolbar) {
-            tvTitle.text = getString(R.string.msg_my_manga_list)
+            tvTitle.text = getString(R.string.msg_top_anime)
             val viewIcon = when (gridOrList) {
-                GRID -> R.drawable.ic_list_view
-                LIST -> R.drawable.ic_grid_view
+                AdapterType.GRID -> R.drawable.ic_list_view
+                AdapterType.LIST -> R.drawable.ic_grid_view
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
         }
+
+        with(binding) {
+            groupType.tvItemLabel.text = getString(R.string.msg_filter_by_type)
+            groupStatus.tvItemLabel.text = getString(R.string.msg_filter_by_status)
+            groupAgeRating.tvItemLabel.text = getString(R.string.msg_filter_by_age)
+
+            groupType.tvItem.text = animeType.showName
+            groupStatus.tvItem.text = animeFilter.showName
+            groupAgeRating.tvItem.text = ageRating.showName
+        }
     }
 
     private fun setAdapters() {
-        adapter = MalMangaVerticalAdapter(mangaList, this)
+        adapter = AnimeVerticalAdapter(animeList, this)
         adapter?.setHasStableIds(true)
         toggleAdapterType(gridOrList)
         binding.rvList.setHasFixedSize(true)
@@ -150,12 +160,12 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun toggleAdapterType(gridOrList: AdapterType) {
         when (gridOrList) {
-            GRID -> {
+            AdapterType.GRID -> {
                 binding.rvList.addItemDecoration(GridSpacing(2, 16, false))
                 binding.rvList.layoutManager = GridLayoutManager(context, 2)
             }
 
-            LIST -> {
+            AdapterType.LIST -> {
                 binding.rvList.removeItemDecorations()
                 binding.rvList.layoutManager = LinearLayoutManager(context)
             }
@@ -169,8 +179,9 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private fun setListeners() {
         binding.toolbar.ivBack.setOnClickListener(this)
         binding.toolbar.ivExtra.setOnClickListener(this)
+        binding.groupType.llItem.setOnClickListener(this)
         binding.groupStatus.llItem.setOnClickListener(this)
-        binding.groupSort.llItem.setOnClickListener(this)
+        binding.groupAgeRating.llItem.setOnClickListener(this)
         binding.swipeRefresh.setOnRefreshListener {
             getList(true)
         }
@@ -180,31 +191,10 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         when (v) {
             binding.toolbar.ivBack -> parentActivity?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
+            binding.groupType.llItem -> openOptionDialog(typeList, ListOptionsType.TYPE)
             binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
-            binding.groupSort.llItem -> openOptionDialog(sortList, ListOptionsType.SORT)
+            binding.groupAgeRating.llItem -> openOptionDialog(ageRatingList, ListOptionsType.AGE)
         }
-    }
-
-    private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ListOptionsType) {
-        optionBottomSheetDialog =
-            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
-        val view = DialogOptionsBinding.inflate(layoutInflater)
-
-        with(view) {
-            val title = when (type) {
-                ListOptionsType.STATUS -> R.string.msg_choose_status
-                ListOptionsType.SORT -> R.string.msg_sort_by
-                else->{0}
-            }
-            tvTitle.text = getString(title)
-            optionAdapter = ItemSelectionAdapter(list, this@MyMangaListFragment, type)
-            rvItems.setHasFixedSize(true)
-            rvItems.layoutManager = LinearLayoutManager(context)
-            rvItems.adapter = optionAdapter
-        }
-
-        optionBottomSheetDialog?.setContentView(view.root)
-        optionBottomSheetDialog?.show()
     }
 
     private fun toggleViewType() {
@@ -212,13 +202,13 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         isLoaderVisible(true)
         CoroutineScope(Dispatchers.IO).launch {
             val viewIcon = when (gridOrList) {
-                GRID -> {
-                    gridOrList = LIST
+                AdapterType.GRID -> {
+                    gridOrList = AdapterType.LIST
                     R.drawable.ic_grid_view
                 }
 
-                LIST -> {
-                    gridOrList = GRID
+                AdapterType.LIST -> {
+                    gridOrList = AdapterType.GRID
                     R.drawable.ic_list_view
                 }
             }
@@ -231,12 +221,37 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         }
     }
 
+    private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ListOptionsType) {
+        optionBottomSheetDialog =
+            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+        val view = DialogOptionsBinding.inflate(layoutInflater)
+
+        with(view) {
+            val title = when (type) {
+                ListOptionsType.TYPE -> R.string.msg_choose_type
+                ListOptionsType.STATUS -> R.string.msg_choose_status
+                ListOptionsType.AGE -> R.string.msg_choose_age_rating
+                else -> {
+                    0
+                }
+            }
+            tvTitle.text = getString(title)
+            optionAdapter = ItemSelectionAdapter(list, this@JikanTopAnimeFragment, type)
+            rvItems.setHasFixedSize(true)
+            rvItems.layoutManager = LinearLayoutManager(context)
+            rvItems.adapter = optionAdapter
+        }
+
+        optionBottomSheetDialog?.setContentView(view.root)
+        optionBottomSheetDialog?.show()
+    }
+
     private fun setObservers() {
-        viewModel.myMangaListResponse.observe(viewLifecycleOwner) { event ->
+        viewModel.topAnimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
-                        response.data?.let {
+                        response.data?.data?.let {
                             setData(it)
                         }
                         isLoaderVisible(false)
@@ -258,9 +273,9 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setData(data: MalMyMangaListResponse) {
-        mangaList.clear()
-        data.data?.let { mangaList.addAll(it) }
+    private fun setData(data: ArrayList<AnimeData>) {
+        animeList.clear()
+        animeList.addAll(data)
         adapter?.notifyDataSetChanged()
     }
 
@@ -273,7 +288,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun showEmptyLayout(isError: Boolean) {
-        val isListEmpty = mangaList.isEmpty()
+        val isListEmpty = animeList.isEmpty()
         with(binding.emptyLayout) {
             if (isListEmpty) {
                 val imageRes = if (isError) {
@@ -294,7 +309,8 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun getList(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
-        viewModel.getMyMangaList(status, sort, limit, offset)
+        val sfw = SettingsHelper.getSfwEnabled()
+        viewModel.getTopAnime(animeType, animeFilter, ageRating, sfw, page, limit)
     }
 
     override fun onItemClick(position: Int) {
@@ -303,32 +319,47 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     override fun <T> onItemClick(position: Int, type: T) {
         when (type as ListOptionsType) {
-            ListOptionsType.STATUS -> {
-                statusList.setOptionSelected(position) {
-                    binding.groupStatus.tvItem.text = it.name
-                    status = MalMangaStatus.valueOfOrDefault(it.id)
+            ListOptionsType.TYPE -> {
+                typeList.setOptionSelected(position) {
+                    binding.groupType.tvItem.text = it.name
+                    animeType = AnimeType.valueOfOrDefault(it.id)
                     runCommonOptionFunction()
                 }
             }
 
-            ListOptionsType.SORT -> {
-                sortList.setOptionSelected(position) {
-                    binding.groupSort.tvItem.text = it.name
-                    sort = MalMangaSortType.valueOfOrDefault(it.id)
+            ListOptionsType.STATUS -> {
+                statusList.setOptionSelected(position) {
+                    binding.groupStatus.tvItem.text = it.name
+                    animeFilter = AnimeFilter.valueOfOrDefault(it.id)
                     runCommonOptionFunction()
                 }
             }
-            else ->{}
+
+            ListOptionsType.AGE -> {
+                ageRatingList.setOptionSelected(position) {
+                    binding.groupAgeRating.tvItem.text = it.name
+                    ageRating = AgeRating.valueOfOrDefault(it.id)
+                    runCommonOptionFunction()
+                }
+            }
+
+            else -> {}
         }
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun runCommonOptionFunction() {
         optionAdapter?.notifyDataSetChanged()
         optionBottomSheetDialog?.cancel()
         getList(false)
     }
+
     companion object {
         @JvmStatic
-        fun newInstance() = MyMangaListFragment()
+        fun newInstance(filter: AnimeFilter) = JikanTopAnimeFragment().apply {
+            arguments = Bundle().apply {
+                putString(Const.BundleExtras.EXTRA_STRING, filter.search)
+            }
+        }
     }
 }

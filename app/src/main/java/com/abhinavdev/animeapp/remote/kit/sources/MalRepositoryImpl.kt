@@ -3,11 +3,12 @@ package com.abhinavdev.animeapp.remote.kit.sources
 import androidx.annotation.IntRange
 import com.abhinavdev.animeapp.remote.kit.ApiClient
 import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
+import com.abhinavdev.animeapp.remote.models.enums.MalAnimeSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
+import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
-import com.abhinavdev.animeapp.remote.models.enums.MalSortType
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
@@ -55,7 +56,7 @@ class MalRepositoryImpl : MalRepository {
     }
 
     override suspend fun getMyAnimeList(
-        status: MalAnimeStatus, sort: MalSortType, limit: Int, offset: Int
+        status: MalAnimeStatus, sort: MalAnimeSortType, limit: Int, offset: Int
     ): Response<MalMyAnimeListResponse> {
         return apiService.getMyAnimeList(status.search, sort.search, limit, offset, fields)
     }
@@ -97,7 +98,7 @@ class MalRepositoryImpl : MalRepository {
     }
 
     override suspend fun getMyMangaList(
-        status: MalMangaStatus, sort: MalSortType, limit: Int, offset: Int
+        status: MalMangaStatus, sort: MalMangaSortType, limit: Int, offset: Int
     ): Response<MalMyMangaListResponse> {
         return apiService.getMyMangaList(status.search, sort.search, limit, offset, fields)
     }

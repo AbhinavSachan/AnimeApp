@@ -153,7 +153,7 @@ dependencies {
 //    implementation ("com.google.android.exoplayer:exoplayer:2.18.7")
 
     //flexbox
-//    implementation ("com.google.android.flexbox:flexbox:3.0.0")
+    implementation (libs.flexbox)
 
     //recyclerview with indicator
 //    implementation ("ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.3")

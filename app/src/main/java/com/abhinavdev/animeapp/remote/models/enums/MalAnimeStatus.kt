@@ -30,7 +30,7 @@ enum class MalAnimeStatus(
     companion object {
         fun valueOfOrDefault(value: String) = entries.find { it.search == value } ?: ALL
 
-        var list = entries.map { it.showName }
+        var list = entries.map { it }
 
     }
 }

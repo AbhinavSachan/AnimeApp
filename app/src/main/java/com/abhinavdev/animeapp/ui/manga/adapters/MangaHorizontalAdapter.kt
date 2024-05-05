@@ -7,18 +7,19 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowHorizontalListItemBinding
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickMultiTypeCallback
+import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMangaData
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class MangaHorizontalAdapter(
     private val list: List<MangaData>,
     private val type: MultiApiCallType,
-    private val listener: CustomClickMultiTypeCallback
+    private val listener: OnClickMultiTypeCallback
 ) : RecyclerView.Adapter<MangaHorizontalAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -29,7 +30,7 @@ class MangaHorizontalAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = PresentableMangaData(holder.adapterPosition, list[position])
         val image = data.getImage()
-        val mangaName = data.getName()
+        val mangaName = data.getName().placeholder()
         val mangaType = data.getType()
         val rating = data.getRating()
         val rank = data.getRank()
@@ -47,13 +48,13 @@ class MangaHorizontalAdapter(
                     MultiApiCallType.TopPopular -> {
                         tvRanking.hide()
                         tvRating.show()
-                        tvType.hide()
+                        tvType.show()
                     }
 
                     MultiApiCallType.TopFavourite -> {
                         tvRanking.hide()
                         tvRating.show()
-                        tvType.hide()
+                        tvType.show()
                     }
 
                     MultiApiCallType.TopUpcoming -> {

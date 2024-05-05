@@ -8,7 +8,7 @@ import com.abhinavdev.animeapp.databinding.RowHorizontalListItemBinding
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableAnimeData
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickMultiTypeCallback
+import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
@@ -18,7 +18,7 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 class AnimeHorizontalAdapter(
     private val list: List<AnimeData>,
     private val type: MultiApiCallType,
-    private val listener: CustomClickMultiTypeCallback
+    private val listener: OnClickMultiTypeCallback
 ) : RecyclerView.Adapter<AnimeHorizontalAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -47,13 +47,13 @@ class AnimeHorizontalAdapter(
                     MultiApiCallType.TopPopular -> {
                         tvRanking.hide()
                         tvRating.show()
-                        tvType.hide()
+                        tvType.show()
                     }
 
                     MultiApiCallType.TopFavourite -> {
                         tvRanking.hide()
                         tvRating.show()
-                        tvType.hide()
+                        tvType.show()
                     }
 
                     MultiApiCallType.TopUpcoming -> {
