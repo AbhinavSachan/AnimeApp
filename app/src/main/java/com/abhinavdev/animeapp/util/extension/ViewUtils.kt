@@ -25,6 +25,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Size
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -311,10 +312,10 @@ fun View?.getSizeOfView(onSizeReady: (Size) -> Unit) {
     }
 }
 
-fun Context.inflateLayoutAsync(
+fun LayoutInflater.inflateLayoutAsync(
     @LayoutRes layoutRes: Int, container: ViewGroup?, onLayoutInflated: (View) -> Unit
 ) {
-    val asyncLayoutInflater = AsyncLayoutInflater(this)
+    val asyncLayoutInflater = AsyncLayoutInflater(context)
 
     asyncLayoutInflater.inflate(layoutRes, container) { view, _, _ ->
         onLayoutInflated(view)

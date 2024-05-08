@@ -164,11 +164,14 @@
         <item name="cardElevation">@dimen/_3sdp</item>
     </style>
 
-    <style name="CustomClickableIcon">
+    <style name="CustomClickableIcon" parent="BaseClickableIcon">
         <item name="android:layout_width">@dimen/_35sdp</item>
         <item name="android:layout_height">@dimen/_35sdp</item>
         <item name="contentPadding">@dimen/_8sdp</item>
         <item name="tint">@color/absolute_white</item>
+    </style>
+
+    <style name="BaseClickableIcon">
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:foreground">@drawable/bg_ripple_effect_accent_rounded</item>
@@ -269,6 +272,10 @@
 
     <style name="BottomSheetDialogBaseStyle">
         <item name="android:background">@drawable/bg_custom_bottom_sheet_dialog</item>
+    </style>
+
+    <style name="BoxDialogBaseStyle">
+        <item name="android:background">@drawable/bg_custom_box_dialog</item>
     </style>
 
     <style name="CustomSliderView">
@@ -409,9 +416,9 @@
         <item name="android:theme">@style/FontExtraBold800</item>
     </style>
 
-    <style name="DotIndicatorColorStyle">
-        <item name="dotsColor">@color/primaryA30</item>
-        <item name="selectedDotColor">@color/accent</item>
-    </style>
+<!--    <style name="DotIndicatorColorStyle">-->
+<!--        <item name="dotsColor">@color/primaryA30</item>-->
+<!--        <item name="selectedDotColor">@color/accent</item>-->
+<!--    </style>-->
 
 </resources>

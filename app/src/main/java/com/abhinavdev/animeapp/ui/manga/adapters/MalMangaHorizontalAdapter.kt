@@ -6,19 +6,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowHorizontalListItemBinding
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
-import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMalMangaData
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
-import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class MalMangaHorizontalAdapter(
     private val list: List<MalMangaData>,
-    private val type: MultiApiCallType,
+    private val type: MultiContentAdapterType,
     private val listener: OnClickMultiTypeCallback
 ) : RecyclerView.Adapter<MalMangaHorizontalAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,39 +37,39 @@ class MalMangaHorizontalAdapter(
 
         with(holder) {
             with(binding) {
-                ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
+                ivPoster.loadImage(image, R.color.bgLightGrey)
                 tvRating.text = rating
                 tvRanking.text = rank
                 tvType.text = mangaType
                 vtvAnimeName.text = mangaName
 
                 when (type) {
-                    MultiApiCallType.TopAiring -> {}
-                    MultiApiCallType.TopPopular -> {
+                    MultiContentAdapterType.TopAiring -> {}
+                    MultiContentAdapterType.TopPopular -> {
                         tvRanking.hide()
                         tvRating.show()
                         tvType.show()
                     }
 
-                    MultiApiCallType.TopFavourite -> {
+                    MultiContentAdapterType.TopFavourite -> {
                         tvRanking.hide()
                         tvRating.show()
                         tvType.show()
                     }
 
-                    MultiApiCallType.TopUpcoming -> {
+                    MultiContentAdapterType.TopUpcoming -> {
                         tvRanking.hide()
                         tvRating.hide()
                         tvType.show()
                     }
 
-                    MultiApiCallType.TopRecommended -> {
+                    MultiContentAdapterType.TopRecommended -> {
                         tvRanking.hide()
                         tvRating.show()
                         tvType.show()
                     }
 
-                    MultiApiCallType.TopRanked -> {
+                    MultiContentAdapterType.TopRanked -> {
                         tvRanking.show()
                         tvRating.show()
                         tvType.show()

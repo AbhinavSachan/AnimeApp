@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/BottomSheetDialogBaseStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -36,29 +37,27 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
         style="@style/TextStyleFont700"
-        android:text="@string/msg_login"
         android:textSize="@dimen/text_size_20"
         app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toTopOf="@id/guide_top" />
+        app:layout_constraintTop_toTopOf="@id/guide_top"
+        tools:text="@string/msg_choose_title_language" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_description"
-        style="@style/TextStyleFont400"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_page_no"
         android:layout_width="0dp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:text="@string/msg_login_des"
-        android:textSize="@dimen/text_size_16"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/checkbox"
-        style="@style/CustomCheckBoxStyle"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:text="@string/msg_use_external_browser"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_description" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_page_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:maxLength="8" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier_description"
@@ -66,7 +65,7 @@
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:barrierMargin="@dimen/_8sdp"
-        app:constraint_referenced_ids="checkbox" />
+        app:constraint_referenced_ids="til_page_no" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_negative"
@@ -82,7 +81,7 @@
         android:id="@+id/btn_positive"
         style="@style/CustomAccentButton"
         android:layout_width="0dp"
-        android:text="@string/msg_login"
+        android:text="@string/action_submit"
         app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintStart_toEndOf="@id/btn_negative"

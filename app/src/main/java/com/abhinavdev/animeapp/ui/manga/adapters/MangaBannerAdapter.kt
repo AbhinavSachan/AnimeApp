@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowBannerAnimeBinding
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
-import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderViewAdapter
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
-import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.loadImage
 
 class MangaBannerAdapter(
     private val list: ArrayList<MangaData>, private val listener: OnClickMultiTypeCallback
@@ -30,12 +30,12 @@ class MangaBannerAdapter(
 
         with(viewHolder) {
             with(binding) {
-                ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
+                ivPoster.loadImage(image, R.color.bgLightGrey)
                 tvSpotlight.text = spotlight
                 tvName.text = mangaName
 
                 btnDetails.setOnClickListener {
-                    listener.onItemClick(position, MultiApiCallType.TopAiring)
+                    listener.onItemClick(position, MultiContentAdapterType.TopAiring)
                 }
             }
         }

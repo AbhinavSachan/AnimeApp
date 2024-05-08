@@ -57,10 +57,17 @@
     <string name="msg_my_anime_description">See all the anime you saved on MAL</string>
     <string name="msg_mal_profile_decription">View your MAL profile</string>
     <string name="action_explore">Explore</string>
+
+<!--    empty list title and description-->
     <string name="msg_your_list_empty">Your list is empty</string>
     <string name="msg_empty_manga_list_des">Oops! It seems you haven\'t added any manga to the list.</string>
     <string name="msg_empty_anime_list_des">Oops! It seems you haven\'t added any anime to the list.</string>
+    <string name="msg_list_empty">Oops! List is empty</string>
+    <string name="msg_empty_list_des">Looks like we haven\'t found any data, Please try different filters.</string>
+    <string name="msg_seach_list_empty">No results!</string>
+    <string name="msg_empty_seach_list_des">Please try different search.</string>
     <string name="msg_empty_error_des">Oops! It seems we\'ve run into some error.</string>
+
     <string name="msg_choose_app_theme">Choose App Theme</string>
     <string name="msg_choose_app_language">Choose App Language</string>
     <string name="msg_choose_title_language">Choose Title Language</string>
@@ -78,4 +85,9 @@
     <string name="msg_top_anime">Top Anime</string>
     <string name="msg_choose_age_rating">Choose Age Rating</string>
     <string name="msg_choose_type">Choose Type</string>
+    <string name="msg_page">Page</string>
+    <string name="msg_previous">Previous</string>
+    <string name="msg_next">Next</string>
+    <string name="msg_enter_page">Enter Page No.</string>
+    <string name="action_submit">Submit</string>
 </resources>

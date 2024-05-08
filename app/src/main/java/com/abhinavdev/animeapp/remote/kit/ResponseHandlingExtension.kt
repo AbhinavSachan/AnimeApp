@@ -9,8 +9,6 @@ import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.hasInternetConnection
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.IOException
 
@@ -39,7 +37,7 @@ suspend fun <T> Response<T>.handleResponse(application: Application): Event<Reso
             val refreshTokenResponse = repo.getRefreshAccessToken(refreshToken)
             if (refreshTokenResponse.isSuccessful) {
                 refreshTokenResponse.body()?.let { accessToken ->
-                    PrefUtils.setObject(Const.PrefKeys.ACCESS_TOKEN_KEY,accessToken)
+                    PrefUtils.setObject(Const.PrefKeys.ACCESS_TOKEN_KEY, accessToken)
                 }
                 application.getString(R.string.error_request_refresh_page)
             } else {
@@ -87,42 +85,5 @@ suspend fun <T> MutableLiveData<Event<Resource<T>>>.fetchData(
                 this@fetchData.postValue(Event(Resource.Error(conversionErrorMsg)))
             }
         }
-    }
-}
-
-suspend fun <K, T> MutableLiveData<Event<Map<K, Resource<T>>>>.fetchMultiData(
-    application: Application, apiCalls: Map<K, suspend () -> Response<T>>
-) {
-    this@fetchMultiData.postValue(Event(apiCalls.keys.associateWith { Resource.Loading() }))
-
-    val noInternetMsg = application.getString(R.string.error_internet_unavailable)
-    val networkErrorMsg = application.getString(R.string.error_network_failure)
-    val conversionErrorMsg = application.getString(R.string.error_conversion_error)
-
-    if (application.hasInternetConnection()) {
-        val responses = apiCalls.map { (identifier, apiCall) -> identifier to apiCall.invoke() }
-        val responseMap = mutableMapOf<K, Resource<T>>()
-        responses.forEach { (identifier, response) ->
-            try {
-                val updatedResponse = response.handleResponse(application)
-
-                updatedResponse.getContentIfNotHandled()?.let { responseMap[identifier] = it }
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                when (t) {
-                    is IOException -> responseMap[identifier] = Resource.Error(networkErrorMsg)
-                    else -> responseMap[identifier] = Resource.Error(conversionErrorMsg)
-                }
-            }
-            withContext(Dispatchers.Main) {
-                // Update the LiveData here
-                this@fetchMultiData.postValue(Event(responseMap))
-            }
-
-        }
-    } else {
-        val errorEvent: Map<K, Resource<T>> =
-            apiCalls.keys.associateWith { Resource.Error(noInternetMsg) }
-        this@fetchMultiData.postValue(Event(errorEvent))
     }
 }

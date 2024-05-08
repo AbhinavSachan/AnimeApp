@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowBannerAnimeBinding
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
-import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderViewAdapter
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
-import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.loadImage
 
 class AnimeBannerAdapter(
     private val list: ArrayList<AnimeData>, private val listener: OnClickMultiTypeCallback
@@ -29,11 +29,11 @@ class AnimeBannerAdapter(
         val animeName = item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
         with(viewHolder) {
             with(binding) {
-                ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
+                ivPoster.loadImage(image, R.color.bgLightGrey)
                 tvSpotlight.text = spotlight
                 tvName.text = animeName
                 btnDetails.setOnClickListener {
-                    listener.onItemClick(position, MultiApiCallType.TopAiring)
+                    listener.onItemClick(position, MultiContentAdapterType.TopAiring)
                 }
             }
         }

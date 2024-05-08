@@ -16,7 +16,7 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.extension.getSizeOfView
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
-import com.abhinavdev.animeapp.util.extension.loadImageWithAnime
+import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
@@ -61,7 +61,7 @@ class MalMangaVerticalAdapter(
             is GridViewHolder -> {
                 with(holder) {
                     with(binding) {
-                        ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
+                        ivPoster.loadImage(image, R.color.bgLightGrey)
                         tvRating.text = rating
                         tvRanking.text = rank
                         tvType.text = mangaType
@@ -82,7 +82,7 @@ class MalMangaVerticalAdapter(
             is ListViewHolder -> {
                 with(holder) {
                     with(binding) {
-                        ivPoster.loadImageWithAnime(image, R.color.bgLightGrey, true)
+                        ivPoster.loadImage(image, R.color.bgLightGrey)
                         tvRating.text = rating.placeholder()
                         tvRanking.text = rank
                         tvType.text = typeWithChapters
@@ -94,7 +94,7 @@ class MalMangaVerticalAdapter(
                         tvRanking.hide()
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
-                        viewTopLeftFade.showOrHide(!tvRating.isHidden())
+                        viewTopLeftFade.showOrHide(!tvRanking.isHidden())
                         root.setOnClickListener { listener.onItemClick(position) }
                     }
                 }

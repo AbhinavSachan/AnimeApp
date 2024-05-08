@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentAnimeHomeBinding
+import com.abhinavdev.animeapp.remote.kit.Event
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.anime.AnimeSearchResponse
@@ -19,7 +21,7 @@ import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeBannerAdapter
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeHorizontalAdapter
 import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeHorizontalAdapter
-import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.ui.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
@@ -29,15 +31,12 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
-import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.isVisible
-import com.abhinavdev.animeapp.util.extension.show
+import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.Job
-import java.io.Serializable
 
 
 class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallback {
@@ -115,6 +114,16 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         isAuthenticated = SettingsHelper.getIsAuthenticated()
         setAllTitles()
         setTopViewPagerHeight()
+        initializeShimmerLoading()
+    }
+
+    private fun initializeShimmerLoading() {
+        airingLoading(true)
+        popularLoading(true)
+        favouriteLoading(true)
+        upcomingLoading(true)
+        rankedLoading(true)
+        recommendedLoading(true)
     }
 
     private fun setAllTitles() {
@@ -141,7 +150,8 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         binding.svTopAiring.setSliderAdapter(airingAdapter!!)
 
         //second rv
-        popularAdapter = AnimeHorizontalAdapter(popularList, MultiApiCallType.TopPopular, this)
+        popularAdapter =
+            AnimeHorizontalAdapter(popularList, MultiContentAdapterType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
         binding.groupPopular.rvItems.setHasFixedSize(true)
         binding.groupPopular.rvItems.layoutManager =
@@ -150,7 +160,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
         //third rv
         favouriteAdapter =
-            AnimeHorizontalAdapter(favouriteList, MultiApiCallType.TopFavourite, this)
+            AnimeHorizontalAdapter(favouriteList, MultiContentAdapterType.TopFavourite, this)
         favouriteAdapter?.setHasStableIds(true)
         binding.groupFavourite.rvItems.setHasFixedSize(true)
         binding.groupFavourite.rvItems.layoutManager =
@@ -158,7 +168,8 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         binding.groupFavourite.rvItems.adapter = favouriteAdapter
 
         //fourth rv
-        upcomingAdapter = AnimeHorizontalAdapter(upcomingList, MultiApiCallType.TopUpcoming, this)
+        upcomingAdapter =
+            AnimeHorizontalAdapter(upcomingList, MultiContentAdapterType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
         binding.groupUpcoming.rvItems.setHasFixedSize(true)
         binding.groupUpcoming.rvItems.layoutManager =
@@ -167,7 +178,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
         //fifth rv
         recommendedAdapter =
-            MalAnimeHorizontalAdapter(recommendedList, MultiApiCallType.TopRecommended, this)
+            MalAnimeHorizontalAdapter(recommendedList, MultiContentAdapterType.TopRecommended, this)
         recommendedAdapter?.setHasStableIds(true)
         binding.groupRecommended.rvItems.setHasFixedSize(true)
         binding.groupRecommended.rvItems.layoutManager =
@@ -175,7 +186,8 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         binding.groupRecommended.rvItems.adapter = recommendedAdapter
 
         //sixth rv
-        rankedAdapter = MalAnimeHorizontalAdapter(rankedList, MultiApiCallType.TopRanked, this)
+        rankedAdapter =
+            MalAnimeHorizontalAdapter(rankedList, MultiContentAdapterType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
         binding.groupTopRanked.rvItems.setHasFixedSize(true)
         binding.groupTopRanked.rvItems.layoutManager =
@@ -213,13 +225,10 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setAuthenticationView() {
-        if (!isAuthenticated && binding.groupRecommended.group.isVisible()) {
-            binding.groupRecommended.root.hide()
-            binding.groupTopRanked.root.hide()
-        } else if (isAuthenticated && binding.groupRecommended.root.isHidden()) {
-            binding.groupRecommended.root.show()
-            binding.groupTopRanked.root.show()
-        }
+        val condition1 = isAuthenticated != binding.groupTopRanked.root.isVisible()
+        val condition2 = isAuthenticated != binding.groupRecommended.root.isVisible()
+        binding.groupTopRanked.root.showOrHide(condition1)
+        binding.groupRecommended.root.showOrHide(condition2)
     }
 
     override fun onResume() {
@@ -253,33 +262,60 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
                 allApiCalls()
             }
         }
-        viewModel.animeAllApiResponse.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { apiMap ->
-                apiMap.forEach { (key, response) ->
-                    when (key) {
-                        MultiApiCallType.TopAiring -> handleAnimeSearchResponse(
-                            key, response, ::airingLoading
-                        )
+        viewModel.airingResponse.handleJikanResponse(MultiContentAdapterType.TopAiring)
+        viewModel.popularResponse.handleJikanResponse(MultiContentAdapterType.TopPopular)
+        viewModel.favouriteResponse.handleJikanResponse(MultiContentAdapterType.TopFavourite)
+        viewModel.upcomingResponse.handleJikanResponse(MultiContentAdapterType.TopUpcoming)
+        viewModel.recommendedResponse.handleMalResponse(MultiContentAdapterType.TopRecommended)
+        viewModel.rankingResponse.handleMalResponse(MultiContentAdapterType.TopRanked)
 
-                        MultiApiCallType.TopPopular -> handleAnimeSearchResponse(
-                            key, response, ::popularLoading
-                        )
+        viewModel.allResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { loading ->
+                isLoading = loading
+                if (isRefreshed) {
+                    parentActivity?.isLoaderVisible(isLoading)
+                }
+            }
+        }
+    }
 
-                        MultiApiCallType.TopFavourite -> handleAnimeSearchResponse(
-                            key, response, ::favouriteLoading
-                        )
+    // Function to handle each type of response
+    private fun LiveData<Event<Resource<AnimeSearchResponse>>>.handleJikanResponse(key: MultiContentAdapterType) {
+        observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.data?.let {
+                            when (key) {
+                                MultiContentAdapterType.TopAiring -> {
+                                    setAiringData(it)
+                                }
 
-                        MultiApiCallType.TopUpcoming -> handleAnimeSearchResponse(
-                            key, response, ::upcomingLoading
-                        )
+                                MultiContentAdapterType.TopPopular -> {
+                                    setPopularData(it)
+                                }
 
-                        MultiApiCallType.TopRanked -> handleAnimeSearchResponse(
-                            key, response, ::rankedLoading
-                        )
+                                MultiContentAdapterType.TopFavourite -> {
+                                    setFavouriteData(it)
+                                }
 
-                        MultiApiCallType.TopRecommended -> handleAnimeSearchResponse(
-                            key, response, ::recommendedLoading
-                        )
+                                MultiContentAdapterType.TopUpcoming -> {
+                                    setUpcomingData(it)
+                                }
+
+                                else -> {}
+                            }
+                            key.setShimmerLoading(false)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        key.setShimmerLoading(false)
+                        response.message?.let { message -> toast(message) }
+                    }
+
+                    is Resource.Loading -> {
+
                     }
                 }
             }
@@ -287,139 +323,150 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     // Function to handle each type of response
-    private inline fun handleAnimeSearchResponse(
-        key: MultiApiCallType, response: Resource<Serializable>, loadingFunction: (Boolean) -> Unit
-    ) {
-        when (response) {
-            is Resource.Success -> {
-                when (key) {
-                    MultiApiCallType.TopAiring -> setAiringData(response.data as AnimeSearchResponse)
-                    MultiApiCallType.TopPopular -> setPopularData(response.data as AnimeSearchResponse)
-                    MultiApiCallType.TopFavourite -> setFavouriteData(response.data as AnimeSearchResponse)
-                    MultiApiCallType.TopUpcoming -> setUpcomingData(response.data as AnimeSearchResponse)
-                    MultiApiCallType.TopRecommended -> setRecommendedData(response.data as MalMyAnimeListResponse)
-                    MultiApiCallType.TopRanked -> setRankedData(response.data as MalMyAnimeListResponse)
+    private fun LiveData<Event<Resource<MalMyAnimeListResponse>>>.handleMalResponse(key: MultiContentAdapterType) {
+        observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.data?.let {
+                            when (key) {
+
+                                MultiContentAdapterType.TopRanked -> {
+                                    setRankedData(it)
+                                }
+
+                                MultiContentAdapterType.TopRecommended -> {
+                                    setRecommendedData(it)
+                                }
+
+                                else -> {}
+                            }
+                            key.setShimmerLoading(false)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        key.setShimmerLoading(false)
+                        response.message?.let { message -> toast(message) }
+                    }
+
+                    is Resource.Loading -> {
+
+                    }
                 }
-                isLoading = false
-                loadingFunction(false)
             }
+        }
+    }
 
-            is Resource.Error -> {
-                isLoading = false
-                loadingFunction(false)
-                response.message?.let { message -> toast(message) }
-            }
-
-            is Resource.Loading -> {
-                isLoading = true
-                loadingFunction(true)
-            }
+    private fun MultiContentAdapterType.setShimmerLoading(isLoading: Boolean){
+        when (this) {
+            MultiContentAdapterType.TopAiring -> airingLoading(isLoading)
+            MultiContentAdapterType.TopPopular -> popularLoading(isLoading)
+            MultiContentAdapterType.TopFavourite -> favouriteLoading(isLoading)
+            MultiContentAdapterType.TopUpcoming -> upcomingLoading(isLoading)
+            MultiContentAdapterType.TopRanked -> rankedLoading(isLoading)
+            MultiContentAdapterType.TopRecommended -> recommendedLoading(isLoading)
         }
     }
 
     private fun airingLoading(isLoading: Boolean) {
         with(binding) {
-            showLoaderOrShimmer(isLoading, svTopAiring, shimmerViewPager)
+            showOrHideShimmer(isLoading, svTopAiring, shimmerViewPager)
         }
     }
 
     private fun popularLoading(isLoading: Boolean) {
         with(binding.groupPopular) {
-            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+            showOrHideShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun favouriteLoading(isLoading: Boolean) {
         with(binding.groupFavourite) {
-            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+            showOrHideShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun upcomingLoading(isLoading: Boolean) {
         with(binding.groupUpcoming) {
-            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+            showOrHideShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun recommendedLoading(isLoading: Boolean) {
         with(binding.groupRecommended) {
-            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+            showOrHideShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
     private fun rankedLoading(isLoading: Boolean) {
         with(binding.groupTopRanked) {
-            showLoaderOrShimmer(isLoading, group, shimmerLoader.root)
+            showOrHideShimmer(isLoading, group, shimmerLoader.root)
         }
     }
 
-    private fun showLoaderOrShimmer(
+    private fun showOrHideShimmer(
         isLoading: Boolean, groupView: View, shimmerView: ShimmerFrameLayout
     ) {
-        if (isRefreshed) {
-            parentActivity?.isLoaderVisible(isLoading)
-        } else {
-            groupView.showOrInvisible(!isLoading)
-            shimmerView.showOrInvisible(isLoading)
-        }
-        this.isLoading = isLoading
+        groupView.showOrInvisible(!isLoading)
+        shimmerView.showOrInvisible(isLoading)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setAiringData(animeData: AnimeSearchResponse) {
+    private fun setAiringData(animeData: ArrayList<AnimeData>) {
         airingList.clear()
-        animeData.data?.let { airingList.addAll(it) }
+        airingList.addAll(animeData)
         airingAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setPopularData(animeData: AnimeSearchResponse) {
+    private fun setPopularData(animeData: ArrayList<AnimeData>) {
         popularList.clear()
-        animeData.data?.let { popularList.addAll(it) }
+        popularList.addAll(animeData)
         popularAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setFavouriteData(animeData: AnimeSearchResponse) {
+    private fun setFavouriteData(animeData: ArrayList<AnimeData>) {
         favouriteList.clear()
-        animeData.data?.let { favouriteList.addAll(it) }
+        favouriteList.addAll(animeData)
         favouriteAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setUpcomingData(animeData: AnimeSearchResponse) {
+    private fun setUpcomingData(animeData: ArrayList<AnimeData>) {
         upcomingList.clear()
-        animeData.data?.let { upcomingList.addAll(it) }
+        upcomingList.addAll(animeData)
         upcomingAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setRecommendedData(animeData: MalMyAnimeListResponse) {
+    private fun setRecommendedData(animeData: ArrayList<MalAnimeData>) {
         recommendedList.clear()
-        animeData.data?.let { recommendedList.addAll(it) }
+        recommendedList.addAll(animeData)
         recommendedAdapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setRankedData(animeData: MalMyAnimeListResponse) {
+    private fun setRankedData(animeData: ArrayList<MalAnimeData>) {
         rankedList.clear()
-        animeData.data?.let { rankedList.addAll(it) }
+        rankedList.addAll(animeData)
         rankedAdapter?.notifyDataSetChanged()
     }
 
     private fun allApiCalls() {
-        viewModel.getAllAnimeData()
+        viewModel.getAllData()
     }
 
     override fun <T> onItemClick(position: Int, type: T) {
-        val apiType = type as MultiApiCallType
+        val apiType = type as MultiContentAdapterType
         when (apiType) {
-            MultiApiCallType.TopAiring -> toast("Airing")
-            MultiApiCallType.TopPopular -> toast("Popular")
-            MultiApiCallType.TopFavourite -> toast("Favourite")
-            MultiApiCallType.TopUpcoming -> toast("Upcoming")
-            MultiApiCallType.TopRecommended -> toast("Recommended")
-            MultiApiCallType.TopRanked -> toast("Ranked")
+            MultiContentAdapterType.TopAiring -> toast("Airing")
+            MultiContentAdapterType.TopPopular -> toast("Popular")
+            MultiContentAdapterType.TopFavourite -> toast("Favourite")
+            MultiContentAdapterType.TopUpcoming -> toast("Upcoming")
+            MultiContentAdapterType.TopRecommended -> toast("Recommended")
+            MultiContentAdapterType.TopRanked -> toast("Ranked")
         }
     }
 

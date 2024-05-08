@@ -31,39 +31,41 @@
 -keep class org.jcodec.** { *; }
 
 # Glide ProGuard rules
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
+#-keep public class * implements com.bumptech.glide.module.GlideModule
+#-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+#  **[] $VALUES;
+#  public *;
+#}
+# keep Glide's annotations
+#-keepnames @com.bumptech.glide.annotation.* class *
 
 # Music player app ProGuard rules
 # keep all model classes
 -keep class com.abhinavdev.animeapp.remote.models.** { *; }
 
 # keep Glide-generated code
--keep public class * implements com.bumptech.glide.GeneratedAppGlideModule {
-  public *;
-}
+#-keep public class * implements com.bumptech.glide.GeneratedAppGlideModule {
+#  public *;
+#}
 
 # keep Glide's annotated classes
--keep @com.bumptech.glide.annotation.GlideExtension class * {
-  *;
-}
+#-keep @com.bumptech.glide.annotation.GlideExtension class * {
+#  *;
+#}
 
 # keep Glide's options classes
--keep public class * extends com.bumptech.glide.load.Options {
-  public static <fields>;
-}
+#-keep public class * extends com.bumptech.glide.load.Options {
+#  public static <fields>;
+#}
 
 # keep Glide's generated API
--keep class * implements com.bumptech.glide.module.GlideModule {
-  public void applyOptions(android.content.Context, com.bumptech.glide.GlideBuilder);
-  public void registerComponents(android.content.Context, com.bumptech.glide.Glide, com.bumptech.glide.Registry);
-}
+#-keep class * implements com.bumptech.glide.module.GlideModule {
+#  public void applyOptions(android.content.Context, com.bumptech.glide.GlideBuilder);
+#  public void registerComponents(android.content.Context, com.bumptech.glide.Glide, com.bumptech.glide.Registry);
+#}
 
-# keep Glide's annotations
--keepnames @com.bumptech.glide.annotation.* class *
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
 # A resource is loaded with a relative path so the package of this class must be preserved.
 -keeppackagenames okhttp3.internal.publicsuffix.*
 # A resource is loaded with a relative path so the package of this class must be preserved.
@@ -77,7 +79,6 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
-
 
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard

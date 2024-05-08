@@ -16,7 +16,6 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.LIST
@@ -28,6 +27,7 @@ import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
+import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
 import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -52,6 +52,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private lateinit var viewModel: MoreViewModel
 
     private var isFromSwipe = false
+    private var shouldScrollToTop = false
 
     private var gridOrList: AdapterType = GRID
 
@@ -59,6 +60,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private var sort = MalMangaSortType.UPDATED
     private var offset = 0
     private var limit = SettingsHelper.getMyListLimit()
+    private val isFirstPage get() = offset == 0
 
     private val mangaList: ArrayList<MalMangaData> = arrayListOf()
     private var adapter: MalMangaVerticalAdapter? = null
@@ -68,6 +70,8 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private var optionAdapter: ItemSelectionAdapter<ListOptionsType>? = null
     private var optionBottomSheetDialog: BottomSheetDialog? = null
+
+    private var paginationHelper: PaginationViewHelper? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -110,6 +114,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun initComponents() {
+        paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
         sortList = MalMangaSortType.list.map {
             ItemSelectionModelBase(it.search, it.showName).apply {
@@ -121,7 +126,6 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                 isSelected = status == it
             }
         }
-
         with(binding) {
             groupStatus.tvItemLabel.text = getString(R.string.msg_filter_by_status)
             groupSort.tvItemLabel.text = getString(R.string.msg_sort_by)
@@ -138,6 +142,11 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
         }
+    }
+
+    private fun updatePageNo(){
+        //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
+        paginationHelper?.setPageText(offset + 1)
     }
 
     private fun setAdapters() {
@@ -174,6 +183,8 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         binding.swipeRefresh.setOnRefreshListener {
             getList(true)
         }
+        paginationHelper?.onPreviousPageClick { onPreviousClick() }
+        paginationHelper?.onNextPageClick { onNextClick() }
     }
 
     override fun onClick(v: View?) {
@@ -236,11 +247,20 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
-                        response.data?.let {
+                        response.data?.data?.let {
                             setData(it)
                         }
                         isLoaderVisible(false)
-                        showEmptyLayout(false)
+                        val hasNext = response.data?.paging?.next != null
+                        updatePageNo()
+                        //if this is not the first page then enable previous button
+                        paginationHelper?.setPreviousButtonEnabled(!isFirstPage)
+                        //if api has next page then enable next button
+                        paginationHelper?.setNextButtonEnabled(hasNext)
+                        //if first page then check if list is empty
+                        if (isFirstPage) {
+                            showEmptyLayout(false)
+                        }
                     }
 
                     is Resource.Error -> {
@@ -258,10 +278,18 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setData(data: MalMyMangaListResponse) {
+    private fun setData(data: ArrayList<MalMangaData>) {
         mangaList.clear()
-        data.data?.let { mangaList.addAll(it) }
+        mangaList.addAll(data)
         adapter?.notifyDataSetChanged()
+        if (shouldScrollToTop){
+            scrollToTopOrPosition()
+            shouldScrollToTop = false
+        }
+    }
+
+    private fun scrollToTopOrPosition(position: Int = 0) {
+        binding.rvList.scrollToPosition(position)
     }
 
     private fun isLoaderVisible(b: Boolean) {
@@ -283,7 +311,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                 } else {
                     tvEmptyTitle.text = getString(R.string.msg_your_list_empty)
                     tvEmptyDesc.text = getString(R.string.msg_empty_manga_list_des)
-                    R.drawable.bg_empty_list
+                    R.drawable.bg_empty_my_list
                 }
                 binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
             }
@@ -321,12 +349,37 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             else ->{}
         }
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun runCommonOptionFunction() {
-        optionAdapter?.notifyDataSetChanged()
+        offset = 0
         optionBottomSheetDialog?.cancel()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onNextClick() {
+        increaseOffset()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onPreviousClick() {
+        decreaseOffset()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun commonFetchListAfterOptionChange(){
+        shouldScrollToTop = true
         getList(false)
     }
+
+    private fun increaseOffset() {
+        offset += 1
+    }
+
+    private fun decreaseOffset() {
+        if (offset != 0) offset -= 1
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() = MyMangaListFragment()

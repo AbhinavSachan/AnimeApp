@@ -16,7 +16,6 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
@@ -28,6 +27,7 @@ import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
+import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
 import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -44,13 +44,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickListener,OnClickMultiTypeCallback {
+class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+    OnClickMultiTypeCallback {
     private var _binding: FragmentMyAnimeListBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
     private lateinit var viewModel: MoreViewModel
 
     private var isFromSwipe = false
+    private var shouldScrollToTop = false
 
     private var gridOrList: AdapterType = GRID
 
@@ -58,6 +60,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private var sort = MalAnimeSortType.UPDATED
     private var offset = 0
     private var limit = SettingsHelper.getMyListLimit()
+    private val isFirstPage get() = offset == 0
 
     private val animeList: ArrayList<MalAnimeData> = arrayListOf()
     private var adapter: MalAnimeVerticalAdapter? = null
@@ -67,6 +70,8 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private var optionAdapter: ItemSelectionAdapter<ListOptionsType>? = null
     private var optionBottomSheetDialog: BottomSheetDialog? = null
+
+    private var paginationHelper: PaginationViewHelper? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -109,6 +114,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun initComponents() {
+        paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
         sortList = MalAnimeSortType.list.map {
             ItemSelectionModelBase(it.search, it.showName).apply {
@@ -135,6 +141,11 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
         }
+    }
+
+    private fun updatePageNo() {
+        //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
+        paginationHelper?.setPageText(offset + 1)
     }
 
     private fun setAdapter() {
@@ -171,6 +182,8 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         binding.swipeRefresh.setOnRefreshListener {
             getList(true)
         }
+        paginationHelper?.onPreviousPageClick { onPreviousClick() }
+        paginationHelper?.onNextPageClick { onNextClick() }
     }
 
     override fun onClick(v: View?) {
@@ -191,7 +204,9 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             val title = when (type) {
                 ListOptionsType.STATUS -> R.string.msg_choose_status
                 ListOptionsType.SORT -> R.string.msg_sort_by
-                else->{0}
+                else -> {
+                    0
+                }
             }
             tvTitle.text = getString(title)
             optionAdapter = ItemSelectionAdapter(list, this@MyAnimeListFragment, type)
@@ -203,6 +218,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         optionBottomSheetDialog?.setContentView(view.root)
         optionBottomSheetDialog?.show()
     }
+
     private fun toggleViewType() {
         binding.rvList.hide()
         isLoaderVisible(true)
@@ -232,11 +248,20 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
-                        response.data?.let {
+                        response.data?.data?.let {
                             setData(it)
                         }
                         isLoaderVisible(false)
-                        showEmptyLayout(false)
+                        val hasNext = response.data?.paging?.next != null
+                        updatePageNo()
+                        //if this is not the first page then enable previous button
+                        paginationHelper?.setPreviousButtonEnabled(!isFirstPage)
+                        //if api has next page then enable next button
+                        paginationHelper?.setNextButtonEnabled(hasNext)
+                        //if first page then check if list is empty
+                        if (isFirstPage) {
+                            showEmptyLayout(false)
+                        }
                     }
 
                     is Resource.Error -> {
@@ -254,10 +279,18 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setData(data: MalMyAnimeListResponse) {
+    private fun setData(data: ArrayList<MalAnimeData>) {
         animeList.clear()
-        data.data?.let { animeList.addAll(it) }
+        animeList.addAll(data)
         adapter?.notifyDataSetChanged()
+        if (shouldScrollToTop) {
+            scrollToTopOrPosition()
+            shouldScrollToTop = false
+        }
+    }
+
+    private fun scrollToTopOrPosition(position: Int = 0) {
+        binding.rvList.scrollToPosition(position)
     }
 
     private fun isLoaderVisible(b: Boolean) {
@@ -278,8 +311,8 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                     R.drawable.bg_error
                 } else {
                     tvEmptyTitle.text = getString(R.string.msg_your_list_empty)
-                    tvEmptyDesc.text = getString(R.string.msg_empty_manga_list_des)
-                    R.drawable.bg_empty_list
+                    tvEmptyDesc.text = getString(R.string.msg_empty_anime_list_des)
+                    R.drawable.bg_empty_my_list
                 }
                 binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
             }
@@ -314,15 +347,41 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                     runCommonOptionFunction()
                 }
             }
+
             else -> {}
         }
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun runCommonOptionFunction() {
-        optionAdapter?.notifyDataSetChanged()
+        offset = 0
         optionBottomSheetDialog?.cancel()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onNextClick() {
+        increaseOffset()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onPreviousClick() {
+        decreaseOffset()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun commonFetchListAfterOptionChange() {
+        shouldScrollToTop = true
         getList(false)
     }
+
+    private fun increaseOffset() {
+        offset += 1
+    }
+
+    private fun decreaseOffset() {
+        if (offset != 0) offset -= 1
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() = MyAnimeListFragment()

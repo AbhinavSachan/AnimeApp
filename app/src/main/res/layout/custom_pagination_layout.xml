@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_pagination"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingTop="@dimen/_8sdp"
+    android:paddingBottom="@dimen/_18sdp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_page_no"
+        style="@style/TextStyleFont500"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:background="@drawable/bg_primary_bor_accent_cor_12"
+        android:elevation="@dimen/_3sdp"
+        android:paddingStart="@dimen/_8sdp"
+        android:paddingTop="@dimen/_1sdp"
+        android:paddingEnd="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_1sdp"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Page 1" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_edit_page_no"
+        style="@style/BaseClickableIcon"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginStart="@dimen/_6sdp"
+        android:background="@drawable/bg_accent_button"
+        android:foreground="@drawable/bg_ripple_effect_white_rounded"
+        android:src="@drawable/ic_edit"
+        app:contentPadding="@dimen/_6sdp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_page_no"
+        app:layout_constraintStart_toEndOf="@id/tv_page_no"
+        app:layout_constraintTop_toTopOf="@id/tv_page_no"
+        app:tint="@color/onAccent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/btn_next_page"
+        style="@style/CustomAccentButtonLL"
+        android:layout_marginEnd="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_page_no"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_page_no">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_next_page"
+            style="@style/TextStyleFont500"
+            android:text="@string/msg_next"
+            android:textColor="@color/onAccent"
+            android:textSize="@dimen/text_size_13" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_next_page"
+            android:layout_width="@dimen/_9sdp"
+            android:layout_height="@dimen/_9sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:src="@drawable/ic_forward"
+            app:tint="@color/onAccent" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/btn_previous_page"
+        style="@style/CustomAccentButtonLL"
+        android:layout_marginEnd="@dimen/_6sdp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_page_no"
+        app:layout_constraintEnd_toStartOf="@id/btn_next_page"
+        app:layout_constraintTop_toTopOf="@id/tv_page_no">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_previous_page"
+            android:layout_width="@dimen/_9sdp"
+            android:layout_height="@dimen/_9sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:rotation="180"
+            android:src="@drawable/ic_forward"
+            app:tint="@color/onAccent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_previous_page"
+            style="@style/TextStyleFont500"
+            android:text="@string/msg_previous"
+            android:textColor="@color/onAccent"
+            android:textSize="@dimen/text_size_13" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

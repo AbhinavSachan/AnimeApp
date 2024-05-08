@@ -82,10 +82,10 @@ android {
         }
     }
     lint {
-        checkReleaseBuilds = false
+        checkReleaseBuilds = true
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
-//        abortOnError false
+        abortOnError = false
     }
 }
 
@@ -94,12 +94,12 @@ dependencies {
     implementation(libs.browser)
     implementation(libs.core.splashscreen)
     implementation(libs.appcompat)
+    implementation(libs.asynclayoutinflater)
     implementation(libs.work.runtime)
     implementation(libs.constraintlayout)
     implementation(libs.swiperefreshlayout)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
-    implementation(libs.legacy.support.v4)
 
     implementation(libs.material)
 
@@ -114,7 +114,6 @@ dependencies {
 
     //okhttp and logging interceptor
     implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
     implementation(libs.retrofit) {
         exclude(module = "okhttp")
@@ -127,10 +126,8 @@ dependencies {
     //json loader
     implementation(libs.lottie)
 
-    //Glide
-    implementation(libs.glide)
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.compiler)
+    //Picasso
+    implementation(libs.picasso)
 
     //calendar de-sugaring library
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -145,28 +142,14 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
 
-
-    //page indicator
-    implementation(libs.dotsindicator)
-
     //play video
 //    implementation ("com.google.android.exoplayer:exoplayer:2.18.7")
-
-    //flexbox
-    implementation (libs.flexbox)
 
     //recyclerview with indicator
 //    implementation ("ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.3")
 
     //Force Update Google Play Store
 //    implementation ("com.google.android.play:core:1.10.3")
-
-    //Google
-//    implementation ("com.google.android.gms:play-services-auth:20.7.0")
-
-    //Facebook
-//    implementation ("com.facebook.android:facebook-android-sdk:13.0.0")
-//    implementation ("com.facebook.android:facebook-login:13.0.0")
 
     //One Signal SDK
 //    implementation ("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
@@ -197,7 +180,7 @@ dependencies {
 
     implementation(libs.okhttpprofiler)
     //micro animations util library
-    implementation(libs.library)
+    implementation(libs.androidanimations)
     implementation(libs.palette.ktx)
     //shimmer loading library
     implementation(libs.shimmer)

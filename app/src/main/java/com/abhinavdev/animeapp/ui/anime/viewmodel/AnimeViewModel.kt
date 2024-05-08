@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.abhinavdev.animeapp.remote.kit.Event
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.kit.fetchData
-import com.abhinavdev.animeapp.remote.kit.fetchMultiData
 import com.abhinavdev.animeapp.remote.kit.repository.AnimeRepository
 import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
 import com.abhinavdev.animeapp.remote.kit.sources.AnimeRepositoryImpl
@@ -19,11 +18,9 @@ import com.abhinavdev.animeapp.remote.models.enums.AgeRating
 import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
-import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
+import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import java.io.Serializable
 
 class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: AnimeRepository = AnimeRepositoryImpl()
@@ -49,60 +46,70 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _animeAllApiResponse =
-        MutableLiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>>()
-    val animeAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>> =
-        _animeAllApiResponse
+    private val _airingResponse = MutableLiveData<Event<Resource<AnimeSearchResponse>>>()
+    val airingResponse: LiveData<Event<Resource<AnimeSearchResponse>>> = _airingResponse
 
-    fun getAllAnimeData() = viewModelScope.launch {
+    private val _popularResponse = MutableLiveData<Event<Resource<AnimeSearchResponse>>>()
+    val popularResponse: LiveData<Event<Resource<AnimeSearchResponse>>> = _popularResponse
+
+    private val _favouriteResponse = MutableLiveData<Event<Resource<AnimeSearchResponse>>>()
+    val favouriteResponse: LiveData<Event<Resource<AnimeSearchResponse>>> = _favouriteResponse
+
+    private val _upcomingResponse = MutableLiveData<Event<Resource<AnimeSearchResponse>>>()
+    val upcomingResponse: LiveData<Event<Resource<AnimeSearchResponse>>> = _upcomingResponse
+
+    private val _rankingResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
+    val rankingResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> = _rankingResponse
+
+    private val _recommendedResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
+    val recommendedResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> = _recommendedResponse
+
+    private val _allResponse = MutableLiveData<Event<Boolean>>()
+    val allResponse: LiveData<Event<Boolean>> = _allResponse
+
+    fun getAllData() = viewModelScope.launch {
         val animeType = AnimeType.ALL
         val ageRating = AgeRating.NONE
         val page = 1
         val limit = 10
-        val offset = 0
         val sfw = SettingsHelper.getSfwEnabled()
         val isAuthenticated = SettingsHelper.getIsAuthenticated()
+        val offset = 0
 
-        val apiCalls = mutableMapOf<MultiApiCallType, suspend () -> Response<Serializable>>()
+        _allResponse.postValue(Event(true))
 
-        apiCalls[MultiApiCallType.TopAiring] = suspend {
+        _airingResponse.fetchData(getApplication()){
             repository.getTopAnime(
                 animeType, AnimeFilter.AIRING, ageRating, sfw, page, limit
-            ) as Response<Serializable>
+            )
         }
-
-        apiCalls[MultiApiCallType.TopPopular] = suspend {
-            repository.getTopAnime(
-                animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
-            ) as Response<Serializable>
-        }
-
-        apiCalls[MultiApiCallType.TopFavourite] = suspend {
-            repository.getTopAnime(
-                animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
-            ) as Response<Serializable>
-        }
-
-        apiCalls[MultiApiCallType.TopUpcoming] = suspend {
-            repository.getTopAnime(
-                animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
-            ) as Response<Serializable>
-        }
-
-        // Add TopRanked,TopRecommended only if authentication is done
         if (isAuthenticated) {
-            apiCalls[MultiApiCallType.TopRanked] = suspend {
+            _rankingResponse.fetchData(getApplication()){
                 malRepository.getAnimeRanking(
                     MalAnimeType.ALL, limit, offset
-                ) as Response<Serializable>
+                )
             }
-            apiCalls[MultiApiCallType.TopRecommended] = suspend {
+            _recommendedResponse.fetchData(getApplication()){
                 malRepository.getRecommendedAnime(
                     limit, offset
-                ) as Response<Serializable>
+                )
             }
         }
-        _animeAllApiResponse.fetchMultiData(getApplication(), apiCalls)
+        _popularResponse.fetchData(getApplication()){
+            repository.getTopAnime(
+                animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
+            )
+        }
+        _favouriteResponse.fetchData(getApplication()){
+            repository.getTopAnime(
+                animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
+            )
+        }
+        _upcomingResponse.fetchData(getApplication()){
+            repository.getTopAnime(
+                animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
+            )
+        }
+        _allResponse.postValue(Event(false))
     }
-
 }

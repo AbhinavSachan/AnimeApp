@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:src="@drawable/bg_empty_list" />
+        tools:src="@drawable/bg_empty_my_list" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_empty_title"

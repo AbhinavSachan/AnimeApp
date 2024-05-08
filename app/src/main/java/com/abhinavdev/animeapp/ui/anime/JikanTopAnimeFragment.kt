@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
+import com.abhinavdev.animeapp.databinding.DialogPickPageBinding
 import com.abhinavdev.animeapp.databinding.FragmentJikanTopAnimeBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
@@ -27,6 +28,7 @@ import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
+import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
@@ -50,6 +52,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     private lateinit var viewModel: AnimeViewModel
 
     private var isFromSwipe = false
+    private var shouldScrollToTop = false
 
     private var gridOrList: AdapterType = AdapterType.GRID
 
@@ -58,6 +61,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     private var ageRating: AgeRating = AgeRating.NONE
     private var page: Int = 1
     private var limit: Int = SettingsHelper.getJikanListLimit()
+    private val isFirstPage get() = page == 1
 
     private val animeList: ArrayList<AnimeData> = arrayListOf()
     private var adapter: AnimeVerticalAdapter? = null
@@ -68,6 +72,9 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     private var optionAdapter: ItemSelectionAdapter<ListOptionsType>? = null
     private var optionBottomSheetDialog: BottomSheetDialog? = null
+
+    private var paginationHelper: PaginationViewHelper? = null
+    private var pickPageDialog: BottomSheetDialog? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -112,6 +119,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     }
 
     private fun initComponents() {
+        paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
         typeList = AnimeType.list.map {
             ItemSelectionModelBase(it.search, it.showName).apply {
@@ -148,6 +156,12 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
             groupStatus.tvItem.text = animeFilter.showName
             groupAgeRating.tvItem.text = ageRating.showName
         }
+        paginationHelper?.setEditButtonVisible(true)
+    }
+
+    private fun updatePageNo(){
+        //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
+        paginationHelper?.setPageText(page)
     }
 
     private fun setAdapters() {
@@ -185,6 +199,9 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
         binding.swipeRefresh.setOnRefreshListener {
             getList(true)
         }
+        paginationHelper?.onPreviousPageClick { onPreviousClick() }
+        paginationHelper?.onNextPageClick { onNextClick() }
+        paginationHelper?.onEditPageClick { onEditPageNoClick() }
     }
 
     override fun onClick(v: View?) {
@@ -255,7 +272,16 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                             setData(it)
                         }
                         isLoaderVisible(false)
-                        showEmptyLayout(false)
+                        val hasNext = response.data?.pagination?.hasNextPage ?: false
+                        updatePageNo()
+                        //if this is not the first page then enable previous button
+                        paginationHelper?.setPreviousButtonEnabled(!isFirstPage)
+                        //if api has next page then enable next button
+                        paginationHelper?.setNextButtonEnabled(hasNext)
+                        //if first page then check if list is empty
+                        if (isFirstPage) {
+                            showEmptyLayout(false)
+                        }
                     }
 
                     is Resource.Error -> {
@@ -277,6 +303,14 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
         animeList.clear()
         animeList.addAll(data)
         adapter?.notifyDataSetChanged()
+        if (shouldScrollToTop) {
+            scrollToTopOrPosition()
+            shouldScrollToTop = false
+        }
+    }
+
+    private fun scrollToTopOrPosition(position: Int = 0) {
+        binding.rvList.scrollToPosition(position)
     }
 
     private fun isLoaderVisible(b: Boolean) {
@@ -296,8 +330,8 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                     tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
                     R.drawable.bg_error
                 } else {
-                    tvEmptyTitle.text = getString(R.string.msg_your_list_empty)
-                    tvEmptyDesc.text = getString(R.string.msg_empty_manga_list_des)
+                    tvEmptyTitle.text = getString(R.string.msg_list_empty)
+                    tvEmptyDesc.text = getString(R.string.msg_empty_list_des)
                     R.drawable.bg_empty_list
                 }
                 binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
@@ -349,9 +383,46 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     @SuppressLint("NotifyDataSetChanged")
     private fun runCommonOptionFunction() {
-        optionAdapter?.notifyDataSetChanged()
+        page = 1
         optionBottomSheetDialog?.cancel()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onNextClick() {
+        increaseOffset()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onPreviousClick() {
+        decreaseOffset()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onEditPageNoClick() {
+        pickPageDialog = BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+        val view = DialogPickPageBinding.inflate(layoutInflater)
+
+        with(view) {
+            tvTitle.text = getString(R.string.msg_enter_page)
+            etPageNo.requestFocus()
+
+        }
+
+        pickPageDialog?.setContentView(view.root)
+        pickPageDialog?.show()
+    }
+
+    private fun commonFetchListAfterOptionChange(){
+        shouldScrollToTop = true
         getList(false)
+    }
+
+    private fun increaseOffset() {
+        page += 1
+    }
+
+    private fun decreaseOffset() {
+        if (page != 1) page -= 1
     }
 
     companion object {

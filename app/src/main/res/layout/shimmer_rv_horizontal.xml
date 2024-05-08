@@ -40,9 +40,6 @@
 
             <include layout="@layout/shimmer_vertical_card" />
 
-            <include layout="@layout/shimmer_vertical_card" />
-
-            <include layout="@layout/shimmer_vertical_card" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </RelativeLayout>

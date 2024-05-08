@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Insets
 import android.net.Uri
 import android.os.Build
@@ -35,7 +34,6 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -44,7 +42,6 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.abhinavdev.animeapp.util.statusbar.setStatusBarColorAndIconDark
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,7 +55,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.YearMonth
@@ -235,26 +231,26 @@ fun ViewPager2.getRecyclerView(): RecyclerView {
  * @param selectedImage Image URI
  * @return The resulted Bitmap after manipulation
  */
-fun rotateImageIfRequired(context: Context, img: Bitmap, selectedImage: Uri): Bitmap? {
-    try {
-        val input: InputStream? = context.contentResolver.openInputStream(selectedImage)
-        input?.let {
-            val ei: ExifInterface? =
-                if (Build.VERSION.SDK_INT > 23) ExifInterface(it)
-                else selectedImage.path?.let { it1 -> ExifInterface(it1) }
-            val orientation: Int? =
-                ei?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-            return when (orientation) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(img, 90)
-                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(img, 180)
-                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(img, 270)
-                else -> img
-            }
-        }
-    } catch (e: Exception) {
-    }
-    return null
-}
+//fun rotateImageIfRequired(context: Context, img: Bitmap, selectedImage: Uri): Bitmap? {
+//    try {
+//        val input: InputStream? = context.contentResolver.openInputStream(selectedImage)
+//        input?.let {
+//            val ei: ExifInterface? =
+//                if (Build.VERSION.SDK_INT > 23) ExifInterface(it)
+//                else selectedImage.path?.let { it1 -> ExifInterface(it1) }
+//            val orientation: Int? =
+//                ei?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+//            return when (orientation) {
+//                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(img, 90)
+//                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(img, 180)
+//                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(img, 270)
+//                else -> img
+//            }
+//        }
+//    } catch (e: Exception) {
+//    }
+//    return null
+//}
 
 fun <T> addAllListTogetherAndJoinStringWithComma(
     vararg lists: List<List<T>>,

@@ -12,6 +12,7 @@ import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
 import com.abhinavdev.animeapp.databinding.FragmentMoreBinding
+import com.abhinavdev.animeapp.databinding.InflationLoaderLayoutBinding
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
@@ -27,6 +28,7 @@ import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
+import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
 import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -61,19 +63,22 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMoreBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+        val loaderBinding = InflationLoaderLayoutBinding.inflate(inflater, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
+        inflater.inflateLayoutAsync(R.layout.fragment_more, container) {
+            _binding = FragmentMoreBinding.bind(it)
+            (loaderBinding.root as? ViewGroup)?.addView(binding.root)
+            init()
+        }
+        return loaderBinding.root
     }
 
     private fun init() {
         initComponents()
         setAdapters()
         setListeners()
+        //set layout first time we arrive on fragment
+        setAuthLayout(PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY))
     }
 
     private fun initComponents() {
@@ -142,22 +147,20 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        //set layout first time we arrive on fragment
-        setAuthLayout(PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY))
-        //set layout when while being in fragment value changes
-        PrefUtils.setBooleanObserver(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
-            setAuthLayout(it)
-        }
-    }
-
     private fun setAuthLayout(authenticated: Boolean) {
         with(binding) {
             groupMyProfile.llItem.clickable(authenticated)
             groupMyAnime.llItem.clickable(authenticated)
             groupMyManga.llItem.clickable(authenticated)
             flLoginLayer.showOrHide(!authenticated)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //set layout when while being in fragment value changes
+        PrefUtils.setBooleanObserver(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
+            setAuthLayout(it)
         }
     }
 

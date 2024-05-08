@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.abhinavdev.animeapp.remote.kit.Event
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.kit.fetchData
-import com.abhinavdev.animeapp.remote.kit.fetchMultiData
 import com.abhinavdev.animeapp.remote.kit.repository.MalRepository
 import com.abhinavdev.animeapp.remote.kit.repository.MangaRepository
 import com.abhinavdev.animeapp.remote.kit.sources.MalRepositoryImpl
@@ -16,13 +15,11 @@ import com.abhinavdev.animeapp.remote.kit.sources.MangaRepositoryImpl
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.enums.MangaFilter
 import com.abhinavdev.animeapp.remote.models.enums.MangaType
+import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
-import com.abhinavdev.animeapp.ui.anime.misc.MultiApiCallType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import java.io.Serializable
 
 class MangaViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MangaRepository = MangaRepositoryImpl()
@@ -48,54 +45,60 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _mangaAllApiResponse =
-        MutableLiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>>()
-    val mangaAllApiResponse: LiveData<Event<Map<MultiApiCallType, Resource<Serializable>>>> =
-        _mangaAllApiResponse
+    private val _airingResponse = MutableLiveData<Event<Resource<MangaSearchResponse>>>()
+    val airingResponse: LiveData<Event<Resource<MangaSearchResponse>>> = _airingResponse
 
-    fun getAllMangaData() = viewModelScope.launch {
-        val animeType = MangaType.ALL
+    private val _popularResponse = MutableLiveData<Event<Resource<MangaSearchResponse>>>()
+    val popularResponse: LiveData<Event<Resource<MangaSearchResponse>>> = _popularResponse
+
+    private val _favouriteResponse = MutableLiveData<Event<Resource<MangaSearchResponse>>>()
+    val favouriteResponse: LiveData<Event<Resource<MangaSearchResponse>>> = _favouriteResponse
+
+    private val _upcomingResponse = MutableLiveData<Event<Resource<MangaSearchResponse>>>()
+    val upcomingResponse: LiveData<Event<Resource<MangaSearchResponse>>> = _upcomingResponse
+
+    private val _rankingResponse = MutableLiveData<Event<Resource<MalMyMangaListResponse>>>()
+    val rankingResponse: LiveData<Event<Resource<MalMyMangaListResponse>>> = _rankingResponse
+
+    private val _allResponse = MutableLiveData<Event<Boolean>>()
+    val allResponse: LiveData<Event<Boolean>> = _allResponse
+
+    fun getAllData() = viewModelScope.launch {
+        val mangaType = MangaType.ALL
         val page = 1
         val limit = 10
         val offset = 0
         val isAuthenticated = SettingsHelper.getIsAuthenticated()
 
-        val apiCalls = mutableMapOf<MultiApiCallType, suspend () -> Response<Serializable>>()
+        _allResponse.postValue(Event(true))
 
-        apiCalls[MultiApiCallType.TopAiring] = suspend {
+        _airingResponse.fetchData(getApplication()){
             repository.getTopManga(
-                animeType, MangaFilter.PUBLISHING, page, limit
-            ) as Response<Serializable>
+                mangaType, MangaFilter.PUBLISHING, page, limit
+            )
         }
-
-        apiCalls[MultiApiCallType.TopPopular] = suspend {
-            repository.getTopManga(
-                animeType, MangaFilter.BY_POPULARITY, page, limit
-            ) as Response<Serializable>
-        }
-
-        apiCalls[MultiApiCallType.TopFavourite] = suspend {
-            repository.getTopManga(
-                animeType, MangaFilter.FAVORITE, page, limit
-            ) as Response<Serializable>
-        }
-
-        apiCalls[MultiApiCallType.TopUpcoming] = suspend {
-            repository.getTopManga(
-                animeType, MangaFilter.UPCOMING, page, limit
-            ) as Response<Serializable>
-        }
-
-        // Add TopRanked only if authenticated
         if (isAuthenticated) {
-            apiCalls[MultiApiCallType.TopRanked] = suspend {
+            _rankingResponse.fetchData(getApplication()){
                 malRepository.getMangaRanking(
                     MalMangaType.ALL, limit, offset
-                ) as Response<Serializable>
+                )
             }
         }
-
-        _mangaAllApiResponse.fetchMultiData(getApplication(), apiCalls)
+        _popularResponse.fetchData(getApplication()){
+            repository.getTopManga(
+                mangaType, MangaFilter.BY_POPULARITY, page, limit
+            )
+        }
+        _favouriteResponse.fetchData(getApplication()){
+            repository.getTopManga(
+                mangaType, MangaFilter.FAVORITE, page, limit
+            )
+        }
+        _upcomingResponse.fetchData(getApplication()){
+            repository.getTopManga(
+                mangaType, MangaFilter.UPCOMING, page, limit
+            )
+        }
+        _allResponse.postValue(Event(false))
     }
-
 }
