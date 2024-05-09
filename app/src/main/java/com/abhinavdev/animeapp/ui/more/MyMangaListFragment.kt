@@ -144,7 +144,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         }
     }
 
-    private fun updatePageNo(){
+    private fun updatePageNo() {
         //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
         paginationHelper?.setPageText(offset + 1)
     }
@@ -153,7 +153,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         adapter = MalMangaVerticalAdapter(mangaList, this)
         adapter?.setHasStableIds(true)
         toggleAdapterType(gridOrList)
-        binding.rvList.setHasFixedSize(true)
+        binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.rvList.adapter = adapter
     }
 
@@ -205,7 +205,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             val title = when (type) {
                 ListOptionsType.STATUS -> R.string.msg_choose_status
                 ListOptionsType.SORT -> R.string.msg_sort_by
-                else->{0}
+                else -> 0
             }
             tvTitle.text = getString(title)
             optionAdapter = ItemSelectionAdapter(list, this@MyMangaListFragment, type)
@@ -282,7 +282,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         mangaList.clear()
         mangaList.addAll(data)
         adapter?.notifyDataSetChanged()
-        if (shouldScrollToTop){
+        if (shouldScrollToTop) {
             scrollToTopOrPosition()
             shouldScrollToTop = false
         }
@@ -346,7 +346,8 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                     runCommonOptionFunction()
                 }
             }
-            else ->{}
+
+            else -> {}
         }
     }
 
@@ -367,7 +368,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         commonFetchListAfterOptionChange()
     }
 
-    private fun commonFetchListAfterOptionChange(){
+    private fun commonFetchListAfterOptionChange() {
         shouldScrollToTop = true
         getList(false)
     }

@@ -3,7 +3,6 @@ package com.abhinavdev.animeapp.ui.anime.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowHorizontalListItemBinding
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
@@ -37,7 +36,7 @@ class MalAnimeHorizontalAdapter(
 
         with(holder) {
             with(binding) {
-                ivPoster.loadImage(image, R.color.bgLightGrey)
+                ivPoster.loadImage(image)
                 tvRating.text = rating
                 tvRanking.text = rank
                 tvType.text = animeType

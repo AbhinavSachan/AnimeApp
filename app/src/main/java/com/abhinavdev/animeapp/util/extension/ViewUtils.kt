@@ -16,6 +16,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
@@ -48,6 +49,7 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.util.appsettings.AppLanguage
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputLayout
 import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
 
@@ -398,9 +400,10 @@ fun BottomSheetBehavior<*>.isCollapsed(): Boolean {
 fun BottomSheetBehavior<*>.isExpanded(): Boolean {
     return this.state == BottomSheetBehavior.STATE_EXPANDED
 }
+
 fun Context.getRegularFont(): Typeface? {
     val lang = SettingsHelper.getAppLanguage()
-    return when(lang){
+    return when (lang) {
         AppLanguage.ENGLISH -> applyFont(R.font.english_regular)
         AppLanguage.JAPANESE -> applyFont(R.font.hindi_regular)
         AppLanguage.HINDI -> applyFont(R.font.japanese_regular)
@@ -409,7 +412,7 @@ fun Context.getRegularFont(): Typeface? {
 
 fun Context.getMediumFont(): Typeface? {
     val lang = SettingsHelper.getAppLanguage()
-    return when(lang){
+    return when (lang) {
         AppLanguage.ENGLISH -> applyFont(R.font.english_medium)
         AppLanguage.JAPANESE -> applyFont(R.font.hindi_medium)
         AppLanguage.HINDI -> applyFont(R.font.japanese_medium)
@@ -418,7 +421,7 @@ fun Context.getMediumFont(): Typeface? {
 
 fun Context.getSemiBoldFont(): Typeface? {
     val lang = SettingsHelper.getAppLanguage()
-    return when(lang){
+    return when (lang) {
         AppLanguage.ENGLISH -> applyFont(R.font.english_semi_bold)
         AppLanguage.JAPANESE -> applyFont(R.font.hindi_semi_bold)
         AppLanguage.HINDI -> applyFont(R.font.japanese_semi_bold)
@@ -427,7 +430,7 @@ fun Context.getSemiBoldFont(): Typeface? {
 
 fun Context.getBoldFont(): Typeface? {
     val lang = SettingsHelper.getAppLanguage()
-    return when(lang){
+    return when (lang) {
         AppLanguage.ENGLISH -> applyFont(R.font.english_bold)
         AppLanguage.JAPANESE -> applyFont(R.font.hindi_bold)
         AppLanguage.HINDI -> applyFont(R.font.japanese_bold)
@@ -436,12 +439,13 @@ fun Context.getBoldFont(): Typeface? {
 
 fun Context.getExtraBoldFont(): Typeface? {
     val lang = SettingsHelper.getAppLanguage()
-    return when(lang){
+    return when (lang) {
         AppLanguage.ENGLISH -> applyFont(R.font.english_extra_bold)
         AppLanguage.JAPANESE -> applyFont(R.font.hindi_extra_bold)
         AppLanguage.HINDI -> applyFont(R.font.japanese_extra_bold)
     }
 }
+
 /**
  * removes all recyclerview item decorations
  *
@@ -450,4 +454,33 @@ fun RecyclerView.removeItemDecorations() {
     while (this.itemDecorationCount > 0) {
         this.removeItemDecorationAt(0)
     }
+}
+
+/**
+ * Extension function to show an error message in a TextInputLayout.
+ * @param handler The Handler to handle delayed actions.
+ * @param duration The Duration of how long this error state will be shown.
+ * @param message The error message to be displayed (default: "Required Field").
+ * @return true if showing error
+ */
+fun TextInputLayout.showError(
+    handler: Handler, message: String, duration: Long = 0L
+) {
+    // Check if the TextInputLayout is attached to the window
+    if (!this.isAttachedToWindow) return
+
+    // Enable error, set error message, focus, and remove error after a delay
+    this.isErrorEnabled = true
+    this.error = message
+    this.requestFocus()
+    if (duration != 0L){
+        handler.postDelayed({
+            if (!this.isAttachedToWindow) return@postDelayed
+            this.isErrorEnabled = false
+        }, duration)// Delayed removal of error after 6 seconds
+    }
+}
+
+fun TextInputLayout.disableError() {
+    if (isErrorEnabled) isErrorEnabled = false
 }

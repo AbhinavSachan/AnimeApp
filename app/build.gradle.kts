@@ -3,11 +3,10 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("kotlin-android")
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("com.google.devtools.ksp")
 }
 
 val properties = Properties()
@@ -126,8 +125,9 @@ dependencies {
     //json loader
     implementation(libs.lottie)
 
-    //Picasso
-    implementation(libs.picasso)
+    //Glide image library
+    implementation(libs.glide)
+    ksp(libs.glide.compiler)
 
     //calendar de-sugaring library
     coreLibraryDesugaring(libs.desugar.jdk.libs)

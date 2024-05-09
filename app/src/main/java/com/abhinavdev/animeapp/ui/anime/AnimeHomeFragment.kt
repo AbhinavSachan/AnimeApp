@@ -153,7 +153,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         popularAdapter =
             AnimeHorizontalAdapter(popularList, MultiContentAdapterType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
-        binding.groupPopular.rvItems.setHasFixedSize(true)
+        binding.groupPopular.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupPopular.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupPopular.rvItems.adapter = popularAdapter
@@ -162,7 +162,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         favouriteAdapter =
             AnimeHorizontalAdapter(favouriteList, MultiContentAdapterType.TopFavourite, this)
         favouriteAdapter?.setHasStableIds(true)
-        binding.groupFavourite.rvItems.setHasFixedSize(true)
+        binding.groupFavourite.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupFavourite.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupFavourite.rvItems.adapter = favouriteAdapter
@@ -171,7 +171,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         upcomingAdapter =
             AnimeHorizontalAdapter(upcomingList, MultiContentAdapterType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
-        binding.groupUpcoming.rvItems.setHasFixedSize(true)
+        binding.groupUpcoming.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupUpcoming.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupUpcoming.rvItems.adapter = upcomingAdapter
@@ -180,7 +180,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         recommendedAdapter =
             MalAnimeHorizontalAdapter(recommendedList, MultiContentAdapterType.TopRecommended, this)
         recommendedAdapter?.setHasStableIds(true)
-        binding.groupRecommended.rvItems.setHasFixedSize(true)
+        binding.groupRecommended.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupRecommended.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupRecommended.rvItems.adapter = recommendedAdapter
@@ -189,7 +189,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         rankedAdapter =
             MalAnimeHorizontalAdapter(rankedList, MultiContentAdapterType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
-        binding.groupTopRanked.rvItems.setHasFixedSize(true)
+        binding.groupTopRanked.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupTopRanked.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupTopRanked.rvItems.adapter = rankedAdapter

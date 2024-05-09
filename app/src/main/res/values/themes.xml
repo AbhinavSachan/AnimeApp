@@ -152,8 +152,8 @@
         <item name="strokeWidth">0dp</item>
     </style>
 
-    <style name="PrimaryStrokeAccentCardStyle">
-        <item name="cardBackgroundColor">@color/primary</item>
+    <style name="BGSecondaryStrokeAccentCardStyle">
+        <item name="cardBackgroundColor">@color/secondary</item>
         <item name="strokeColor">@color/accent</item>
         <item name="strokeWidth">@dimen/_1sdp</item>
         <item name="rippleColor">@color/ripple</item>
@@ -256,6 +256,33 @@
         <item name="android:layout_width">@dimen/_11sdp</item>
         <item name="android:layout_height">@dimen/_11sdp</item>
         <item name="tint">@color/onPrimary</item>
+    </style>
+
+    <style name="CustomTextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxBackgroundColor">@color/bgGrey5_EFEFEF</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/_8sdp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/_8sdp</item>
+        <item name="boxStrokeColor">@color/accent</item>
+        <item name="cursorColor">@color/accent</item>
+        <item name="cursorErrorColor">@color/bgRed</item>
+        <item name="boxStrokeErrorColor">@color/bgRed</item>
+        <item name="errorTextColor">@color/bgRed</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="android:textColorHint">@color/fontHintColor</item>
+        <item name="hintTextColor">@color/accent</item>
+        <item name="boxStrokeWidthFocused">@dimen/_2sdp</item>
+    </style>
+
+    <style name="CustomEditText" parent="TextStyleFont500">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
     </style>
 
     <style name="CustomDropdownLL">
@@ -416,9 +443,9 @@
         <item name="android:theme">@style/FontExtraBold800</item>
     </style>
 
-<!--    <style name="DotIndicatorColorStyle">-->
-<!--        <item name="dotsColor">@color/primaryA30</item>-->
-<!--        <item name="selectedDotColor">@color/accent</item>-->
-<!--    </style>-->
+    <!--    <style name="DotIndicatorColorStyle">-->
+    <!--        <item name="dotsColor">@color/primaryA30</item>-->
+    <!--        <item name="selectedDotColor">@color/accent</item>-->
+    <!--    </style>-->
 
 </resources>

@@ -1,24 +1,37 @@
 package com.abhinavdev.animeapp.util.extension
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
+import com.abhinavdev.animeapp.R
+import com.abhinavdev.animeapp.util.Const
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.Target
 
-fun AppCompatImageView.loadImage(url: Int, placeHolder: Int = 0) {
-    Picasso.get().load(url).placeholder(placeHolder).error(placeHolder).into(this)
-}
-
-fun Target.loadBlurImage(image: Int = 0) {
-    Picasso.get().load(image).resize(3, 3).into(this)
-}
-
-fun Target.loadBlurImage(image: String?) {
-    Picasso.get().load(image).resize(3, 3).into(this)
+fun Target<Drawable>.loadBlurImage(context: Context, image: String?) {
+    Glide.with(context).load(image).override(3, 3).into(this)
 }
 
 fun AppCompatImageView.loadImage(
     path: String?,
-    placeholderImage: Int = 0,
 ) {
-    Picasso.get().load(path).placeholder(placeholderImage).error(placeholderImage).into(this)
+    //if received mal default image url then show our own placeholder
+    val image:Any? = if (path == Const.Other.MAL_IMAGE_PLACEHOLDER) R.drawable.bg_placeholder else path
+    Glide.with(this.context).load(image)
+        .placeholder(R.color.accentA30)
+        .error(R.drawable.bg_error_placeholder)
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+        .into(this)
+}
+fun Context.pauseGlideRequest() {
+    if (!Glide.with(this).isPaused) {
+        Glide.with(this).pauseRequests()
+    }
+}
+
+fun Context.resumeGlideRequest() {
+    if (Glide.with(this).isPaused) {
+        Glide.with(this).resumeRequests()
+    }
 }

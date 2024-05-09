@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/PrimaryStrokeAccentCardStyle"
+    style="@style/BGSecondaryStrokeAccentCardStyle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_147sdp"
     android:layout_marginBottom="@dimen/_8sdp">
@@ -46,8 +46,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toTopOf="@id/guide_top"
-            app:shapeAppearanceOverlay="@style/CircleImageViewRadius16"
-            tools:src="@drawable/placeholder" />
+            app:shapeAppearanceOverlay="@style/CircleImageViewRadius16" />
 
         <View
             android:id="@+id/view_top_left_fade"

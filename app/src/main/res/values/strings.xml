@@ -90,4 +90,7 @@
     <string name="msg_next">Next</string>
     <string name="msg_enter_page">Enter Page No.</string>
     <string name="action_submit">Submit</string>
+    <string name="msg_between">Between</string>
+    <string name="msg_only_single_page">Only Single Page Available</string>
+    <string name="msg_invalid_range">Please enter a number in given range.</string>
 </resources>

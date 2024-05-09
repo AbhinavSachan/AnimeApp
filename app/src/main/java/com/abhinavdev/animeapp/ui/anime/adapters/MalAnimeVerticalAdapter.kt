@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
 import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
@@ -61,7 +60,7 @@ class MalAnimeVerticalAdapter(
             is GridViewHolder -> {
                 with(holder) {
                     with(binding) {
-                        ivPoster.loadImage(image, R.color.bgLightGrey)
+                        ivPoster.loadImage(image)
                         tvRating.text = rating
                         tvRanking.text = rank
                         tvType.text = animeType
@@ -82,7 +81,7 @@ class MalAnimeVerticalAdapter(
             is ListViewHolder -> {
                 with(holder) {
                     with(binding) {
-                        ivPoster.loadImage(image, R.color.bgLightGrey)
+                        ivPoster.loadImage(image)
                         tvRating.text = rating.placeholder()
                         tvRanking.text = rank
                         tvType.text = typeWithEpisodes

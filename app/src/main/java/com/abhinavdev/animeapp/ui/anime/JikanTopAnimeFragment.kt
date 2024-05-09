@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
-import com.abhinavdev.animeapp.databinding.DialogPickPageBinding
 import com.abhinavdev.animeapp.databinding.FragmentJikanTopAnimeBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
@@ -61,6 +60,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     private var ageRating: AgeRating = AgeRating.NONE
     private var page: Int = 1
     private var limit: Int = SettingsHelper.getJikanListLimit()
+    private var lastPage = 1
     private val isFirstPage get() = page == 1
 
     private val animeList: ArrayList<AnimeData> = arrayListOf()
@@ -156,10 +156,9 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
             groupStatus.tvItem.text = animeFilter.showName
             groupAgeRating.tvItem.text = ageRating.showName
         }
-        paginationHelper?.setEditButtonVisible(true)
     }
 
-    private fun updatePageNo(){
+    private fun updatePageNo() {
         //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
         paginationHelper?.setPageText(page)
     }
@@ -168,7 +167,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
         adapter = AnimeVerticalAdapter(animeList, this)
         adapter?.setHasStableIds(true)
         toggleAdapterType(gridOrList)
-        binding.rvList.setHasFixedSize(true)
+        binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.rvList.adapter = adapter
     }
 
@@ -248,9 +247,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                 ListOptionsType.TYPE -> R.string.msg_choose_type
                 ListOptionsType.STATUS -> R.string.msg_choose_status
                 ListOptionsType.AGE -> R.string.msg_choose_age_rating
-                else -> {
-                    0
-                }
+                else -> 0
             }
             tvTitle.text = getString(title)
             optionAdapter = ItemSelectionAdapter(list, this@JikanTopAnimeFragment, type)
@@ -273,7 +270,9 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                         }
                         isLoaderVisible(false)
                         val hasNext = response.data?.pagination?.hasNextPage ?: false
+                        lastPage = response.data?.pagination?.lastVisiblePage ?: 1
                         updatePageNo()
+                        paginationHelper?.setEditButtonVisible(true)
                         //if this is not the first page then enable previous button
                         paginationHelper?.setPreviousButtonEnabled(!isFirstPage)
                         //if api has next page then enable next button
@@ -357,7 +356,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                 typeList.setOptionSelected(position) {
                     binding.groupType.tvItem.text = it.name
                     animeType = AnimeType.valueOfOrDefault(it.id)
-                    runCommonOptionFunction()
+                    runPostOptionClick()
                 }
             }
 
@@ -365,7 +364,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                 statusList.setOptionSelected(position) {
                     binding.groupStatus.tvItem.text = it.name
                     animeFilter = AnimeFilter.valueOfOrDefault(it.id)
-                    runCommonOptionFunction()
+                    runPostOptionClick()
                 }
             }
 
@@ -373,7 +372,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
                 ageRatingList.setOptionSelected(position) {
                     binding.groupAgeRating.tvItem.text = it.name
                     ageRating = AgeRating.valueOfOrDefault(it.id)
-                    runCommonOptionFunction()
+                    runPostOptionClick()
                 }
             }
 
@@ -382,7 +381,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun runCommonOptionFunction() {
+    private fun runPostOptionClick() {
         page = 1
         optionBottomSheetDialog?.cancel()
         commonFetchListAfterOptionChange()
@@ -399,20 +398,13 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     }
 
     private fun onEditPageNoClick() {
-        pickPageDialog = BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
-        val view = DialogPickPageBinding.inflate(layoutInflater)
-
-        with(view) {
-            tvTitle.text = getString(R.string.msg_enter_page)
-            etPageNo.requestFocus()
-
+        pickPageDialog = paginationHelper?.createEditPageDialog(lastPage) {
+            page = it
+            commonFetchListAfterOptionChange()
         }
-
-        pickPageDialog?.setContentView(view.root)
-        pickPageDialog?.show()
     }
 
-    private fun commonFetchListAfterOptionChange(){
+    private fun commonFetchListAfterOptionChange() {
         shouldScrollToTop = true
         getList(false)
     }

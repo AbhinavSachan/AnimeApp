@@ -11,11 +11,11 @@ firebaseAnalytics = "22.0.0"
 firebaseCrashlytics = "19.0.0"
 firebaseCrashlyticsGradle = "2.9.9"
 flexboxVersion = "3.0.0"
+glideVersion = "4.16.0"
 googleServices = "4.4.1"
 gradle = "8.4.0"
 gson = "2.10.1"
-kotlinGradlePlugin = "1.9.22"
-legacySupportV4 = "1.0.0"
+kotlinGradlePlugin = "1.9.24"
 library = "2.4"
 lifecycleVersion = "2.7.0"
 lifecycleExtensions = "2.2.0"
@@ -32,6 +32,7 @@ swiperefreshlayout = "1.1.0"
 switcherVersion = "1.1.2"
 workRuntime = "2.9.0"
 asynclayoutinflaterVersion = "1.0.0"
+kspVersion = "1.9.24-1.0.20"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
@@ -46,11 +47,12 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics", versio
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexboxVersion" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
+glide-compiler = { module = "com.github.bumptech.glide:ksp", version.ref = "glideVersion" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
 androidanimations = { module = "com.daimajia.androidanimations:library", version.ref = "library" }
 lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleVersion" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleVersion" }
@@ -72,3 +74,6 @@ switcher = { module = "io.github.bitvale:switcher", version.ref = "switcherVersi
 work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 asynclayoutinflater = { group = "androidx.asynclayoutinflater", name = "asynclayoutinflater", version.ref = "asynclayoutinflaterVersion" }
+
+[plugins]
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }

@@ -20,7 +20,7 @@ object LoginUtil {
         return "${baseUrl}authorize?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&state=${state}"
     }
 
-    fun Context.showLoginDialog(onCancel: (() -> Unit)? = null) {
+    fun Context.showLoginDialog(onCancel: (() -> Unit)? = null): BottomSheetDialog {
         val dialog = BottomSheetDialog(this, R.style.NoBackgroundDialogTheme)
         val view = DialogLoginBinding.inflate(LayoutInflater.from(this))
         dialog.setCancelable(false)
@@ -45,6 +45,7 @@ object LoginUtil {
         }
         dialog.setContentView(view.root)
         dialog.show()
+        return dialog
     }
 
     private var verifier = ""

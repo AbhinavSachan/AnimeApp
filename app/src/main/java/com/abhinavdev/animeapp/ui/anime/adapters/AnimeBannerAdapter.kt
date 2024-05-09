@@ -29,7 +29,7 @@ class AnimeBannerAdapter(
         val animeName = item.titles?.find { userPreferredType == it.type?.appTitleType }?.title
         with(viewHolder) {
             with(binding) {
-                ivPoster.loadImage(image, R.color.bgLightGrey)
+                ivPoster.loadImage(image)
                 tvSpotlight.text = spotlight
                 tvName.text = animeName
                 btnDetails.setOnClickListener {

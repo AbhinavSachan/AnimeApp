@@ -82,6 +82,8 @@ object Const {
     interface Other {
         companion object {
             const val UNKNOWN_CHAR = "─"
+            const val MAL_IMAGE_PLACEHOLDER = "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"
+            const val HAS_FIXED_SIZE = false
         }
     }
 

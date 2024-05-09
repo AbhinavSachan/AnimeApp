@@ -13,6 +13,7 @@ import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentMangaHomeBinding
 import com.abhinavdev.animeapp.remote.kit.Event
 import com.abhinavdev.animeapp.remote.kit.Resource
+import com.abhinavdev.animeapp.remote.models.enums.MangaFilter
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
@@ -145,7 +146,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         //second rv
         popularAdapter = MangaHorizontalAdapter(popularList, MultiContentAdapterType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
-        binding.groupPopular.rvItems.setHasFixedSize(true)
+        binding.groupPopular.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupPopular.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupPopular.rvItems.adapter = popularAdapter
@@ -154,7 +155,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         favouriteAdapter =
             MangaHorizontalAdapter(favouriteList, MultiContentAdapterType.TopFavourite, this)
         favouriteAdapter?.setHasStableIds(true)
-        binding.groupFavourite.rvItems.setHasFixedSize(true)
+        binding.groupFavourite.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupFavourite.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupFavourite.rvItems.adapter = favouriteAdapter
@@ -162,7 +163,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         //fourth rv
         upcomingAdapter = MangaHorizontalAdapter(upcomingList, MultiContentAdapterType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
-        binding.groupUpcoming.rvItems.setHasFixedSize(true)
+        binding.groupUpcoming.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupUpcoming.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupUpcoming.rvItems.adapter = upcomingAdapter
@@ -170,7 +171,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         //fifth rv
         rankedAdapter = MalMangaHorizontalAdapter(rankedList, MultiContentAdapterType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
-        binding.groupTopRanked.rvItems.setHasFixedSize(true)
+        binding.groupTopRanked.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupTopRanked.rvItems.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.groupTopRanked.rvItems.adapter = rankedAdapter
@@ -179,13 +180,23 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     private fun setListeners() {
         binding.ivRefresh.setOnClickListener(this)
         binding.ivSearch.setOnClickListener(this)
+        binding.groupPopular.tvViewAll.setOnClickListener(this)
+        binding.groupFavourite.tvViewAll.setOnClickListener(this)
+        binding.groupUpcoming.tvViewAll.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
             binding.ivRefresh -> onRefreshClick()
             binding.ivSearch -> {}
+            binding.groupPopular.tvViewAll -> onViewClick(MangaFilter.BY_POPULARITY)
+            binding.groupFavourite.tvViewAll -> onViewClick(MangaFilter.FAVORITE)
+            binding.groupUpcoming.tvViewAll -> onViewClick(MangaFilter.UPCOMING)
         }
+    }
+
+    private fun onViewClick(filter: MangaFilter) {
+        parentActivity?.navigateToFragment(JikanTopMangaFragment.newInstance(filter))
     }
 
     private fun onRefreshClick() = if (!isLoading) {

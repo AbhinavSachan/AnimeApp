@@ -155,7 +155,6 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     @SuppressLint("MissingSuperCall")
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         if (fragment != null) {

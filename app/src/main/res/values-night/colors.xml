@@ -24,6 +24,8 @@
 
     <color name="primary">#000000</color>
     <color name="onPrimary">#B0E6E6</color>
+    <color name="secondary">#141414</color>
+    <color name="onSecondary">#B0E6E6</color>
     <color name="onAccent">#DADADA</color>
     <color name="primaryA30">#4D000000</color>
     <color name="accent">#974040</color>
@@ -43,7 +45,7 @@
     <color name="muted8_878787">#878787</color>
     <color name="muted9_434141">#434141</color>
     <color name="bgGrey">#7B7B7B</color>
-    <color name="bgLightGrey">#D3D3D3</color>
+    <color name="bgLightGrey">#434343</color>
     <color name="bgRed">#FF0000</color>
     <color name="bgGreen">#48ea8b</color>
     <color name="bgBlue">#6B53F9</color>
@@ -64,7 +66,7 @@
     <color name="bgGrey1_CDCECE">#CDCECE</color>
     <color name="bgGrey2_DFD2D2">#DFD2D2</color>
     <color name="bgGrey3_F3F3F3">#F3F3F3</color>
-    <color name="bgGrey5_EFEFEF">#EFEFEF</color>
+    <color name="bgGrey5_EFEFEF">#202020</color>
     <color name="bgGrey5A30_EFEFEF">#4DEFEFEF</color>
     <color name="bgGrey6_B4B3B3">#B4B3B3</color>
     <color name="bgGrey7_7C7C7C">#7C7C7C</color>
@@ -75,7 +77,7 @@
     <color name="bgGrey12_EDEDED">#EDEDED</color>
     <color name="bgGrey13_F2F2F7">#F2F2F7</color>
     <color name="bgBlack1_202020">#202020</color>
-    <color name="bgBlack2_383838">#383838</color>
+    <color name="bgBlack2_383838">#CCCCCC</color>
     <color name="bgBlack3_565656">#565656</color>
     <color name="bgWhite2_F8F8F8">#F8F8F8</color>
     <color name="bgWhite2A80_F8F8F8">#CCF8F8F8</color>     <!--80%-->

@@ -14,6 +14,9 @@ buildscript {
         classpath(libs.firebase.crashlytics.gradle)
     }
 }
+plugins {
+    alias(libs.plugins.devtools.ksp) apply false
+}
 allprojects {
     repositories {
         google()
