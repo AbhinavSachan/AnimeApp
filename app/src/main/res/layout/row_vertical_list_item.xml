@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/BGSecondaryStrokeAccentCardStyle"
+    style="@style/BGPrimaryStrokeAccentCardStyle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_147sdp"
     android:layout_marginBottom="@dimen/_8sdp">
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="@dimen/safe_zone_vertical_list_card" />
+            app:layout_constraintGuide_percent="0.9633508" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_poster"
@@ -66,7 +66,7 @@
             android:layout_marginStart="@dimen/_6sdp"
             android:layout_marginTop="@dimen/_3sdp"
             android:textColor="@color/absolute_white"
-            android:textSize="@dimen/text_size_20"
+            android:textSize="@dimen/text_size_16"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/iv_poster"
             app:layout_constraintTop_toTopOf="@id/iv_poster"

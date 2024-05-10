@@ -14,6 +14,12 @@ class MalMyAnimeListResponse : MalBaseResponse<ArrayList<MalAnimeData>>()
 data class MalAnimeData(
     @SerializedName("node") val node: MalAnimeNode?,
     @SerializedName("synopsis") val synopsis: String?,
+    @SerializedName("list_status") val listStatus: AnimeListStatus?,
+    @SerializedName("ranking") val ranking: MalRankingData?,
+) : BaseModel()
+
+data class MalRankingData(
+    @SerializedName("rank") val rank: Int?,
 ) : BaseModel()
 
 data class MalAnimeNode(

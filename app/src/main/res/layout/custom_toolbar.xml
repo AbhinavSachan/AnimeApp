@@ -4,23 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/RootLayoutStyle"
     android:layout_width="match_parent"
+    android:background="@color/primary"
     android:layout_height="@dimen/tool_bar_size"
+    android:paddingStart="@dimen/_8sdp"
+    android:paddingEnd="@dimen/_8sdp"
     android:elevation="@dimen/_4sdp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
         style="@style/TextStyleFont700"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:layout_marginStart="@dimen/_8sdp"
         android:textSize="@dimen/text_size_18"
         app:layout_constraintBottom_toBottomOf="@id/iv_back"
         app:layout_constraintStart_toEndOf="@id/iv_back"
         app:layout_constraintTop_toTopOf="@id/iv_back"
-        tools:text="Title" />
+        tools:text="Home" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_back"
         style="@style/CustomClickableIcon"
-        android:layout_marginStart="@dimen/_8sdp"
         android:src="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +56,6 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_extra"
         style="@style/CustomClickableIcon"
-        android:layout_marginEnd="@dimen/_8sdp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

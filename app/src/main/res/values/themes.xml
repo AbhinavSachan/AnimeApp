@@ -5,8 +5,8 @@
         <item name="colorAccent">@color/black</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorSecondary">@color/white</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -24,7 +24,7 @@
 
     <style name="CustomSplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/primary</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
     </style>
 
@@ -111,7 +111,7 @@
     </style>
 
     <style name="RootLayoutStyle" parent="BaseLayoutAttributes">
-        <item name="android:background">@color/primary</item>
+        <item name="android:background">@color/secondary</item>
     </style>
 
     <style name="NoBackgroundDialogTheme" parent="Theme.Material3.Light.Dialog">
@@ -145,22 +145,21 @@
         <item name="cornerSizeTopRight">@dimen/_12sdp</item>
     </style>
 
-    <style name="NoStrokeTransparentCardStyle">
-        <item name="cardBackgroundColor">@color/transparent</item>
-        <item name="strokeColor">@color/transparent</item>
+    <style name="NoStrokeAccentCardStyle">
+        <item name="cardBackgroundColor">@color/accent</item>
         <item name="rippleColor">@color/ripple</item>
         <item name="strokeWidth">0dp</item>
     </style>
 
-    <style name="BGSecondaryStrokeAccentCardStyle">
-        <item name="cardBackgroundColor">@color/secondary</item>
+    <style name="BGPrimaryStrokeAccentCardStyle">
+        <item name="cardBackgroundColor">@color/primary</item>
         <item name="strokeColor">@color/accent</item>
         <item name="strokeWidth">@dimen/_1sdp</item>
         <item name="rippleColor">@color/ripple</item>
         <item name="cardElevation">@dimen/_3sdp</item>
     </style>
 
-    <style name="NoStrokeTransparentCardStyle.Elevated" parent="NoStrokeTransparentCardStyle">
+    <style name="NoStrokeTransparentCardStyle.Elevated" parent="NoStrokeAccentCardStyle">
         <item name="cardElevation">@dimen/_3sdp</item>
     </style>
 
@@ -189,10 +188,10 @@
         <item name="android:foreground">@drawable/bg_ripple_effect_accent_rounded</item>
     </style>
 
-    <style name="CustomPrimaryButtonLL">
+    <style name="CustomSecondaryButtonLL">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/bg_primary_button</item>
+        <item name="android:background">@drawable/bg_secondary_button</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:clickable">true</item>
@@ -224,12 +223,12 @@
         <item name="android:textColor">@color/onPrimary</item>
     </style>
 
-    <style name="CustomAccentButtonLL" parent="CustomPrimaryButtonLL">
+    <style name="CustomAccentButtonLL" parent="CustomSecondaryButtonLL">
         <item name="android:background">@drawable/bg_accent_button</item>
         <item name="android:foreground">@drawable/bg_ripple_effect_white_rounded</item>
     </style>
 
-    <style name="CustomPrimaryButtonLL.Bordered" parent="CustomPrimaryButtonLL">
+    <style name="CustomPrimaryButtonLL.Bordered" parent="CustomSecondaryButtonLL">
         <item name="android:background">@drawable/bg_primary_button_bor_accent</item>
     </style>
 
@@ -441,6 +440,29 @@
         <item name="android:textColor">@color/fontTextPrimary</item>
         <item name="android:textSize">@dimen/text_size_12</item>
         <item name="android:theme">@style/FontExtraBold800</item>
+    </style>
+
+    <style name="CollapsingToolbarExpandedTextStyle" parent="FontBold700">
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_32</item>
+    </style>
+
+    <style name="CollapsingToolbarCollapsedTextStyle" parent="FontBold700">
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:textSize">@dimen/text_size_18</item>
+    </style>
+
+    <style name="CollapsingToolbarStyle">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/fontTextPrimary</item>
+        <item name="android:background">@color/primary</item>
+        <item name="contentScrim">@color/primary</item>
+        <item name="collapsedTitleGravity">start</item>
+        <item name="expandedTitleGravity">center_horizontal|bottom</item>
+        <item name="android:textSize">@dimen/text_size_32</item>
+        <item name="expandedTitleTextAppearance">@style/CollapsingToolbarExpandedTextStyle</item>
+        <item name="collapsedTitleTextAppearance">@style/CollapsingToolbarCollapsedTextStyle</item>
     </style>
 
     <!--    <style name="DotIndicatorColorStyle">-->

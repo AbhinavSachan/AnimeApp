@@ -8,6 +8,7 @@ import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
 import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMalMangaData
 import com.abhinavdev.animeapp.util.Const
@@ -22,7 +23,8 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class MalMangaVerticalAdapter(
     private val list: List<MalMangaData>,
-    private val listener: CustomClickListener
+    private val listener: CustomClickListener,
+    private val pageType: MultiContentAdapterType
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var adapterType: AdapterType = AdapterType.GRID
@@ -66,7 +68,7 @@ class MalMangaVerticalAdapter(
                         tvType.text = mangaType
                         vtvAnimeName.text = mangaName
 
-                        tvRanking.hide()
+                        tvRanking.showOrHide(!rank.isNullOrBlank())
                         tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
@@ -89,8 +91,8 @@ class MalMangaVerticalAdapter(
                         tvStatus.text = status.placeholder()
                         tvDate.text = airedOn
 
+                        tvRanking.showOrHide(!rank.isNullOrBlank())
                         groupSeason.hide()
-                        tvRanking.hide()
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
                         viewTopLeftFade.showOrHide(!tvRanking.isHidden())

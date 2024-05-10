@@ -31,7 +31,9 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
+import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isVisible
+import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
@@ -112,6 +114,14 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
     private fun initComponents() {
         isAuthenticated = SettingsHelper.getIsAuthenticated()
+        with(binding.toolbar){
+            ivBack.hide()
+            ivExtra.show()
+            ivExtraTwo.show()
+            tvTitle.text = getString(R.string.msg_anime)
+            ivExtra.setImageResource(R.drawable.ic_refresh)
+            ivExtraTwo.setImageResource(R.drawable.ic_search)
+        }
         setAllTitles()
         setTopViewPagerHeight()
         initializeShimmerLoading()
@@ -122,8 +132,10 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         popularLoading(true)
         favouriteLoading(true)
         upcomingLoading(true)
-        rankedLoading(true)
-        recommendedLoading(true)
+        if (isAuthenticated){
+            rankedLoading(true)
+            recommendedLoading(true)
+        }
     }
 
     private fun setAllTitles() {
@@ -196,8 +208,10 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setListeners() {
-        binding.ivRefresh.setOnClickListener(this)
-        binding.ivSearch.setOnClickListener(this)
+        binding.toolbar.ivExtra.setOnClickListener(this)
+        binding.toolbar.ivExtraTwo.setOnClickListener(this)
+        binding.groupTopRanked.tvViewAll.setOnClickListener(this)
+        binding.groupRecommended.tvViewAll.setOnClickListener(this)
         binding.groupPopular.tvViewAll.setOnClickListener(this)
         binding.groupFavourite.tvViewAll.setOnClickListener(this)
         binding.groupUpcoming.tvViewAll.setOnClickListener(this)
@@ -205,16 +219,30 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.ivRefresh -> onRefreshClick()
-            binding.ivSearch -> {}
-            binding.groupPopular.tvViewAll -> onViewClick(AnimeFilter.BY_POPULARITY)
-            binding.groupFavourite.tvViewAll -> onViewClick(AnimeFilter.FAVORITE)
-            binding.groupUpcoming.tvViewAll -> onViewClick(AnimeFilter.UPCOMING)
+            binding.toolbar.ivExtra -> onRefreshClick()
+            binding.toolbar.ivExtraTwo -> onSearchClick()
+            binding.groupTopRanked.tvViewAll -> onTopRankedClick()
+            binding.groupRecommended.tvViewAll -> onTopRecommendedClick()
+            binding.groupPopular.tvViewAll -> openJikanFragment(AnimeFilter.BY_POPULARITY)
+            binding.groupFavourite.tvViewAll -> openJikanFragment(AnimeFilter.FAVORITE)
+            binding.groupUpcoming.tvViewAll -> openJikanFragment(AnimeFilter.UPCOMING)
         }
     }
 
-    private fun onViewClick(filter: AnimeFilter) {
+    private fun onSearchClick() {
+
+    }
+
+    private fun openJikanFragment(filter: AnimeFilter) {
         parentActivity?.navigateToFragment(JikanTopAnimeFragment.newInstance(filter))
+    }
+
+    private fun onTopRankedClick() {
+        parentActivity?.navigateToFragment(AnimeRankingFragment.newInstance())
+    }
+
+    private fun onTopRecommendedClick() {
+        parentActivity?.navigateToFragment(AnimeRecommendedFragment.newInstance())
     }
 
     private fun onRefreshClick() = if (!isLoading) {
@@ -255,13 +283,6 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setObservers() {
-        PrefUtils.getBoolean(Const.PrefKeys.IS_AUTHENTICATED_KEY).let {
-            if (it != isAuthenticated) {
-                isAuthenticated = it
-                setAuthenticationView()
-                allApiCalls()
-            }
-        }
         viewModel.airingResponse.handleJikanResponse(MultiContentAdapterType.TopAiring)
         viewModel.popularResponse.handleJikanResponse(MultiContentAdapterType.TopPopular)
         viewModel.favouriteResponse.handleJikanResponse(MultiContentAdapterType.TopFavourite)
@@ -358,7 +379,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         }
     }
 
-    private fun MultiContentAdapterType.setShimmerLoading(isLoading: Boolean){
+    private fun MultiContentAdapterType.setShimmerLoading(isLoading: Boolean) {
         when (this) {
             MultiContentAdapterType.TopAiring -> airingLoading(isLoading)
             MultiContentAdapterType.TopPopular -> popularLoading(isLoading)
@@ -366,6 +387,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
             MultiContentAdapterType.TopUpcoming -> upcomingLoading(isLoading)
             MultiContentAdapterType.TopRanked -> rankedLoading(isLoading)
             MultiContentAdapterType.TopRecommended -> recommendedLoading(isLoading)
+            else -> {}
         }
     }
 
@@ -467,6 +489,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
             MultiContentAdapterType.TopUpcoming -> toast("Upcoming")
             MultiContentAdapterType.TopRecommended -> toast("Recommended")
             MultiContentAdapterType.TopRanked -> toast("Ranked")
+            else -> {}
         }
     }
 

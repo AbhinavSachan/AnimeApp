@@ -8,12 +8,12 @@ import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
 import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableMalAnimeData
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.extension.getSizeOfView
-import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.placeholder
@@ -22,7 +22,8 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class MalAnimeVerticalAdapter(
     private val list: List<MalAnimeData>,
-    private val listener: CustomClickListener
+    private val listener: CustomClickListener,
+    private val pageType:MultiContentAdapterType
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var adapterType: AdapterType = AdapterType.GRID
@@ -66,7 +67,7 @@ class MalAnimeVerticalAdapter(
                         tvType.text = animeType
                         vtvAnimeName.text = animeName
 
-                        tvRanking.hide()
+                        tvRanking.showOrHide(!rank.isNullOrBlank())
                         tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
@@ -90,7 +91,7 @@ class MalAnimeVerticalAdapter(
                         tvSeason.text = season
                         tvDate.text = airedOn
 
-                        tvRanking.hide()
+                        tvRanking.showOrHide(!rank.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
                         viewTopLeftFade.showOrHide(!tvRanking.isHidden())

@@ -50,7 +50,6 @@ class MangaVerticalAdapter(
         val mangaName = data.getName().placeholder()
         val mangaType = data.getType()
         val rating = data.getRating()
-        val rank = data.getRank()
         val status = data.getStatus()
         val airedOn = data.getDate()
         val typeWithChapters = data.getTypeWithChapter(context)
@@ -61,7 +60,6 @@ class MangaVerticalAdapter(
                     with(binding) {
                         ivPoster.loadImage(image)
                         tvRating.text = rating
-                        tvRanking.text = rank
                         tvType.text = mangaType
                         vtvAnimeName.text = mangaName
 
@@ -82,7 +80,6 @@ class MangaVerticalAdapter(
                     with(binding) {
                         ivPoster.loadImage(image)
                         tvRating.text = rating
-                        tvRanking.text = rank
                         tvType.text = typeWithChapters
                         tvName.text = mangaName
                         tvStatus.text = status.placeholder()

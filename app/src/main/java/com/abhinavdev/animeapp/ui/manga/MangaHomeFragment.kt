@@ -31,7 +31,9 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
+import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isVisible
+import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
@@ -108,6 +110,14 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
     private fun initComponents() {
         isAuthenticated = SettingsHelper.getIsAuthenticated()
+        with(binding.toolbar){
+            ivBack.hide()
+            ivExtra.show()
+            ivExtraTwo.show()
+            tvTitle.text = getString(R.string.msg_manga)
+            ivExtra.setImageResource(R.drawable.ic_refresh)
+            ivExtraTwo.setImageResource(R.drawable.ic_search)
+        }
         setAllTitles()
         setTopViewPagerHeight()
         initializeShimmerLoading()
@@ -118,7 +128,9 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         popularLoading(true)
         favouriteLoading(true)
         upcomingLoading(true)
-        rankedLoading(true)
+        if (isAuthenticated){
+            rankedLoading(true)
+        }
     }
 
     private fun setAllTitles() {
@@ -144,7 +156,8 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         binding.svTopAiring.setSliderAdapter(airingAdapter!!)
 
         //second rv
-        popularAdapter = MangaHorizontalAdapter(popularList, MultiContentAdapterType.TopPopular, this)
+        popularAdapter =
+            MangaHorizontalAdapter(popularList, MultiContentAdapterType.TopPopular, this)
         popularAdapter?.setHasStableIds(true)
         binding.groupPopular.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupPopular.rvItems.layoutManager =
@@ -161,7 +174,8 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         binding.groupFavourite.rvItems.adapter = favouriteAdapter
 
         //fourth rv
-        upcomingAdapter = MangaHorizontalAdapter(upcomingList, MultiContentAdapterType.TopUpcoming, this)
+        upcomingAdapter =
+            MangaHorizontalAdapter(upcomingList, MultiContentAdapterType.TopUpcoming, this)
         upcomingAdapter?.setHasStableIds(true)
         binding.groupUpcoming.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupUpcoming.rvItems.layoutManager =
@@ -169,7 +183,8 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         binding.groupUpcoming.rvItems.adapter = upcomingAdapter
 
         //fifth rv
-        rankedAdapter = MalMangaHorizontalAdapter(rankedList, MultiContentAdapterType.TopRanked, this)
+        rankedAdapter =
+            MalMangaHorizontalAdapter(rankedList, MultiContentAdapterType.TopRanked, this)
         rankedAdapter?.setHasStableIds(true)
         binding.groupTopRanked.rvItems.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupTopRanked.rvItems.layoutManager =
@@ -178,8 +193,9 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setListeners() {
-        binding.ivRefresh.setOnClickListener(this)
-        binding.ivSearch.setOnClickListener(this)
+        binding.toolbar.ivExtra.setOnClickListener(this)
+        binding.toolbar.ivExtraTwo.setOnClickListener(this)
+        binding.groupTopRanked.tvViewAll.setOnClickListener(this)
         binding.groupPopular.tvViewAll.setOnClickListener(this)
         binding.groupFavourite.tvViewAll.setOnClickListener(this)
         binding.groupUpcoming.tvViewAll.setOnClickListener(this)
@@ -187,16 +203,13 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.ivRefresh -> onRefreshClick()
-            binding.ivSearch -> {}
-            binding.groupPopular.tvViewAll -> onViewClick(MangaFilter.BY_POPULARITY)
-            binding.groupFavourite.tvViewAll -> onViewClick(MangaFilter.FAVORITE)
-            binding.groupUpcoming.tvViewAll -> onViewClick(MangaFilter.UPCOMING)
+            binding.toolbar.ivExtra -> onRefreshClick()
+            binding.toolbar.ivExtraTwo -> onSearchClick()
+            binding.groupTopRanked.tvViewAll -> onTopRankedClick()
+            binding.groupPopular.tvViewAll -> openJikanFragment(MangaFilter.BY_POPULARITY)
+            binding.groupFavourite.tvViewAll -> openJikanFragment(MangaFilter.FAVORITE)
+            binding.groupUpcoming.tvViewAll -> openJikanFragment(MangaFilter.UPCOMING)
         }
-    }
-
-    private fun onViewClick(filter: MangaFilter) {
-        parentActivity?.navigateToFragment(JikanTopMangaFragment.newInstance(filter))
     }
 
     private fun onRefreshClick() = if (!isLoading) {
@@ -204,6 +217,17 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         allApiCalls()
     } else {
         toast(getString(R.string.msg_please_wait))
+    }
+    private fun onSearchClick() {
+
+    }
+
+    private fun onTopRankedClick() {
+        parentActivity?.navigateToFragment(MangaRankingFragment.newInstance())
+    }
+
+    private fun openJikanFragment(filter: MangaFilter) {
+        parentActivity?.navigateToFragment(JikanTopMangaFragment.newInstance(filter))
     }
 
     private fun setAuthenticationView() {
@@ -306,6 +330,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
                                 MultiContentAdapterType.TopRanked -> {
                                     setRankedData(it)
                                 }
+
                                 else -> {}
                             }
                             key.setShimmerLoading(false)
@@ -325,14 +350,14 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         }
     }
 
-    private fun MultiContentAdapterType.setShimmerLoading(isLoading: Boolean){
+    private fun MultiContentAdapterType.setShimmerLoading(isLoading: Boolean) {
         when (this) {
             MultiContentAdapterType.TopAiring -> airingLoading(isLoading)
             MultiContentAdapterType.TopPopular -> popularLoading(isLoading)
             MultiContentAdapterType.TopFavourite -> favouriteLoading(isLoading)
             MultiContentAdapterType.TopUpcoming -> upcomingLoading(isLoading)
             MultiContentAdapterType.TopRanked -> rankedLoading(isLoading)
-            else->{}
+            else -> {}
         }
     }
 
@@ -404,7 +429,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     @SuppressLint("NotifyDataSetChanged")
     private fun setRankedData(animeData: ArrayList<MalMangaData>) {
         rankedList.clear()
-       rankedList.addAll(animeData)
+        rankedList.addAll(animeData)
         rankedAdapter?.notifyDataSetChanged()
     }
 

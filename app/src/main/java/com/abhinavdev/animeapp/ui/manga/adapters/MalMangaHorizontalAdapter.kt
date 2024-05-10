@@ -32,7 +32,7 @@ class MalMangaHorizontalAdapter(
         val mangaName = data.getName().placeholder()
         val mangaType = data.getType()
         val rating = data.getRating()
-        val rank = data.getRank()
+        val rank = data.getRank().placeholder()
 
         with(holder) {
             with(binding) {
@@ -73,6 +73,8 @@ class MalMangaHorizontalAdapter(
                         tvRating.show()
                         tvType.show()
                     }
+
+                    else -> {}
                 }
                 viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
                 viewTopLeftFade.showOrHide(!tvRating.isHidden())

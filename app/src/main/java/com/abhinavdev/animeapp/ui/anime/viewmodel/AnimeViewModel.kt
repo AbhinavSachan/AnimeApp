@@ -42,7 +42,31 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         type: AnimeType, filter: AnimeFilter, rating: AgeRating, sfw: Boolean, page: Int, limit: Int
     ) = viewModelScope.launch {
         _topAnimeResponse.fetchData(getApplication()) {
-            repository.getTopAnime(type, filter, rating, sfw, page, limit)
+            repository.getTopAnime(
+                type = type, filter = filter, rating = rating, sfw = sfw, page = page, limit = limit
+            )
+        }
+    }
+
+    private val _animeRankingResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
+    val animeRankingResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> =
+        _animeRankingResponse
+
+    fun getAnimeRanking(
+        type: MalAnimeType, offset: Int, limit: Int
+    ) = viewModelScope.launch {
+        _animeRankingResponse.fetchData(getApplication()) {
+            malRepository.getAnimeRanking(rankingType = type, limit = limit, offset = offset)
+        }
+    }
+
+    private val _animeRecommendedResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
+    val animeRecommendedResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> =
+        _animeRecommendedResponse
+
+    fun getRecommendedAnime(offset: Int, limit: Int) = viewModelScope.launch {
+        _animeRecommendedResponse.fetchData(getApplication()) {
+            malRepository.getRecommendedAnime(limit = limit, offset = offset)
         }
     }
 
@@ -62,7 +86,8 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     val rankingResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> = _rankingResponse
 
     private val _recommendedResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
-    val recommendedResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> = _recommendedResponse
+    val recommendedResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> =
+        _recommendedResponse
 
     private val _allResponse = MutableLiveData<Event<Boolean>>()
     val allResponse: LiveData<Event<Boolean>> = _allResponse
@@ -78,34 +103,34 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
 
         _allResponse.postValue(Event(true))
 
-        _airingResponse.fetchData(getApplication()){
+        _airingResponse.fetchData(getApplication()) {
             repository.getTopAnime(
                 animeType, AnimeFilter.AIRING, ageRating, sfw, page, limit
             )
         }
         if (isAuthenticated) {
-            _rankingResponse.fetchData(getApplication()){
+            _rankingResponse.fetchData(getApplication()) {
                 malRepository.getAnimeRanking(
                     MalAnimeType.ALL, limit, offset
                 )
             }
-            _recommendedResponse.fetchData(getApplication()){
+            _recommendedResponse.fetchData(getApplication()) {
                 malRepository.getRecommendedAnime(
                     limit, offset
                 )
             }
         }
-        _popularResponse.fetchData(getApplication()){
+        _popularResponse.fetchData(getApplication()) {
             repository.getTopAnime(
                 animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
             )
         }
-        _favouriteResponse.fetchData(getApplication()){
+        _favouriteResponse.fetchData(getApplication()) {
             repository.getTopAnime(
                 animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
             )
         }
-        _upcomingResponse.fetchData(getApplication()){
+        _upcomingResponse.fetchData(getApplication()) {
             repository.getTopAnime(
                 animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
             )

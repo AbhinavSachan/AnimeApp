@@ -18,11 +18,12 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
     }
 
     fun getType(): String {
-        return MalMangaType.valueOfOrDefault(item.node?.mediaType).showName
+        return MalMangaType.valueOfOrDefault(item.node?.mediaType?.search).showName
     }
 
-    fun getRank(): String {
-        return "#${position + 1}"
+    fun getRank(): String? {
+        val rank = item.ranking?.rank
+        return if (rank != null) "#$rank" else null
     }
 
     fun getRating(): String? {
@@ -34,10 +35,10 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
         val volumes = item.node?.numVolumes
         val result = StringBuilder()
         result.append(getType())
-        if (chapters == null || chapters <= 0) {
+        if (chapters != null && chapters > 0) {
             result.append(" (${chapters.toStringOrUnknown()} ${context.getString(R.string.msg_chapters)})")
         }
-        if (volumes == null || volumes <= 0) {
+        if (volumes != null && volumes > 0) {
             result.append(" (${volumes.toStringOrUnknown()} ${context.getString(R.string.msg_volumes)})")
         }
         return result.toString()

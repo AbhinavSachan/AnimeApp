@@ -49,7 +49,7 @@
     <string name="msg_app_theme">App Theme</string>
     <string name="msg_sfw">SFW (Safe for work)</string>
     <string name="msg_title_language">Title Language</string>
-    <string name="msg_sfw_description">If Enabled, this feature ensures content is safe, by filtering out potentially sensitive or explicit material.</string>
+    <string name="msg_sfw_description">If Enabled, this feature ensures content is safe, by filtering out potentially sensitive or explicit material.(This feature is still in beta version.)</string>
     <string name="msg_language_description">Select preferred app language</string>
     <string name="msg_title_lang_description">Select preferred title language\n(this doesn\'t depend on app language)</string>
     <string name="msg_theme_description">Select the app theme you like</string>
@@ -93,4 +93,5 @@
     <string name="msg_between">Between</string>
     <string name="msg_only_single_page">Only Single Page Available</string>
     <string name="msg_invalid_range">Please enter a number in given range.</string>
+    <string name="msg_filter_by">Filter By</string>
 </resources>

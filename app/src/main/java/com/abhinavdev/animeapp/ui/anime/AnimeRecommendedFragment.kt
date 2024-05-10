@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.more
+package com.abhinavdev.animeapp.ui.anime
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,26 +10,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
-import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
-import com.abhinavdev.animeapp.databinding.FragmentMyMangaListBinding
+import com.abhinavdev.animeapp.databinding.FragmentAnimeRecommendedBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
-import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
-import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
-import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
+import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
+import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
-import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
-import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.LIST
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
+import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
-import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.ui.manga.adapters.MalMangaVerticalAdapter
-import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
-import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
-import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
-import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
 import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
-import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
@@ -40,38 +30,28 @@ import com.abhinavdev.animeapp.util.extension.removeItemDecorations
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
-    OnClickMultiTypeCallback {
-    private var _binding: FragmentMyMangaListBinding? = null
+class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomClickListener {
+    private var _binding: FragmentAnimeRecommendedBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
-    private lateinit var viewModel: MoreViewModel
+    private lateinit var viewModel: AnimeViewModel
 
     private var isFromSwipe = false
     private var shouldScrollToTop = false
 
-    private var gridOrList: AdapterType = GRID
+    private var gridOrList: AdapterType = AdapterType.GRID
 
-    private var status = MalMangaStatus.ALL
-    private var sort = MalMangaSortType.UPDATED
     private var page = 1
     private var offset = 0
-    private var limit = SettingsHelper.getMyListLimit()
+    private var limit = SettingsHelper.getRecommendedListLimit()
     private val isFirstPage get() = page == 1
 
-    private val mangaList: ArrayList<MalMangaData> = arrayListOf()
-    private var adapter: MalMangaVerticalAdapter? = null
-
-    private var statusList: List<ItemSelectionModelBase> = arrayListOf()
-    private var sortList: List<ItemSelectionModelBase> = arrayListOf()
-
-    private var optionAdapter: ItemSelectionAdapter<ListOptionsType>? = null
-    private var optionBottomSheetDialog: BottomSheetDialog? = null
+    private val animeList: ArrayList<MalAnimeData> = arrayListOf()
+    private var adapter: MalAnimeVerticalAdapter? = null
 
     private var paginationHelper: PaginationViewHelper? = null
 
@@ -92,13 +72,13 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = createViewModel(MoreViewModel::class.java)
+        viewModel = createViewModel(AnimeViewModel::class.java)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMyMangaListBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentAnimeRecommendedBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -118,28 +98,12 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private fun initComponents() {
         paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
-        sortList = MalMangaSortType.list.map {
-            ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = sort == it
-            }
-        }
-        statusList = MalMangaStatus.list.map {
-            ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = status == it
-            }
-        }
-        with(binding) {
-            groupStatus.tvItemLabel.text = getString(R.string.msg_filter_by_status)
-            groupSort.tvItemLabel.text = getString(R.string.msg_sort_by)
-            groupStatus.tvItem.text = status.showName
-            groupSort.tvItem.text = sort.showName
-        }
 
         with(binding.toolbar) {
-            tvTitle.text = getString(R.string.msg_my_manga_list)
+            tvTitle.text = getString(R.string.msg_top_recommended)
             val viewIcon = when (gridOrList) {
-                GRID -> R.drawable.ic_list_view
-                LIST -> R.drawable.ic_grid_view
+                AdapterType.GRID -> R.drawable.ic_list_view
+                AdapterType.LIST -> R.drawable.ic_grid_view
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
@@ -152,7 +116,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun setAdapters() {
-        adapter = MalMangaVerticalAdapter(mangaList, this,MultiContentAdapterType.MyManga)
+        adapter = MalAnimeVerticalAdapter(animeList, this, MultiContentAdapterType.TopRecommended)
         adapter?.setHasStableIds(true)
         toggleAdapterType(gridOrList)
         binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
@@ -161,12 +125,12 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun toggleAdapterType(gridOrList: AdapterType) {
         when (gridOrList) {
-            GRID -> {
+            AdapterType.GRID -> {
                 binding.rvList.addItemDecoration(GridSpacing(2, 16, false))
                 binding.rvList.layoutManager = GridLayoutManager(context, 2)
             }
 
-            LIST -> {
+            AdapterType.LIST -> {
                 binding.rvList.removeItemDecorations()
                 binding.rvList.layoutManager = LinearLayoutManager(context)
             }
@@ -180,8 +144,6 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private fun setListeners() {
         binding.toolbar.ivBack.setOnClickListener(this)
         binding.toolbar.ivExtra.setOnClickListener(this)
-        binding.groupStatus.llItem.setOnClickListener(this)
-        binding.groupSort.llItem.setOnClickListener(this)
         binding.swipeRefresh.setOnRefreshListener {
             getList(true)
         }
@@ -193,31 +155,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         when (v) {
             binding.toolbar.ivBack -> parentActivity?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
-            binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
-            binding.groupSort.llItem -> openOptionDialog(sortList, ListOptionsType.SORT)
         }
-    }
-
-    private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ListOptionsType) {
-        optionBottomSheetDialog =
-            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
-        val view = DialogOptionsBinding.inflate(layoutInflater)
-
-        with(view) {
-            val title = when (type) {
-                ListOptionsType.STATUS -> R.string.msg_choose_status
-                ListOptionsType.SORT -> R.string.msg_sort_by
-                else -> 0
-            }
-            tvTitle.text = getString(title)
-            optionAdapter = ItemSelectionAdapter(list, this@MyMangaListFragment, type)
-            rvItems.setHasFixedSize(true)
-            rvItems.layoutManager = LinearLayoutManager(context)
-            rvItems.adapter = optionAdapter
-        }
-
-        optionBottomSheetDialog?.setContentView(view.root)
-        optionBottomSheetDialog?.show()
     }
 
     private fun toggleViewType() {
@@ -225,13 +163,13 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         isLoaderVisible(true)
         CoroutineScope(Dispatchers.IO).launch {
             val viewIcon = when (gridOrList) {
-                GRID -> {
-                    gridOrList = LIST
+                AdapterType.GRID -> {
+                    gridOrList = AdapterType.LIST
                     R.drawable.ic_grid_view
                 }
 
-                LIST -> {
-                    gridOrList = GRID
+                AdapterType.LIST -> {
+                    gridOrList = AdapterType.GRID
                     R.drawable.ic_list_view
                 }
             }
@@ -245,7 +183,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun setObservers() {
-        viewModel.myMangaListResponse.observe(viewLifecycleOwner) { event ->
+        viewModel.animeRecommendedResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
@@ -280,9 +218,9 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setData(data: ArrayList<MalMangaData>) {
-        mangaList.clear()
-        mangaList.addAll(data)
+    private fun setData(data: ArrayList<MalAnimeData>) {
+        animeList.clear()
+        animeList.addAll(data)
         adapter?.notifyDataSetChanged()
         if (shouldScrollToTop) {
             scrollToTopOrPosition()
@@ -303,7 +241,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun showEmptyLayout(isError: Boolean) {
-        val isListEmpty = mangaList.isEmpty()
+        val isListEmpty = animeList.isEmpty()
         with(binding.emptyLayout) {
             if (isListEmpty) {
                 val imageRes = if (isError) {
@@ -311,9 +249,9 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                     tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
                     R.drawable.bg_error
                 } else {
-                    tvEmptyTitle.text = getString(R.string.msg_your_list_empty)
-                    tvEmptyDesc.text = getString(R.string.msg_empty_manga_list_des)
-                    R.drawable.bg_empty_my_list
+                    tvEmptyTitle.text = getString(R.string.msg_list_empty)
+                    tvEmptyDesc.text = getString(R.string.msg_empty_list_des)
+                    R.drawable.bg_empty_list
                 }
                 binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
             }
@@ -324,41 +262,11 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun getList(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
-        viewModel.getMyMangaList(status, sort, limit, offset)
+        viewModel.getRecommendedAnime(offset, limit)
     }
 
     override fun onItemClick(position: Int) {
 
-    }
-
-    override fun <T> onItemClick(position: Int, type: T) {
-        when (type as ListOptionsType) {
-            ListOptionsType.STATUS -> {
-                statusList.setOptionSelected(position) {
-                    binding.groupStatus.tvItem.text = it.name
-                    status = MalMangaStatus.valueOfOrDefault(it.id)
-                    runCommonOptionFunction()
-                }
-            }
-
-            ListOptionsType.SORT -> {
-                sortList.setOptionSelected(position) {
-                    binding.groupSort.tvItem.text = it.name
-                    sort = MalMangaSortType.valueOfOrDefault(it.id)
-                    runCommonOptionFunction()
-                }
-            }
-
-            else -> {}
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun runCommonOptionFunction() {
-        page = 1
-        offset = 0
-        optionBottomSheetDialog?.cancel()
-        commonFetchListAfterOptionChange()
     }
 
     private fun onNextClick() {
@@ -390,6 +298,6 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     companion object {
         @JvmStatic
-        fun newInstance() = MyMangaListFragment()
+        fun newInstance() = AnimeRecommendedFragment()
     }
 }

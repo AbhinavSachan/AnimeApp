@@ -22,6 +22,7 @@ fun AppCompatImageView.loadImage(
         .placeholder(R.color.accentA30)
         .error(R.drawable.bg_error_placeholder)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+        .skipMemoryCache(false)
         .into(this)
 }
 fun Context.pauseGlideRequest() {

@@ -117,11 +117,11 @@
                 android:id="@+id/tv_ranking"
                 style="@style/TextStyleFont800"
                 android:textColor="@color/absolute_white"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_22"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guide_start"
-                tools:text="1"
+                tools:text="#1"
                 tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

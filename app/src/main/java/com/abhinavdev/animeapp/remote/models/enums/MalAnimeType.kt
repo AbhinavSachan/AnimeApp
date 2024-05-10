@@ -37,8 +37,8 @@ enum class MalAnimeType(
     FAVORITE("favorite", "Favorite");
 
     companion object {
-        fun valueOfOrDefault(value:MalAnimeType?) = entries.find { it.search == value?.search } ?: UNKNOWN
+        fun valueOfOrDefault(value:String?) = entries.find { it.search == value } ?: UNKNOWN
 
-        val list = entries.map { it.showName }
+        val list = entries.filter { it != UNKNOWN }.map { it }
     }
 }

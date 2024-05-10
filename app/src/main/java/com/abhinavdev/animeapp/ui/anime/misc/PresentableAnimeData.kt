@@ -35,7 +35,7 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
         val episodes = item.episodes
         val result = StringBuilder()
         result.append(getType().uppercase())
-        if (episodes == null || episodes <= 0){
+        if (episodes != null && episodes > 0){
             result.append(" (${episodes.toStringOrUnknown()} ${context.getString(R.string.msg_episodes)})")
         }
         return result.toString()

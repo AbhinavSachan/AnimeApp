@@ -7,4 +7,6 @@ sealed class MultiContentAdapterType {
     data object TopUpcoming : MultiContentAdapterType()
     data object TopRecommended : MultiContentAdapterType()
     data object TopRanked : MultiContentAdapterType()
+    data object MyManga : MultiContentAdapterType()
+    data object MyAnime : MultiContentAdapterType()
 }

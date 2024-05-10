@@ -23,7 +23,7 @@
         android:id="@+id/bottomNavBar"
         android:layout_width="0dp"
         android:layout_height="@dimen/_55sdp"
-        android:background="@color/primary"
+        android:background="@color/secondary"
         app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="@dimen/_16sdp"
         app:itemIconTint="@color/bottom_navigation_icon_selector"

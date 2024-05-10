@@ -32,13 +32,11 @@ class MangaHorizontalAdapter(
         val mangaName = data.getName().placeholder()
         val mangaType = data.getType()
         val rating = data.getRating()
-        val rank = data.getRank()
 
         with(holder) {
             with(binding) {
                 ivPoster.loadImage(image)
                 tvRating.text = rating
-                tvRanking.text = rank
                 tvType.text = mangaType
                 vtvAnimeName.text = mangaName
 
@@ -73,6 +71,8 @@ class MangaHorizontalAdapter(
                         tvRating.show()
                         tvType.show()
                     }
+
+                    else -> {}
                 }
                 viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
                 viewTopLeftFade.showOrHide(!tvRating.isHidden())

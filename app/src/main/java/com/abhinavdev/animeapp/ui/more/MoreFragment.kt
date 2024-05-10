@@ -97,6 +97,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
                 isSelected = SettingsHelper.getAppTheme() == it
             }
         }
+        with(binding.toolbar){
+            ivBack.hide()
+            tvTitle.text = getString(R.string.msg_more)
+        }
 
         //setting clickable from xml is not working
         //if switch is non clickable then user where ever clicks only linearlayout will be triggered
@@ -149,9 +153,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
 
     private fun setAuthLayout(authenticated: Boolean) {
         with(binding) {
-            groupMyProfile.llItem.clickable(authenticated)
-            groupMyAnime.llItem.clickable(authenticated)
-            groupMyManga.llItem.clickable(authenticated)
+            llLogout.showOrHide(authenticated)
+            viewLogout.showOrHide(authenticated)
             flLoginLayer.showOrHide(!authenticated)
         }
     }

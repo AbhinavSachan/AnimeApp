@@ -20,6 +20,7 @@ import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.LIST
+import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
@@ -58,9 +59,10 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private var status = MalAnimeStatus.ALL
     private var sort = MalAnimeSortType.UPDATED
+    private var page = 1
     private var offset = 0
     private var limit = SettingsHelper.getMyListLimit()
-    private val isFirstPage get() = offset == 0
+    private val isFirstPage get() = page == 1
 
     private val animeList: ArrayList<MalAnimeData> = arrayListOf()
     private var adapter: MalAnimeVerticalAdapter? = null
@@ -145,11 +147,11 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun updatePageNo() {
         //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
-        paginationHelper?.setPageText(offset + 1)
+        paginationHelper?.setPageText(page)
     }
 
     private fun setAdapter() {
-        adapter = MalAnimeVerticalAdapter(animeList, this)
+        adapter = MalAnimeVerticalAdapter(animeList, this, MultiContentAdapterType.MyAnime)
         adapter?.setHasStableIds(true)
         toggleAdapterType(gridOrList)
         binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
@@ -352,6 +354,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     @SuppressLint("NotifyDataSetChanged")
     private fun runCommonOptionFunction() {
+        page = 1
         offset = 0
         optionBottomSheetDialog?.cancel()
         commonFetchListAfterOptionChange()
@@ -373,13 +376,16 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun increaseOffset() {
-        offset += 1
+        page += 1
+        offset += limit
     }
 
     private fun decreaseOffset() {
-        if (offset != 0) offset -= 1
+        if (offset != 0) {
+            page -= 1
+            offset -= limit
+        }
     }
-
     companion object {
         @JvmStatic
         fun newInstance() = MyAnimeListFragment()

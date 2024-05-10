@@ -22,10 +22,6 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
         return MangaType.valueOfOrDefault(item.type?.search).showName
     }
 
-    fun getRank(): String {
-        return "#${position + 1}"
-    }
-
     fun getRating(): String? {
         return item.score?.formatToOneDigitAfterDecimalOrNull()
     }
@@ -35,10 +31,10 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
         val volumes = item.volumes
         val result = StringBuilder()
         result.append(getType())
-        if (chapters == null || chapters <= 0) {
+        if (chapters != null && chapters > 0) {
             result.append(" (${chapters.toStringOrUnknown()} ${context.getString(R.string.msg_chapters)})")
         }
-        if (volumes == null || volumes <= 0) {
+        if (volumes != null && volumes > 0) {
             result.append(" (${volumes.toStringOrUnknown()} ${context.getString(R.string.msg_volumes)})")
         }
         return result.toString()

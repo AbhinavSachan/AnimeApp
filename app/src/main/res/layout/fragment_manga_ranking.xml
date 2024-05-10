@@ -36,16 +36,6 @@
                     layout="@layout/filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_6sdp"
-                    android:layout_weight="1"
-                    android:orientation="vertical" />
-
-                <include
-                    android:id="@+id/group_status"
-                    layout="@layout/filter_sort_item_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_6sdp"
                     android:layout_weight="1"
                     android:orientation="vertical" />
 

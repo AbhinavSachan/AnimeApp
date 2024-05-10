@@ -30,7 +30,7 @@ class MalAnimeHorizontalAdapter(
         val data = PresentableMalAnimeData(holder.adapterPosition,list[position])
         val image = data.getImage()
         val rating = data.getRating()
-        val rank = data.getRank()
+        val rank = data.getRank().placeholder()
         val animeType = data.getType()
         val animeName = data.getName().placeholder()
 
@@ -73,6 +73,8 @@ class MalAnimeHorizontalAdapter(
                         tvRating.show()
                         tvType.show()
                     }
+
+                    else -> {}
                 }
                 viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
                 viewTopLeftFade.showOrHide(!tvRating.isHidden())

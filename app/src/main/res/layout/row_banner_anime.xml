@@ -48,7 +48,7 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/btn_details"
-        style="@style/CustomPrimaryButtonLL"
+        style="@style/CustomSecondaryButtonLL"
         android:layout_marginStart="@dimen/safe_zone_anime_page"
         android:layout_marginBottom="@dimen/safe_zone_anime_page"
         app:layout_constraintBottom_toBottomOf="parent"

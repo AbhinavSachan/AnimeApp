@@ -38,8 +38,8 @@ enum class MalMangaType(
     FAVORITE("favorite", "Favorite");
 
     companion object {
-        fun valueOfOrDefault(value:MalMangaType?) = entries.find { it.search == value?.search } ?: UNKNOWN
+        fun valueOfOrDefault(value:String?) = entries.find { it.search == value } ?: UNKNOWN
 
-        val list = entries.map { it.showName }
+        val list = entries.filter { it != UNKNOWN }.map { it }
     }
 }

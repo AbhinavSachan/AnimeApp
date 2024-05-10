@@ -6,8 +6,8 @@
         <item name="colorAccent">@color/black</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorSecondary">@color/white</item>
-        <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
 
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
@@ -20,7 +20,7 @@
 
     <style name="CustomSplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/primary</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
 
         <item name="android:forceDarkAllowed">false</item>

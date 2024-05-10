@@ -71,6 +71,8 @@ class AnimeHorizontalAdapter(
                         tvRating.show()
                         tvType.show()
                     }
+
+                    else -> {}
                 }
                 viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
                 viewTopLeftFade.showOrHide(!tvRating.isHidden())

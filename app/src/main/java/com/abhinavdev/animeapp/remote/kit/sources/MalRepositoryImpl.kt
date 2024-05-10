@@ -19,7 +19,7 @@ import retrofit2.Response
 class MalRepositoryImpl : MalRepository {
     private val apiService = ApiClient.getMalApiService()
 
-    private val fields = "my_list_status{priority,comments},alternative_titles,media_type,mean,nsfw,num_episodes,start_season,num_chapters,start_date,num_volumes,end_date,status"
+    private val fields = "my_list_status{priority,comments},alternative_titles,media_type,mean,nsfw,num_episodes,start_season,num_chapters,start_date,num_volumes,end_date,status,synopsis"
 
     override suspend fun updateAnimeListStatus(
         animeId: Int,

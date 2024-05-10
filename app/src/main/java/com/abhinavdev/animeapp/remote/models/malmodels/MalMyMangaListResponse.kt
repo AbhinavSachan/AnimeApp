@@ -13,7 +13,8 @@ class MalMyMangaListResponse : MalBaseResponse<ArrayList<MalMangaData>>()
 data class MalMangaData(
     @SerializedName("node") val node: MalMangaNode?,
     @SerializedName("synopsis") val synopsis: String?,
-    @SerializedName("list_status") val listStatus: MangaListStatus?
+    @SerializedName("list_status") val listStatus: MangaListStatus?,
+    @SerializedName("ranking") val ranking: MalRankingData?,
 ) : BaseModel()
 
 data class MalMangaNode(
@@ -28,6 +29,7 @@ data class MalMangaNode(
     @SerializedName("start_date") val startDate: String?,
     @SerializedName("end_date") val endDate: String?,
     @SerializedName("status") val status: MalMangaMediaStatus?,
+    @SerializedName("my_list_status") val listStatus: MangaListStatus?,
     @SerializedName("num_volumes") val numVolumes: Int?,
 ) : BaseModel()
 

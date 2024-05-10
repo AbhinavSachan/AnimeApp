@@ -7,130 +7,136 @@
     android:layout_height="match_parent"
     tools:context=".ui.more.MoreFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/custom_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.core.widget.NestedScrollView
-            style="@style/BaseNestedScrollViewAttributes"
+    <androidx.core.widget.NestedScrollView
+        style="@style/BaseNestedScrollViewAttributes"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ll_authenticated_features"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ll_authenticated_features"
+                <include
+                    android:id="@+id/group_my_profile"
+                    layout="@layout/more_click_item_layout" />
+
+                <include
+                    android:id="@+id/group_my_anime"
+                    layout="@layout/more_click_item_layout" />
+
+                <include
+                    android:id="@+id/group_my_manga"
+                    layout="@layout/more_click_item_layout" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/fl_login_layer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/blackA70"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/ll_authenticated_features"
+                app:layout_constraintEnd_toEndOf="@id/ll_authenticated_features"
+                app:layout_constraintStart_toStartOf="@id/ll_authenticated_features"
+                app:layout_constraintTop_toTopOf="@id/ll_authenticated_features"
+                tools:visibility="visible">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/TextStyleFont500"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <include
-                        android:id="@+id/group_my_profile"
-                        layout="@layout/more_click_item_layout" />
-
-                    <include
-                        android:id="@+id/group_my_anime"
-                        layout="@layout/more_click_item_layout" />
-
-                    <include
-                        android:id="@+id/group_my_manga"
-                        layout="@layout/more_click_item_layout" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/fl_login_layer"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:background="@drawable/bg_login_layer_cor_12"
-                    android:clickable="true"
-                    android:focusable="true"
+                    android:layout_marginBottom="@dimen/_6sdp"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/ll_authenticated_features"
-                    app:layout_constraintEnd_toEndOf="@id/ll_authenticated_features"
-                    app:layout_constraintStart_toStartOf="@id/ll_authenticated_features"
-                    app:layout_constraintTop_toTopOf="@id/ll_authenticated_features"
-                    tools:visibility="visible">
+                    android:text="@string/msg_login_to_access_des"
+                    android:textColor="@color/fontTextWhite"
+                    android:textSize="@dimen/text_size_13" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/TextStyleFont500"
-                        android:layout_marginBottom="@dimen/_6sdp"
-                        android:gravity="center"
-                        android:text="@string/msg_login_to_access_des"
-                        android:textColor="@color/fontTextWhite"
-                        android:textSize="@dimen/text_size_13" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_login"
+                    style="@style/CustomAccentButton"
+                    android:text="@string/msg_login" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_login"
-                        style="@style/CustomAccentButton"
-                        android:text="@string/msg_login" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ll_other_features"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/ll_authenticated_features">
+
+                <include
+                    android:id="@+id/group_app_theme"
+                    layout="@layout/more_select_item_layout" />
+
+                <include
+                    android:id="@+id/group_title_type"
+                    layout="@layout/more_select_item_layout" />
+
+                <include
+                    android:id="@+id/group_app_language"
+                    layout="@layout/more_select_item_layout" />
+
+                <include
+                    android:id="@+id/group_sfw"
+                    layout="@layout/more_switch_item_layout" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ll_other_features"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@id/ll_authenticated_features">
+                    android:id="@+id/ll_logout"
+                    style="@style/MoreMainLLStyle">
 
-                    <include layout="@layout/more_select_item_layout"
-                        android:id="@+id/group_app_theme"/>
+                    <com.google.android.material.imageview.ShapeableImageView
+                        style="@style/MoreImageView"
+                        android:src="@drawable/ic_logout"
+                        app:tint="@color/fontTextRed_CC3131" />
 
-                    <include layout="@layout/more_select_item_layout"
-                        android:id="@+id/group_title_type"/>
+                    <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
 
-                    <include layout="@layout/more_select_item_layout"
-                        android:id="@+id/group_app_language"/>
+                        <com.google.android.material.textview.MaterialTextView
+                            style="@style/MoreTitleTextView"
+                            android:text="@string/msg_logout"
+                            android:textColor="@color/fontTextRed_CC3131" />
 
-                    <include layout="@layout/more_switch_item_layout"
-                        android:id="@+id/group_sfw"/>
+                        <com.google.android.material.textview.MaterialTextView
+                            style="@style/MoreDescriptionTextView"
+                            android:text="@string/msg_logout_description" />
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/ll_logout"
-                        style="@style/MoreMainLLStyle">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreImageView"
-                            android:src="@drawable/ic_logout"
-                            app:tint="@color/fontTextRed_CC3131" />
-
-                        <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreTitleTextView"
-                                android:text="@string/msg_logout"
-                                android:textColor="@color/fontTextRed_CC3131" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                style="@style/MoreDescriptionTextView"
-                                android:text="@string/msg_logout_description" />
-
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            style="@style/MoreEndImageView"
-                            android:src="@drawable/ic_forward"
-                            app:tint="@color/fontTextRed_CC3131" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-                    <View style="@style/MoreDLView" />
-
+                    <com.google.android.material.imageview.ShapeableImageView
+                        style="@style/MoreEndImageView"
+                        android:src="@drawable/ic_forward"
+                        app:tint="@color/fontTextRed_CC3131" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <View
+                    android:id="@+id/view_logout"
+                    style="@style/MoreDLView" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

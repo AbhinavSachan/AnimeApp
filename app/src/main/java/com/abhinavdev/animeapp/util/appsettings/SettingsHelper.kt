@@ -23,11 +23,11 @@ object SettingsHelper {
     }
 
     fun getRankingListLimit(): Int {
-        return PrefUtils.getInt(Const.PrefKeys.RANKING_LIST_LIMIT_KEY,24)
+        return PrefUtils.getInt(Const.PrefKeys.RANKING_LIST_LIMIT_KEY,50)
     }
 
     fun getRecommendedListLimit(): Int {
-        return PrefUtils.getInt(Const.PrefKeys.RECOMMENDED_LIST_LIMIT_KEY,24)
+        return PrefUtils.getInt(Const.PrefKeys.RECOMMENDED_LIST_LIMIT_KEY,50)
     }
 
     fun getJikanListLimit(): Int {

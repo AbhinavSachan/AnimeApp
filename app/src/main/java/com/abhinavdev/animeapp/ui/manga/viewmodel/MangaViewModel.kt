@@ -28,9 +28,9 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
     private val _mangaFullResponse = MutableLiveData<Event<Resource<MangaResponse>>>()
     val mangaFullResponse: LiveData<Event<Resource<MangaResponse>>> = _mangaFullResponse
 
-    fun getFullMangaById(animeId: Int) = viewModelScope.launch {
+    fun getFullMangaById(mangaId: Int) = viewModelScope.launch {
         _mangaFullResponse.fetchData(getApplication()) {
-            repository.getMangaFullById(animeId)
+            repository.getMangaFullById(mangaId)
         }
     }
 
@@ -42,6 +42,18 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
     ) = viewModelScope.launch {
         _topMangaResponse.fetchData(getApplication()) {
             repository.getTopManga(type, filter, page, limit)
+        }
+    }
+
+    private val _mangaRankingResponse = MutableLiveData<Event<Resource<MalMyMangaListResponse>>>()
+    val mangaRankingResponse: LiveData<Event<Resource<MalMyMangaListResponse>>> =
+        _mangaRankingResponse
+
+    fun getMangaRanking(
+        type: MalMangaType, offset: Int, limit: Int
+    ) = viewModelScope.launch {
+        _mangaRankingResponse.fetchData(getApplication()) {
+            malRepository.getMangaRanking(rankingType = type, limit = limit, offset = offset)
         }
     }
 
