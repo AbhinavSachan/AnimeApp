@@ -67,6 +67,9 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initComponents() {
+        with(binding.toolbar) {
+            tvTitle.text = getString(R.string.msg_my_profile)
+        }
         with(binding.emptyLayout) {
             tvEmptyTitle.text = getString(R.string.error_something_went_wrong)
             tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
@@ -79,7 +82,7 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setListeners() {
-
+        binding.toolbar.ivBack.setOnClickListener(this)
         binding.swipeRefresh.setOnRefreshListener {
             getProfile(true)
         }
@@ -87,7 +90,7 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-
+            binding.toolbar.ivBack->parentActivity?.onBackPressed()
         }
     }
 
@@ -117,7 +120,7 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun setData(profileData: UserFullProfileResponse) {
+    private fun setData(data: UserFullProfileResponse) {
 
     }
 

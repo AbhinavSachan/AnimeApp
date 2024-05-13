@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomSplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="windowSplashScreenBackground">@color/primary</item>
+        <item name="postSplashScreenTheme">@style/Theme.Main</item>
+    </style>
+
+    <style name="AmoledThemeOverlay" parent="ThemeOverlay.Material3.DynamicColors.DayNight">
+        <item name="android:colorBackground">#000000</item>
+        <item name="colorSurface">#000000</item>
+        <item name="bottomSheetDialogTheme">@style/AmoledSheet</item>
+    </style>
+</resources>

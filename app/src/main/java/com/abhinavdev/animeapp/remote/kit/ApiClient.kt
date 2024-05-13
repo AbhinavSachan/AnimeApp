@@ -98,6 +98,8 @@ object ApiClient {
                     log { "You are being rate limited or Api is being rate limited by MyAnimeList, retrying in 1 seconds..." }
                     Thread.sleep(1000L)
                 } catch (_: InterruptedException) {
+                } finally {
+                    response.close() // Close the previous response before making a new request
                 }
 
                 response = chain.proceed(chain.request())

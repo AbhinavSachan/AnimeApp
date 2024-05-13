@@ -87,6 +87,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:visibility="visible" />
 
+            <View
+                android:id="@+id/view_bottom_right_fade"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_black_trans_fade_bottom_right"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:visibility="visible" />
+
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_rating"
                 style="@style/TextStyleFont500"
@@ -126,6 +136,44 @@
                 app:layout_constraintStart_toStartOf="@id/guide_start"
                 tools:text="#1"
                 tools:visibility="visible" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_episodes"
+                style="@style/TextStyleFont500"
+                android:background="@drawable/bg_accent_corner_3"
+                android:paddingStart="@dimen/_3sdp"
+                android:paddingTop="@dimen/_1sdp"
+                android:paddingEnd="@dimen/_3sdp"
+                android:paddingBottom="@dimen/_1sdp"
+                android:textColor="@color/onAccent"
+                android:textSize="@dimen/text_size_9"
+                android:drawableStart="@drawable/ic_cc"
+                android:drawableTint="@color/onAccent"
+                android:drawablePadding="@dimen/_2sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
+                app:layout_constraintEnd_toEndOf="@id/guide_end"
+                tools:text="175"
+                tools:visibility="visible" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_volumes"
+                style="@style/TextStyleFont500"
+                android:background="@drawable/bg_accent_corner_3"
+                android:paddingStart="@dimen/_3sdp"
+                android:paddingTop="@dimen/_1sdp"
+                android:paddingEnd="@dimen/_3sdp"
+                android:paddingBottom="@dimen/_1sdp"
+                android:layout_marginEnd="@dimen/_2sdp"
+                android:textColor="@color/onAccent"
+                android:textSize="@dimen/text_size_9"
+                android:drawableStart="@drawable/ic_volumes"
+                android:drawableTint="@color/onAccent"
+                android:drawablePadding="@dimen/_2sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/guide_bottom"
+                app:layout_constraintEnd_toStartOf="@id/tv_episodes"
+                tools:text="175" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

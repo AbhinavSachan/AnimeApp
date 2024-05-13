@@ -17,6 +17,10 @@ object Const {
 
             //key to save app theme in settings
             const val APP_THEME_KEY = "settings_app_theme_key"
+            const val IS_AMOLED_THEME_KEY = "settings_is_amoled_theme_key"
+            const val THEME_PALLET_KEY = "settings_theme_pallet_key"
+            const val USE_MATERIAL_YOU_KEY = "settings_use_material_you_key"
+            const val USE_POSTER_IMAGE_COLORS_KEY = "settings_use_poster_image_colors_key"
 
             //key to save title language type in settings
             const val PREFERRED_TITLE_TYPE_KEY = "settings_preferred_title_type_key"
@@ -61,7 +65,9 @@ object Const {
         companion object {
             const val EXTRA_DATA = "extra_data"
             const val EXTRA_ID = "extra_id"
-            const val EXTRA_STRING = "extra_string"
+            const val EXTRA_TYPE = "extra_type"
+            const val EXTRA_FILTER = "extra_filter"
+            const val EXTRA_AGE_RATING = "extra_age_rating"
         }
     }
 

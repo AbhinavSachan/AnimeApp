@@ -19,6 +19,10 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
         return item.images?.webp?.largeImageUrl
     }
 
+    fun getEpisode(): String? {
+        return item.episodes?.takeIf { it > 0 }?.toString()
+    }
+
     fun getType(): String {
         return AnimeType.valueOfOrDefault(item.type?.search).showName
     }

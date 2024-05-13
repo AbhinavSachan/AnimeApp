@@ -179,7 +179,7 @@ class MangaRankingFragment : BaseFragment(), View.OnClickListener, CustomClickLi
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressed()
+            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
             binding.groupType.llItem -> openOptionDialog(typeList, ListOptionsType.TYPE)
         }

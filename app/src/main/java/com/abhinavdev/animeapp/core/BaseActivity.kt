@@ -1,6 +1,8 @@
 package com.abhinavdev.animeapp.core
 
 import android.content.Context
+import android.os.Build
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.abhinavdev.animeapp.util.appsettings.LocaleHelper
@@ -12,7 +14,7 @@ abstract class BaseActivity : AppCompatActivity() {
     internal var lang: String = ""
 
     override fun attachBaseContext(base: Context) {
-        SettingsHelper.getAppLanguageString().let { lang = it }
+        SettingsHelper.getAppLanguage().search.let { lang = it }
         super.attachBaseContext(LocaleHelper.onAttach(base, lang))
     }
 
@@ -50,4 +52,15 @@ abstract class BaseActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
+    open fun setOnBackPressedListener(callback: () -> Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.onBackInvokedDispatcher.registerOnBackInvokedCallback(0) { callback.invoke() }
+        } else {
+            this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    callback.invoke()
+                }
+            })
+        }
+    }
 }

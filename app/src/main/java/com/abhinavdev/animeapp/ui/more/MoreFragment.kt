@@ -26,10 +26,13 @@ import com.abhinavdev.animeapp.util.appsettings.AppLanguage
 import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
+import com.abhinavdev.animeapp.util.extension.setStatusBarColorAsTheme
 import com.abhinavdev.animeapp.util.extension.setTheme
+import com.abhinavdev.animeapp.util.extension.setThemeChangeAnimation
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -100,6 +103,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
         with(binding.toolbar){
             ivBack.hide()
             tvTitle.text = getString(R.string.msg_more)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
 
         //setting clickable from xml is not working
@@ -297,7 +304,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
                     binding.groupAppTheme.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.APP_THEME_KEY, it.id)
-                    activity?.setTheme(AppTheme.valueOfOrDefault(it.id))
+                    val theme = AppTheme.valueOfOrDefault(it.id)
+                    activity?.setThemeChangeAnimation()
+                    setTheme(theme)
+                    activity?.setStatusBarColorAsTheme(theme)
                 }
             }
         }

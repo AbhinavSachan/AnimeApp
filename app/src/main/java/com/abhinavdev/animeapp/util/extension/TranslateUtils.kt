@@ -25,7 +25,7 @@ object TranslateUtils {
                 putExtra("key_text_input", text)
                 putExtra("key_text_output", "")
                 putExtra("key_language_from", "en")
-                putExtra("key_language_to", SettingsHelper.getAppLanguageString())
+                putExtra("key_language_to", SettingsHelper.getAppLanguage().search)
                 putExtra("key_suggest_translation", "")
                 putExtra("key_from_floating_window", false)
                 component = ComponentName(

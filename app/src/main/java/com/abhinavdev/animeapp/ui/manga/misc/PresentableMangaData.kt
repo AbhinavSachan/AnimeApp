@@ -18,6 +18,14 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
         return item.images?.webp?.largeImageUrl
     }
 
+    fun getChapters(): String? {
+        return item.chapters?.takeIf { it > 0 }?.toString()
+    }
+
+    fun getVolumes(): String? {
+        return item.volumes?.takeIf { it > 0 }?.toString()
+    }
+
     fun getType(): String {
         return MangaType.valueOfOrDefault(item.type?.search).showName
     }

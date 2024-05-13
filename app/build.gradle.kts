@@ -186,5 +186,9 @@ dependencies {
     implementation(libs.shimmer)
     //some fancy switch
     implementation(libs.switcher)
+    // epoxy recycler view
+    implementation (libs.epoxy)
+    // Add the annotation processor if you are using Epoxy's annotations (recommended)
+    ksp (libs.epoxy.processor)
 }
 //https://docs.consumet.org/#tag/anilist

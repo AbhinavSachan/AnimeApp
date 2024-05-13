@@ -91,7 +91,10 @@ class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = createViewModel(MangaViewModel::class.java)
-        mangaFilter = MangaFilter.valueOfOrDefault(arguments?.getString(Const.BundleExtras.EXTRA_STRING))
+        arguments?.let {
+            mangaFilter = MangaFilter.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_FILTER))
+            mangaType = MangaType.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_TYPE))
+        }
     }
 
     override fun onCreateView(
@@ -193,7 +196,7 @@ class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressed()
+            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
             binding.groupType.llItem -> openOptionDialog(typeList, ListOptionsType.TYPE)
             binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
@@ -396,9 +399,10 @@ class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     companion object {
         @JvmStatic
-        fun newInstance(filter: MangaFilter) = JikanTopMangaFragment().apply {
+        fun newInstance(filter: MangaFilter = MangaFilter.NONE,mangaType:MangaType = MangaType.ALL) = JikanTopMangaFragment().apply {
             arguments = Bundle().apply {
-                putString(Const.BundleExtras.EXTRA_STRING, filter.search)
+                putString(Const.BundleExtras.EXTRA_FILTER, filter.search)
+                putString(Const.BundleExtras.EXTRA_TYPE, mangaType.search)
             }
         }
     }

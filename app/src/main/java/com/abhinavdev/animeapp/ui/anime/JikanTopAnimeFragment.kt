@@ -94,8 +94,12 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = createViewModel(AnimeViewModel::class.java)
-        animeFilter =
-            AnimeFilter.valueOfOrDefault(arguments?.getString(Const.BundleExtras.EXTRA_STRING))
+
+        arguments?.let {
+            animeFilter = AnimeFilter.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_FILTER))
+            animeType = AnimeType.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_TYPE))
+            ageRating= AgeRating.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_AGE_RATING))
+        }
     }
 
     override fun onCreateView(
@@ -205,7 +209,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressed()
+            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
             binding.groupType.llItem -> openOptionDialog(typeList, ListOptionsType.TYPE)
             binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
@@ -419,9 +423,13 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     companion object {
         @JvmStatic
-        fun newInstance(filter: AnimeFilter) = JikanTopAnimeFragment().apply {
+        fun newInstance(
+            filter: AnimeFilter = AnimeFilter.NONE, animeType: AnimeType = AnimeType.ALL, ageRating: AgeRating = AgeRating.NONE
+        ) = JikanTopAnimeFragment().apply {
             arguments = Bundle().apply {
-                putString(Const.BundleExtras.EXTRA_STRING, filter.search)
+                putString(Const.BundleExtras.EXTRA_FILTER, filter.search)
+                putString(Const.BundleExtras.EXTRA_TYPE, animeType.search)
+                putString(Const.BundleExtras.EXTRA_AGE_RATING, ageRating.search)
             }
         }
     }

@@ -3,4 +3,4 @@
     app:fontProviderAuthority="com.google.android.gms.fonts"
     app:fontProviderCerts="@array/com_google_android_gms_fonts_certs"
     app:fontProviderPackage="com.google.android.gms"
-    app:fontProviderQuery="name=IBM Plex Sans&amp;weight=700"></font-family>
+    app:fontProviderQuery="name=Shippori Mincho B1&amp;weight=800"/>

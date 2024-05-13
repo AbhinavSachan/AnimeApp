@@ -54,8 +54,8 @@ data class FavouriteManga(
 ) : BaseModelWithMal()
 
 data class AnimeStatistics(
-    @SerializedName("days_watched") val daysWatched: Int?,
-    @SerializedName("mean_score") val meanScore: Int?,
+    @SerializedName("days_watched") val daysWatched: Float?,
+    @SerializedName("mean_score") val meanScore: Float?,
     @SerializedName("watching") val watching: Int?,
     @SerializedName("completed") val completed: Int?,
     @SerializedName("on_hold") val onHold: Int?,
@@ -67,8 +67,8 @@ data class AnimeStatistics(
 ) : BaseModel()
 
 data class MangaStatistics(
-    @SerializedName("days_read") val daysRead: Int?,
-    @SerializedName("mean_score") val meanScore: Int?,
+    @SerializedName("days_read") val daysRead: Float?,
+    @SerializedName("mean_score") val meanScore: Float?,
     @SerializedName("reading") val reading: Int?,
     @SerializedName("completed") val completed: Int?,
     @SerializedName("on_hold") val onHold: Int?,

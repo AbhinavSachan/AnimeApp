@@ -9,68 +9,49 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/custom_toolbar"
+        layout="@layout/custom_transparent_toolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         style="@style/BaseNestedScrollViewAttributes"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="0dp">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_main"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_list_items"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.abhinavdev.animeapp.ui.common.ui.autoimageslider.SliderView
+            <include
                 android:id="@+id/sv_top_airing"
-                style="@style/CustomSliderView"
+                layout="@layout/custom_auto_image_slider_layout"/>
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_210sdp"
-                android:visibility="invisible"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
+                android:layout_height="@dimen/_15sdp"/>
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_view_pager"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/shimmer_color"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@id/sv_top_airing"
-                app:layout_constraintEnd_toEndOf="@id/sv_top_airing"
-                app:layout_constraintStart_toStartOf="@id/sv_top_airing"
-                app:layout_constraintTop_toTopOf="@id/sv_top_airing" />
+            <include
+                android:id="@+id/group_top_ranked"
+                layout="@layout/custom_rv_horizontal" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/ll_list_items"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/sv_top_airing">
+            <include
+                android:id="@+id/group_popular"
+                layout="@layout/custom_rv_horizontal" />
 
-                <include
-                    android:id="@+id/group_top_ranked"
-                    layout="@layout/custom_rv_horizontal" />
+            <include
+                android:id="@+id/group_favourite"
+                layout="@layout/custom_rv_horizontal" />
 
-                <include
-                    android:id="@+id/group_popular"
-                    layout="@layout/custom_rv_horizontal" />
+            <include
+                android:id="@+id/group_upcoming"
+                layout="@layout/custom_rv_horizontal" />
 
-                <include
-                    android:id="@+id/group_favourite"
-                    layout="@layout/custom_rv_horizontal" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <include
-                    android:id="@+id/group_upcoming"
-                    layout="@layout/custom_rv_horizontal" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

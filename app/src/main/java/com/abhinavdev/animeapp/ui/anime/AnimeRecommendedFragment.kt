@@ -153,7 +153,7 @@ class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomCli
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressed()
+            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
         }
     }

@@ -22,8 +22,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_4sdp"
-        android:paddingStart="@dimen/safe_zone_anime_page"
-        android:paddingEnd="@dimen/safe_zone_anime_page"
+        android:paddingStart="@dimen/safe_zone_main_page"
+        android:paddingEnd="@dimen/safe_zone_main_page"
         android:textColor="#CCFFFFFF"
         android:textSize="@dimen/text_size_11"
         app:layout_constraintBottom_toTopOf="@id/tv_name"
@@ -37,8 +37,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_12sdp"
-        android:paddingStart="@dimen/safe_zone_anime_page"
-        android:paddingEnd="@dimen/safe_zone_anime_page"
+        android:paddingStart="@dimen/safe_zone_main_page"
+        android:paddingEnd="@dimen/safe_zone_main_page"
         android:textColor="@color/absolute_white"
         android:textSize="@dimen/text_size_16"
         app:layout_constraintBottom_toTopOf="@id/btn_details"
@@ -49,8 +49,8 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/btn_details"
         style="@style/CustomSecondaryButtonLL"
-        android:layout_marginStart="@dimen/safe_zone_anime_page"
-        android:layout_marginBottom="@dimen/safe_zone_anime_page"
+        android:layout_marginStart="@dimen/safe_zone_main_page"
+        android:layout_marginBottom="@dimen/safe_zone_main_page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 

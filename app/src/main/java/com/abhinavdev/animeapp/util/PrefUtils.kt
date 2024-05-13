@@ -7,7 +7,7 @@ import com.google.gson.Gson
 
 object PrefUtils {
     //preference file
-    private const val DEFAULT_PREFS = "default_shared_prefs"
+    private const val DEFAULT_PREFS = "com.abhinavdev.animeapp.SharedPreferences"
 
     //any numeric getter method will return -1 as default value
     private const val DEFAULT_NUMERIC_VALUE = -1

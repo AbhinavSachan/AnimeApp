@@ -1,6 +1,8 @@
 package com.abhinavdev.animeapp.util.extension
 
 import android.app.Activity
+import android.app.Application
+import android.app.UiModeManager
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -9,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Insets
 import android.net.Uri
@@ -28,6 +31,7 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabColorSchemeParams
@@ -299,22 +303,66 @@ fun getNonNullNumValue(value: String?): String {
         value
     }
 }
+fun restartApp(context: Context) {
+    val pm = context.packageManager
 
-fun Activity.setTheme(theme: AppTheme) {
+    val intent = pm.getLaunchIntentForPackage(context.packageName)
+    val component = intent?.component
+
+    val mainIntent = Intent.makeRestartActivityTask(component)
+    mainIntent.setPackage(context.packageName)
+    context.startActivity(mainIntent)
+
+    Runtime.getRuntime().exit(0)
+}
+fun Activity.setThemeChangeAnimation(){
     this.window.setWindowAnimations(R.style.FadeAnimationDark)
+}
+fun setTheme(theme: AppTheme) {
     when (theme) {
         AppTheme.DARK -> {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            setSystemBarColor(this.window, theme)
         }
 
         AppTheme.LIGHT -> {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            setSystemBarColor(this.window, theme)
         }
 
         AppTheme.DEFAULT -> {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
+}
+@RequiresApi(Build.VERSION_CODES.S)
+fun Application.setApplicationTheme(theme: AppTheme) {
+    val service  = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+    when (theme) {
+        AppTheme.DARK -> {
+            service.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
+        }
+
+        AppTheme.LIGHT -> {
+            service.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO)
+        }
+
+        AppTheme.DEFAULT -> {
+            service.setApplicationNightMode(UiModeManager.MODE_NIGHT_CUSTOM)
+        }
+    }
+}
+
+fun Activity.setStatusBarColorAsTheme(theme: AppTheme) {
+    this.window.setWindowAnimations(R.style.FadeAnimationDark)
+    when (theme) {
+        AppTheme.DARK -> {
+            setSystemBarColor(this.window, theme)
+        }
+
+        AppTheme.LIGHT -> {
+            setSystemBarColor(this.window, theme)
+        }
+
+        AppTheme.DEFAULT -> {
             setStatusBarColorAndIconDark(applyColor(R.color.primary))
         }
     }
@@ -562,4 +610,12 @@ suspend inline fun <T> Flow<T>.safeCollect(crossinline action: (T) -> Unit) {
             action(it)
         }
     }
+}
+
+fun getOrientation(): Int {
+    return Resources.getSystem().configuration.orientation
+}
+
+fun Context.getConfiguration(): Configuration {
+    return resources.configuration
 }

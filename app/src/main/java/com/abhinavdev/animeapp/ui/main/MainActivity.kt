@@ -1,10 +1,10 @@
 package com.abhinavdev.animeapp.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -16,10 +16,12 @@ import com.abhinavdev.animeapp.ui.main.adapters.MainFragmentAdapter
 import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
+import com.abhinavdev.animeapp.util.adapter.FadeTransformation
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
-import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.showOrHide
+import com.abhinavdev.animeapp.util.extension.testLog
 import com.abhinavdev.animeapp.util.extension.toast
 import com.google.android.material.navigation.NavigationBarView
 
@@ -41,12 +43,28 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setTheme(SettingsHelper.getAppTheme())
+        ViewUtil.setOnApplyUiInsetsListener(binding.bottomNavBar) { insets ->
+            ViewUtil.setBottomPadding(binding.bottomNavBar, insets.bottom, false)
+        }
         setContentView(binding.root)
 
         viewModel = createViewModel(MainViewModel::class.java)
-
+        setOnBackPressedListener {
+            testLog { "Back Pressed" }
+            val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+            if (fragment != null) {
+                //first if there is any fragment open close it
+                supportFragmentManager.popBackStackImmediate()
+            } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
+                //if home page just finish activity
+                finish()
+            } else {
+                //if its not home page then back pressing will bring us on home page
+                navigateToPosition(MainFragmentAdapter.PageType.ANIME)
+            }
+        }
         checkLoginIntent(intent)
         init()
     }
@@ -85,7 +103,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         fragmentAdapter = MainFragmentAdapter(this, rootFragmentTypes)
         binding.viewPager.adapter = fragmentAdapter
         binding.viewPager.isUserInputEnabled = false
-
+        binding.viewPager.setPageTransformer(FadeTransformation())
     }
 
     private fun setListeners() {
@@ -154,20 +172,20 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
 //        setStatusBarIconsDark(false)
     }
 
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        if (fragment != null) {
-            //first if there is any fragment open close it
-            supportFragmentManager.popBackStackImmediate()
-        } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
-            //if home page just finish activity
-            finish()
-        } else {
-            //if its not home page then back pressing will bring us on home page
-            navigateToPosition(MainFragmentAdapter.PageType.ANIME)
-        }
-    }
+//    @SuppressLint("MissingSuperCall")
+//    override fun onBackPressed() {
+//        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+//        if (fragment != null) {
+//            //first if there is any fragment open close it
+//            supportFragmentManager.popBackStackImmediate()
+//        } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
+//            //if home page just finish activity
+//            finish()
+//        } else {
+//            //if its not home page then back pressing will bring us on home page
+//            navigateToPosition(MainFragmentAdapter.PageType.ANIME)
+//        }
+//    }
 
     fun isLoaderVisible(b: Boolean) {
         binding.loader.progressOverlay.showOrHide(b)

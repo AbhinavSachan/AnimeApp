@@ -58,7 +58,7 @@
     <string name="msg_mal_profile_decription">View your MAL profile</string>
     <string name="action_explore">Explore</string>
 
-<!--    empty list title and description-->
+    <!--    empty list title and description-->
     <string name="msg_your_list_empty">Your list is empty</string>
     <string name="msg_empty_manga_list_des">Oops! It seems you haven\'t added any manga to the list.</string>
     <string name="msg_empty_anime_list_des">Oops! It seems you haven\'t added any anime to the list.</string>

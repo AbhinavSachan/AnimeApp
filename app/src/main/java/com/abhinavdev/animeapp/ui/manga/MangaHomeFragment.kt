@@ -29,10 +29,9 @@ import com.abhinavdev.animeapp.ui.manga.viewmodel.MangaViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
-import com.abhinavdev.animeapp.util.extension.getDisplaySize
-import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.isVisible
+import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfScreen
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
@@ -110,17 +109,20 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
     private fun initComponents() {
         isAuthenticated = SettingsHelper.getIsAuthenticated()
-        with(binding.toolbar){
-            ivBack.hide()
+        with(binding.toolbar) {
             ivExtra.show()
             ivExtraTwo.show()
-            tvTitle.text = getString(R.string.msg_manga)
+            ivExtraThree.show()
             ivExtra.setImageResource(R.drawable.ic_refresh)
-            ivExtraTwo.setImageResource(R.drawable.ic_search)
+            ivExtraTwo.setImageResource(R.drawable.ic_random)
+            ivExtraThree.setImageResource(R.drawable.ic_search)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
         setAllTitles()
         setTopViewPagerHeight()
-        initializeShimmerLoading()
     }
 
     private fun initializeShimmerLoading() {
@@ -128,7 +130,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         popularLoading(true)
         favouriteLoading(true)
         upcomingLoading(true)
-        if (isAuthenticated){
+        if (isAuthenticated) {
             rankedLoading(true)
         }
     }
@@ -141,19 +143,15 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setTopViewPagerHeight() {
-        val screenSize = getDisplaySize(requireActivity())
-        if (screenSize.width > screenSize.height) {
-            binding.svTopAiring.layoutParams.height = (screenSize.height * 8) / 9
-        } else {
-            binding.svTopAiring.layoutParams.height = (screenSize.width * 8) / 9
-        }
+        binding.svTopAiring.autoImageSlider.setHeightAsPercentageOfScreen(activity,55)
     }
 
     private fun setAdapters() {
         //top airing in top auto image slider
         airingAdapter = MangaBannerAdapter(airingList, this)
-        binding.svTopAiring.setIndicatorAnimation(IndicatorAnimationType.DROP)
-        binding.svTopAiring.setSliderAdapter(airingAdapter!!)
+        binding.svTopAiring.autoImageSlider.setIndicatorAnimation(IndicatorAnimationType.DROP)
+        binding.svTopAiring.autoImageSlider.setSliderAdapter(airingAdapter!!)
+        binding.svTopAiring.autoImageSlider.startAutoCycle()
 
         //second rv
         popularAdapter =
@@ -195,6 +193,7 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     private fun setListeners() {
         binding.toolbar.ivExtra.setOnClickListener(this)
         binding.toolbar.ivExtraTwo.setOnClickListener(this)
+        binding.toolbar.ivExtraThree.setOnClickListener(this)
         binding.groupTopRanked.tvViewAll.setOnClickListener(this)
         binding.groupPopular.tvViewAll.setOnClickListener(this)
         binding.groupFavourite.tvViewAll.setOnClickListener(this)
@@ -204,7 +203,8 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     override fun onClick(v: View?) {
         when (v) {
             binding.toolbar.ivExtra -> onRefreshClick()
-            binding.toolbar.ivExtraTwo -> onSearchClick()
+            binding.toolbar.ivExtraTwo -> onRandomClick()
+            binding.toolbar.ivExtraThree -> onSearchClick()
             binding.groupTopRanked.tvViewAll -> onTopRankedClick()
             binding.groupPopular.tvViewAll -> openJikanFragment(MangaFilter.BY_POPULARITY)
             binding.groupFavourite.tvViewAll -> openJikanFragment(MangaFilter.FAVORITE)
@@ -218,6 +218,11 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     } else {
         toast(getString(R.string.msg_please_wait))
     }
+
+    private fun onRandomClick() {
+
+    }
+
     private fun onSearchClick() {
 
     }
@@ -227,12 +232,11 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun openJikanFragment(filter: MangaFilter) {
-        parentActivity?.navigateToFragment(JikanTopMangaFragment.newInstance(filter))
+        parentActivity?.navigateToFragment(JikanTopMangaFragment.newInstance(filter = filter))
     }
 
     private fun setAuthenticationView() {
-        val condition = isAuthenticated != binding.groupTopRanked.root.isVisible()
-        binding.groupTopRanked.root.showOrHide(condition)
+        binding.groupTopRanked.root.showOrHide(isAuthenticated)
     }
 
     override fun onResume() {
@@ -245,17 +249,17 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        PrefUtils.removeObserver()
+    }
+
     private fun setAuthLayout(authenticated: Boolean) {
         if (authenticated != isAuthenticated) {
             isAuthenticated = authenticated
             setAuthenticationView()
             allApiCalls()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        PrefUtils.removeObserver()
     }
 
     private fun setObservers() {
@@ -270,6 +274,9 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
                 isLoading = loading
                 if (isRefreshed) {
                     parentActivity?.isLoaderVisible(isLoading)
+                    if (!isLoading) isRefreshed = false
+                }else if (isLoading) {
+                    initializeShimmerLoading()
                 }
             }
         }
@@ -362,8 +369,8 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun airingLoading(isLoading: Boolean) {
-        with(binding) {
-            showOrHideShimmer(isLoading, svTopAiring, shimmerViewPager)
+        with(binding.svTopAiring) {
+            showOrHideShimmer(isLoading, autoImageSlider, shimmerLoader)
         }
     }
 

@@ -46,8 +46,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.abhinavdev.animeapp.R
-import com.abhinavdev.animeapp.util.appsettings.AppLanguage
-import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textfield.TextInputLayout
 import java.io.ByteArrayOutputStream
@@ -402,48 +400,23 @@ fun BottomSheetBehavior<*>.isExpanded(): Boolean {
 }
 
 fun Context.getRegularFont(): Typeface? {
-    val lang = SettingsHelper.getAppLanguage()
-    return when (lang) {
-        AppLanguage.ENGLISH -> applyFont(R.font.english_regular)
-        AppLanguage.JAPANESE -> applyFont(R.font.hindi_regular)
-        AppLanguage.HINDI -> applyFont(R.font.japanese_regular)
-    }
+    return applyFont(R.font.custom_regular)
 }
 
 fun Context.getMediumFont(): Typeface? {
-    val lang = SettingsHelper.getAppLanguage()
-    return when (lang) {
-        AppLanguage.ENGLISH -> applyFont(R.font.english_medium)
-        AppLanguage.JAPANESE -> applyFont(R.font.hindi_medium)
-        AppLanguage.HINDI -> applyFont(R.font.japanese_medium)
-    }
+    return applyFont(R.font.custom_medium)
 }
 
 fun Context.getSemiBoldFont(): Typeface? {
-    val lang = SettingsHelper.getAppLanguage()
-    return when (lang) {
-        AppLanguage.ENGLISH -> applyFont(R.font.english_semi_bold)
-        AppLanguage.JAPANESE -> applyFont(R.font.hindi_semi_bold)
-        AppLanguage.HINDI -> applyFont(R.font.japanese_semi_bold)
-    }
+    return applyFont(R.font.custom_semi_bold)
 }
 
 fun Context.getBoldFont(): Typeface? {
-    val lang = SettingsHelper.getAppLanguage()
-    return when (lang) {
-        AppLanguage.ENGLISH -> applyFont(R.font.english_bold)
-        AppLanguage.JAPANESE -> applyFont(R.font.hindi_bold)
-        AppLanguage.HINDI -> applyFont(R.font.japanese_bold)
-    }
+    return applyFont(R.font.custom_bold)
 }
 
 fun Context.getExtraBoldFont(): Typeface? {
-    val lang = SettingsHelper.getAppLanguage()
-    return when (lang) {
-        AppLanguage.ENGLISH -> applyFont(R.font.english_extra_bold)
-        AppLanguage.JAPANESE -> applyFont(R.font.hindi_extra_bold)
-        AppLanguage.HINDI -> applyFont(R.font.japanese_extra_bold)
-    }
+    return applyFont(R.font.custom_extra_bold)
 }
 
 /**
@@ -473,7 +446,7 @@ fun TextInputLayout.showError(
     this.isErrorEnabled = true
     this.error = message
     this.requestFocus()
-    if (duration != 0L){
+    if (duration != 0L) {
         handler.postDelayed({
             if (!this.isAttachedToWindow) return@postDelayed
             this.isErrorEnabled = false
@@ -483,4 +456,23 @@ fun TextInputLayout.showError(
 
 fun TextInputLayout.disableError() {
     if (isErrorEnabled) isErrorEnabled = false
+}
+
+fun View.setHeightRelativeToWidth(activity: Activity?, heightMultiplier: Float = 6f/4f) {
+    activity ?: return
+    val screenSize = getDisplaySize(activity)
+    val height = if (screenSize.width > screenSize.height) {
+        (screenSize.height * heightMultiplier).toInt()
+    } else {
+        (screenSize.width * heightMultiplier).toInt()
+    }
+    this.layoutParams.height = height
+}
+
+
+fun View.setHeightAsPercentageOfScreen(activity: Activity?, percent: Int = 50) {
+    activity ?: return
+    val screenSize = getDisplaySize(activity)
+    val height = (screenSize.height * percent)/100
+    this.layoutParams.height = height
 }

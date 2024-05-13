@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
-        <item>@font/hindi_medium</item>
-        <item>@font/hindi_extra_bold</item>
-        <item>@font/hindi_regular</item>
-        <item>@font/hindi_semi_bold</item>
-        <item>@font/hindi_bold</item>
-        <item>@font/japanese_regular</item>
-        <item>@font/japanese_bold</item>
-        <item>@font/japanese_extra_bold</item>
-        <item>@font/japanese_medium</item>
-        <item>@font/japanese_semi_bold</item>
-        <item>@font/english_bold</item>
-        <item>@font/english_extra_bold</item>
-        <item>@font/english_regular</item>
-        <item>@font/english_medium</item>
-        <item>@font/english_semi_bold</item>
+        <item>@font/custom_medium</item>
+        <item>@font/custom_extra_bold</item>
+        <item>@font/custom_regular</item>
+        <item>@font/custom_semi_bold</item>
+        <item>@font/custom_bold</item>
     </array>
 </resources>

@@ -190,7 +190,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressed()
+            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
             binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
             binding.groupSort.llItem -> openOptionDialog(sortList, ListOptionsType.SORT)

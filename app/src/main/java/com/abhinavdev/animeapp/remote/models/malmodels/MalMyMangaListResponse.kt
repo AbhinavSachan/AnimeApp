@@ -18,7 +18,7 @@ data class MalMangaData(
 ) : BaseModel()
 
 data class MalMangaNode(
-    @SerializedName("id") val id: Int?,
+    @SerializedName("id") val id: Int,
     @SerializedName("title") val title: String?,
     @SerializedName("main_picture") val mainPicture: MainPicture?,
     @SerializedName("alternative_titles") val alternativeTitles: MalAlternativeTitles?,

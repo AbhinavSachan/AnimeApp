@@ -29,16 +29,14 @@ import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
-import com.abhinavdev.animeapp.util.extension.getDisplaySize
-import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.isVisible
+import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfScreen
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
 import com.abhinavdev.animeapp.util.extension.toast
 import com.facebook.shimmer.ShimmerFrameLayout
-import kotlinx.coroutines.Job
 
 
 class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallback {
@@ -69,8 +67,6 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     private var isLoading = false
     private var isRefreshed = false
     private var isAuthenticated = false
-
-    private var authCheckJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -114,17 +110,20 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
     private fun initComponents() {
         isAuthenticated = SettingsHelper.getIsAuthenticated()
-        with(binding.toolbar){
-            ivBack.hide()
+        with(binding.toolbar) {
             ivExtra.show()
             ivExtraTwo.show()
-            tvTitle.text = getString(R.string.msg_anime)
+            ivExtraThree.show()
             ivExtra.setImageResource(R.drawable.ic_refresh)
-            ivExtraTwo.setImageResource(R.drawable.ic_search)
+            ivExtraTwo.setImageResource(R.drawable.ic_random)
+            ivExtraThree.setImageResource(R.drawable.ic_search)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
         setAllTitles()
         setTopViewPagerHeight()
-        initializeShimmerLoading()
     }
 
     private fun initializeShimmerLoading() {
@@ -132,7 +131,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         popularLoading(true)
         favouriteLoading(true)
         upcomingLoading(true)
-        if (isAuthenticated){
+        if (isAuthenticated) {
             rankedLoading(true)
             recommendedLoading(true)
         }
@@ -147,19 +146,15 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setTopViewPagerHeight() {
-        val screenSize = getDisplaySize(requireActivity())
-        if (screenSize.width > screenSize.height) {
-            binding.svTopAiring.layoutParams.height = (screenSize.height * 8) / 9
-        } else {
-            binding.svTopAiring.layoutParams.height = (screenSize.width * 8) / 9
-        }
+        binding.svTopAiring.autoImageSlider.setHeightAsPercentageOfScreen(activity,55)
     }
 
     private fun setAdapters() {
         //top airing in top auto image slider
         airingAdapter = AnimeBannerAdapter(airingList, this)
-        binding.svTopAiring.setIndicatorAnimation(IndicatorAnimationType.DROP)
-        binding.svTopAiring.setSliderAdapter(airingAdapter!!)
+        binding.svTopAiring.autoImageSlider.setIndicatorAnimation(IndicatorAnimationType.DROP)
+        binding.svTopAiring.autoImageSlider.setSliderAdapter(airingAdapter!!)
+        binding.svTopAiring.autoImageSlider.startAutoCycle()
 
         //second rv
         popularAdapter =
@@ -210,6 +205,7 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     private fun setListeners() {
         binding.toolbar.ivExtra.setOnClickListener(this)
         binding.toolbar.ivExtraTwo.setOnClickListener(this)
+        binding.toolbar.ivExtraThree.setOnClickListener(this)
         binding.groupTopRanked.tvViewAll.setOnClickListener(this)
         binding.groupRecommended.tvViewAll.setOnClickListener(this)
         binding.groupPopular.tvViewAll.setOnClickListener(this)
@@ -220,7 +216,8 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     override fun onClick(v: View?) {
         when (v) {
             binding.toolbar.ivExtra -> onRefreshClick()
-            binding.toolbar.ivExtraTwo -> onSearchClick()
+            binding.toolbar.ivExtraTwo -> onRandomClick()
+            binding.toolbar.ivExtraThree -> onSearchClick()
             binding.groupTopRanked.tvViewAll -> onTopRankedClick()
             binding.groupRecommended.tvViewAll -> onTopRecommendedClick()
             binding.groupPopular.tvViewAll -> openJikanFragment(AnimeFilter.BY_POPULARITY)
@@ -229,12 +226,23 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         }
     }
 
+    private fun onRefreshClick() = if (!isLoading) {
+        isRefreshed = true
+        allApiCalls()
+    } else {
+        toast(getString(R.string.msg_please_wait))
+    }
+
+    private fun onRandomClick() {
+
+    }
+
     private fun onSearchClick() {
 
     }
 
     private fun openJikanFragment(filter: AnimeFilter) {
-        parentActivity?.navigateToFragment(JikanTopAnimeFragment.newInstance(filter))
+        parentActivity?.navigateToFragment(JikanTopAnimeFragment.newInstance(filter = filter))
     }
 
     private fun onTopRankedClick() {
@@ -245,18 +253,9 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         parentActivity?.navigateToFragment(AnimeRecommendedFragment.newInstance())
     }
 
-    private fun onRefreshClick() = if (!isLoading) {
-        isRefreshed = true
-        allApiCalls()
-    } else {
-        toast(getString(R.string.msg_please_wait))
-    }
-
     private fun setAuthenticationView() {
-        val condition1 = isAuthenticated != binding.groupTopRanked.root.isVisible()
-        val condition2 = isAuthenticated != binding.groupRecommended.root.isVisible()
-        binding.groupTopRanked.root.showOrHide(condition1)
-        binding.groupRecommended.root.showOrHide(condition2)
+        binding.groupTopRanked.root.showOrHide(isAuthenticated)
+        binding.groupRecommended.root.showOrHide(isAuthenticated)
     }
 
     override fun onResume() {
@@ -269,17 +268,17 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        PrefUtils.removeObserver()
+    }
+
     private fun setAuthLayout(authenticated: Boolean) {
         if (authenticated != isAuthenticated) {
             isAuthenticated = authenticated
             setAuthenticationView()
             allApiCalls()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        PrefUtils.removeObserver()
     }
 
     private fun setObservers() {
@@ -295,6 +294,9 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
                 isLoading = loading
                 if (isRefreshed) {
                     parentActivity?.isLoaderVisible(isLoading)
+                    if (!isLoading) isRefreshed = false
+                } else if (isLoading) {
+                    initializeShimmerLoading()
                 }
             }
         }
@@ -326,12 +328,12 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
                                 else -> {}
                             }
-                            key.setShimmerLoading(false)
+                            key.stopShimmerLoading()
                         }
                     }
 
                     is Resource.Error -> {
-                        key.setShimmerLoading(false)
+                        key.stopShimmerLoading()
                         response.message?.let { message -> toast(message) }
                     }
 
@@ -362,12 +364,12 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
                                 else -> {}
                             }
-                            key.setShimmerLoading(false)
+                            key.stopShimmerLoading()
                         }
                     }
 
                     is Resource.Error -> {
-                        key.setShimmerLoading(false)
+                        key.stopShimmerLoading()
                         response.message?.let { message -> toast(message) }
                     }
 
@@ -379,21 +381,21 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         }
     }
 
-    private fun MultiContentAdapterType.setShimmerLoading(isLoading: Boolean) {
+    private fun MultiContentAdapterType.stopShimmerLoading() {
         when (this) {
-            MultiContentAdapterType.TopAiring -> airingLoading(isLoading)
-            MultiContentAdapterType.TopPopular -> popularLoading(isLoading)
-            MultiContentAdapterType.TopFavourite -> favouriteLoading(isLoading)
-            MultiContentAdapterType.TopUpcoming -> upcomingLoading(isLoading)
-            MultiContentAdapterType.TopRanked -> rankedLoading(isLoading)
-            MultiContentAdapterType.TopRecommended -> recommendedLoading(isLoading)
+            MultiContentAdapterType.TopAiring -> airingLoading(false)
+            MultiContentAdapterType.TopPopular -> popularLoading(false)
+            MultiContentAdapterType.TopFavourite -> favouriteLoading(false)
+            MultiContentAdapterType.TopUpcoming -> upcomingLoading(false)
+            MultiContentAdapterType.TopRanked -> rankedLoading(false)
+            MultiContentAdapterType.TopRecommended -> recommendedLoading(false)
             else -> {}
         }
     }
 
     private fun airingLoading(isLoading: Boolean) {
-        with(binding) {
-            showOrHideShimmer(isLoading, svTopAiring, shimmerViewPager)
+        with(binding.svTopAiring) {
+            showOrHideShimmer(isLoading, autoImageSlider, shimmerLoader)
         }
     }
 

@@ -22,13 +22,14 @@
     <color name="blackA20">#33FFFFFF</color>
 
 
-    <color name="primary">#000000</color>
+    <color name="primary">#181a20</color>
     <color name="onPrimary">#B0E6E6</color>
-    <color name="secondary">#141414</color>
+    <color name="secondary">#13151a</color>
     <color name="onSecondary">#B0E6E6</color>
     <color name="onAccent">#DADADA</color>
     <color name="primaryA30">#4D000000</color>
     <color name="accent">#974040</color>
+    <color name="image_placeholder">#957272</color>
     <color name="accentA50">#80974040</color>
     <color name="accentA80">#CC974040</color>
     <color name="accentA60">#99974040</color>
@@ -52,9 +53,9 @@
     <color name="bgYellow">#FFC244</color>
     <color name="bgLightBlue">#F6EEF7</color>
 
-    <color name="fontTextGreen_14B661">#14B661</color>
-    <color name="fontTextRed_CC3131">#CC3131</color>
-    <color name="fontTextRed2_FF7E70">#FF7E70</color>
+    <color name="fontTextGreen">#14B661</color>
+    <color name="fontTextRed">#CC3131</color>
+    <color name="fontTextRedLight">#FF7E70</color>
     <color name="fontTextPrimary">#B5ECEC</color>
     <color name="fontTextWhite">#000000</color>
     <color name="fontTextBlack">#FFFFFF</color>

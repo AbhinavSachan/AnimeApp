@@ -19,7 +19,7 @@ fun AppCompatImageView.loadImage(
     //if received mal default image url then show our own placeholder
     val image:Any? = if (path == Const.Other.MAL_IMAGE_PLACEHOLDER) R.drawable.bg_placeholder else path
     Glide.with(this.context).load(image)
-        .placeholder(R.color.accentA30)
+        .placeholder(R.color.image_placeholder)
         .error(R.drawable.bg_error_placeholder)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         .skipMemoryCache(false)

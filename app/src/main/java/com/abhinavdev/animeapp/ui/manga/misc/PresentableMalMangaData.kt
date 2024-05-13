@@ -17,6 +17,14 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
         return item.node?.mainPicture?.large
     }
 
+    fun getChapters(): String? {
+        return item.node?.numChapters?.takeIf { it > 0 }?.toString()
+    }
+
+    fun getVolumes(): String? {
+        return item.node?.numVolumes?.takeIf { it > 0 }?.toString()
+    }
+
     fun getType(): String {
         return MalMangaType.valueOfOrDefault(item.node?.mediaType?.search).showName
     }
@@ -49,7 +57,11 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
     }
 
     fun getDate(): String {
-        return "${getFormattedDateOrNull(item.node?.startDate).placeholder()} to ${getFormattedDateOrNull(item.node?.endDate).placeholder()}"
+        return "${getFormattedDateOrNull(item.node?.startDate).placeholder()} to ${
+            getFormattedDateOrNull(
+                item.node?.endDate
+            ).placeholder()
+        }"
     }
 
     fun getName(): String? {

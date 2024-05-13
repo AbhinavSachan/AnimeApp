@@ -107,14 +107,14 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         style="@style/MoreImageView"
                         android:src="@drawable/ic_logout"
-                        app:tint="@color/fontTextRed_CC3131" />
+                        app:tint="@color/fontTextRed" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
 
                         <com.google.android.material.textview.MaterialTextView
                             style="@style/MoreTitleTextView"
                             android:text="@string/msg_logout"
-                            android:textColor="@color/fontTextRed_CC3131" />
+                            android:textColor="@color/fontTextRed" />
 
                         <com.google.android.material.textview.MaterialTextView
                             style="@style/MoreDescriptionTextView"
@@ -125,7 +125,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         style="@style/MoreEndImageView"
                         android:src="@drawable/ic_forward"
-                        app:tint="@color/fontTextRed_CC3131" />
+                        app:tint="@color/fontTextRed" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <View

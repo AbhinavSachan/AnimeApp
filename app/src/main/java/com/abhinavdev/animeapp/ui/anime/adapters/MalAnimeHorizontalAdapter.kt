@@ -9,7 +9,7 @@ import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableMalAnimeData
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.isHidden
+import com.abhinavdev.animeapp.util.extension.isVisible
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
@@ -27,8 +27,9 @@ class MalAnimeHorizontalAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val data = PresentableMalAnimeData(holder.adapterPosition,list[position])
+        val data = PresentableMalAnimeData(position,list[position])
         val image = data.getImage()
+        val episode = data.getEpisode()
         val rating = data.getRating()
         val rank = data.getRank().placeholder()
         val animeType = data.getType()
@@ -41,6 +42,9 @@ class MalAnimeHorizontalAdapter(
                 tvRanking.text = rank
                 tvType.text = animeType
                 vtvAnimeName.text = animeName
+                tvEpisodes.text = episode
+
+                tvEpisodes.showOrHide(!episode.isNullOrBlank())
 
                 when (type) {
                     MultiContentAdapterType.TopAiring -> {}
@@ -76,9 +80,10 @@ class MalAnimeHorizontalAdapter(
 
                     else -> {}
                 }
-                viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
-                viewTopLeftFade.showOrHide(!tvRating.isHidden())
-                viewTopRightFade.showOrHide(!tvType.isHidden())
+                viewBottomLeftFade.showOrHide(tvRanking.isVisible())
+                viewTopLeftFade.showOrHide(tvRating.isVisible())
+                viewTopRightFade.showOrHide(tvType.isVisible())
+                viewBottomRightFade.showOrHide(tvEpisodes.isVisible())
                 root.setOnClickListener { listener.onItemClick(position, type) }
             }
         }

@@ -30,6 +30,7 @@
     <color name="onAccent">#F8F8F8</color>
     <color name="primaryA30">#4DFFFFFF</color>
     <color name="accent">#FF6B6B</color>
+    <color name="image_placeholder">#FFC3C3</color>
     <color name="accentA50">#80FF6B6B</color>
     <color name="accentA80">#CCFF6B6B</color>
     <color name="accentA60">#99FF6B6B</color>
@@ -54,9 +55,9 @@
     <color name="bgYellow">#FFC244</color>
     <color name="bgLightBlue">#F6EEF7</color>
 
-    <color name="fontTextGreen_14B661">#14B661</color>
-    <color name="fontTextRed_CC3131">#CC3131</color>
-    <color name="fontTextRed2_FF7E70">#FF7E70</color>
+    <color name="fontTextGreen">#14B661</color>
+    <color name="fontTextRed">#CC3131</color>
+    <color name="fontTextRedLight">#FF7E70</color>
     <color name="fontTextPrimary">#181f1f</color>
     <color name="fontTextWhite">#ffffff</color>
     <color name="fontTextBlack">#000000</color>

@@ -3,13 +3,15 @@ package com.abhinavdev.animeapp.ui.manga.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowHorizontalListItemBinding
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMangaData
+import com.abhinavdev.animeapp.util.extension.applyDrawable
 import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.isHidden
+import com.abhinavdev.animeapp.util.extension.isVisible
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
@@ -27,8 +29,10 @@ class MangaHorizontalAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val data = PresentableMangaData(holder.adapterPosition, list[position])
+        val data = PresentableMangaData(position, list[position])
         val image = data.getImage()
+        val chapters = data.getChapters()
+        val volumes = data.getVolumes()
         val mangaName = data.getName().placeholder()
         val mangaType = data.getType()
         val rating = data.getRating()
@@ -36,10 +40,15 @@ class MangaHorizontalAdapter(
         with(holder) {
             with(binding) {
                 ivPoster.loadImage(image)
+                tvEpisodes.setCompoundDrawables(tvEpisodes.context.applyDrawable(R.drawable.ic_chapters),null,null,null)
                 tvRating.text = rating
                 tvType.text = mangaType
                 vtvAnimeName.text = mangaName
+                tvEpisodes.text = chapters
+                tvVolumes.text = volumes
 
+                tvEpisodes.showOrHide(!chapters.isNullOrBlank())
+                tvVolumes.showOrHide(!volumes.isNullOrBlank())
                 when (type) {
                     MultiContentAdapterType.TopAiring -> {}
                     MultiContentAdapterType.TopPopular -> {
@@ -74,9 +83,10 @@ class MangaHorizontalAdapter(
 
                     else -> {}
                 }
-                viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
-                viewTopLeftFade.showOrHide(!tvRating.isHidden())
-                viewTopRightFade.showOrHide(!tvType.isHidden())
+                viewBottomLeftFade.showOrHide(tvRanking.isVisible())
+                viewTopLeftFade.showOrHide(tvRating.isVisible())
+                viewTopRightFade.showOrHide(tvType.isVisible())
+                viewBottomRightFade.showOrHide(tvEpisodes.isVisible() || tvVolumes.isVisible())
                 root.setOnClickListener { listener.onItemClick(position, type) }
             }
         }

@@ -8,3 +8,12 @@ inline fun Any.log(tag: String = this::class.java.simpleName, message: () -> Str
         Log.d(tag, message())
     }
 }
+
+/**
+ * testTag
+ */
+inline fun Any.testLog(message: () -> String) {
+    if (BuildConfig.DEBUG) {
+        Log.d("testTag", message())
+    }
+}

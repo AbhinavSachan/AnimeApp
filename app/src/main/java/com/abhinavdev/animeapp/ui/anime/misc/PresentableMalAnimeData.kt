@@ -17,6 +17,10 @@ class PresentableMalAnimeData(val position: Int, val item: MalAnimeData) {
         return item.node?.mainPicture?.large
     }
 
+    fun getEpisode(): String? {
+        return item.node?.numEpisodes?.takeIf { it > 0 }?.toString()
+    }
+
     fun getType(): String {
         return MalAnimeType.valueOfOrDefault(item.node?.mediaType?.search).showName
     }

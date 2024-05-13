@@ -14,7 +14,7 @@ import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.extension.getSizeOfView
 import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.isHidden
+import com.abhinavdev.animeapp.util.extension.isVisible
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
@@ -43,8 +43,9 @@ class AnimeVerticalAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val data = PresentableAnimeData(holder.adapterPosition, list[position])
+        val data = PresentableAnimeData(position, list[position])
         val image = data.getImage()
+        val episode = data.getEpisode()
         val animeName = data.getName()
         val animeType = data.getType()
         val rating = data.getRating()
@@ -64,14 +65,17 @@ class AnimeVerticalAdapter(
                         tvRanking.text = rank
                         tvType.text = animeType
                         vtvAnimeName.text = animeName
+                        tvEpisodes.text = episode
 
+                        tvEpisodes.showOrHide(!episode.isNullOrBlank())
                         tvRanking.hide()
                         tvRating.showOrHide(!rating.isNullOrBlank())
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
-                        viewBottomLeftFade.showOrHide(!tvRanking.isHidden())
-                        viewTopLeftFade.showOrHide(!tvRating.isHidden())
-                        viewTopRightFade.showOrHide(!tvType.isHidden())
+                        viewBottomLeftFade.showOrHide(tvRanking.isVisible())
+                        viewTopLeftFade.showOrHide(tvRating.isVisible())
+                        viewTopRightFade.showOrHide(tvType.isVisible())
+                        viewBottomRightFade.showOrHide(tvEpisodes.isVisible())
                         root.setOnClickListener { listener.onItemClick(position) }
                     }
                 }
@@ -92,7 +96,7 @@ class AnimeVerticalAdapter(
                         tvRanking.hide()
                         tvType.show()
                         //showing black background faded view accordingly which text is visible
-                        viewTopLeftFade.showOrHide(!tvRanking.isHidden())
+                        viewTopLeftFade.showOrHide(tvRanking.isVisible())
                         root.setOnClickListener { listener.onItemClick(position) }
                     }
                 }
