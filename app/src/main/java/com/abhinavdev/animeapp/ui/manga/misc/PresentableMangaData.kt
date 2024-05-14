@@ -62,7 +62,7 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
             val month = from.month
             val year = from.year
             val cal = Calendar.getInstance()
-            if (day != null && month != null && year != null){
+            if (day != null && month != null && year != null) {
                 cal.set(year, month, day)
                 startDate = cal.time.formatTo().placeholder()
             }
@@ -72,7 +72,7 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
             val month = to.month
             val year = to.year
             val cal = Calendar.getInstance()
-            if (day != null && month != null && year != null){
+            if (day != null && month != null && year != null) {
                 cal.set(year, month, day)
                 endDate = cal.time.formatTo().placeholder()
             }
@@ -80,8 +80,8 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
         return "$startDate to $endDate"
     }
 
-    fun getName(): String? {
+    fun getName(): String {
         val userPreferredType = SettingsHelper.getPreferredTitleType()
-        return item.titles?.find { userPreferredType == it.type?.appTitleType }?.title ?: item.titles?.find { AppTitleType.ROMAJI == it.type?.appTitleType }?.title
+        return AppTitleType.getTitleFromData(item.titles, userPreferredType)
     }
 }

@@ -458,21 +458,25 @@ fun TextInputLayout.disableError() {
     if (isErrorEnabled) isErrorEnabled = false
 }
 
-fun View.setHeightRelativeToWidth(activity: Activity?, heightMultiplier: Float = 6f/4f) {
-    activity ?: return
-    val screenSize = getDisplaySize(activity)
+fun View.setHeightRelativeToWidth(screenSize:Size, heightMultiplier: Float = 6f/4f):Int {
     val height = if (screenSize.width > screenSize.height) {
         (screenSize.height * heightMultiplier).toInt()
     } else {
         (screenSize.width * heightMultiplier).toInt()
     }
     this.layoutParams.height = height
+    return height
 }
 
-
-fun View.setHeightAsPercentageOfScreen(activity: Activity?, percent: Int = 50) {
-    activity ?: return
-    val screenSize = getDisplaySize(activity)
-    val height = (screenSize.height * percent)/100
+//set height as percentage of given height
+fun View.setHeightAsPercentageOfGivenHeight(screenHeight: Int, percent: Int = 50):Int {
+    val height = (screenHeight * percent)/100
     this.layoutParams.height = height
+    return height
+}
+
+fun View.setWidthInRatioToHeight(ratioWidth: Int, ratioHeight: Int) {
+    val layoutParams = this.layoutParams
+    layoutParams.width = (layoutParams.height * ratioWidth) / ratioHeight
+    this.layoutParams = layoutParams
 }

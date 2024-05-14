@@ -28,18 +28,19 @@ import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
-import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
 import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.removeItemDecorations
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
+import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -144,6 +145,11 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
         }
+        val padding = binding.rvList.paddingBottom
+        ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
+            ViewUtil.setBottomPadding(binding.rvList, padding + insets.bottom)
+        }
+
     }
 
     private fun updatePageNo() {
@@ -200,7 +206,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ListOptionsType) {
         optionBottomSheetDialog =
-            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+            BottomSheetDialog(requireContext(), R.style.NoBackGroundBottomSheetDialog)
         val view = DialogOptionsBinding.inflate(layoutInflater)
 
         with(view) {

@@ -27,17 +27,18 @@ import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
-import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.removeItemDecorations
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
+import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -141,6 +142,11 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
             }
         }
 
+        val padding = binding.rvList.paddingBottom
+        ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
+            ViewUtil.setBottomPadding(binding.rvList, padding + insets.bottom)
+        }
+
         with(binding.toolbar) {
             tvTitle.text = getString(R.string.msg_top_anime)
             val viewIcon = when (gridOrList) {
@@ -149,6 +155,10 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
 
         with(binding) {
@@ -243,7 +253,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
 
     private fun openOptionDialog(list: List<ItemSelectionModelBase>, type: ListOptionsType) {
         optionBottomSheetDialog =
-            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+            BottomSheetDialog(requireContext(), R.style.NoBackGroundBottomSheetDialog)
         val view = DialogOptionsBinding.inflate(layoutInflater)
 
         with(view) {
@@ -351,7 +361,8 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
     }
 
     override fun onItemClick(position: Int) {
-
+        val animeId = animeList[position].malId
+        parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))
     }
 
     override fun <T> onItemClick(position: Int, type: T) {

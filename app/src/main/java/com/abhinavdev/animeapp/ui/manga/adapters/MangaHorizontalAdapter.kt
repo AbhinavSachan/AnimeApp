@@ -13,7 +13,6 @@ import com.abhinavdev.animeapp.util.extension.applyDrawable
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isVisible
 import com.abhinavdev.animeapp.util.extension.loadImage
-import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
@@ -33,7 +32,7 @@ class MangaHorizontalAdapter(
         val image = data.getImage()
         val chapters = data.getChapters()
         val volumes = data.getVolumes()
-        val mangaName = data.getName().placeholder()
+        val mangaName = data.getName()
         val mangaType = data.getType()
         val rating = data.getRating()
 

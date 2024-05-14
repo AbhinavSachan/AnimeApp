@@ -31,7 +31,8 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
-import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfScreen
+import com.abhinavdev.animeapp.util.extension.getDisplaySize
+import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfGivenHeight
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
@@ -143,7 +144,9 @@ class MangaHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setTopViewPagerHeight() {
-        binding.svTopAiring.autoImageSlider.setHeightAsPercentageOfScreen(activity,55)
+        activity?.let { getDisplaySize(it) }?.let {
+            binding.svTopAiring.autoImageSlider.setHeightAsPercentageOfGivenHeight(it.height,55)
+        }
     }
 
     private fun setAdapters() {

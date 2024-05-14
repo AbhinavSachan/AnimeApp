@@ -4,7 +4,6 @@ import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
-import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
@@ -83,6 +82,6 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
 
     fun getName(): String {
         val userPreferredType = SettingsHelper.getPreferredTitleType()
-        return item.titles?.find { userPreferredType == it.type?.appTitleType }?.title ?: item.titles?.find { AppTitleType.ROMAJI == it.type?.appTitleType }?.title ?: Const.Other.UNKNOWN_CHAR
+        return AppTitleType.getTitleFromData(item.titles,userPreferredType)
     }
 }

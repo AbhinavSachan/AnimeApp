@@ -5,28 +5,27 @@
         <item name="colorAccent">@color/black</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorSecondary">@color/white</item>
-        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:statusBarColor">@color/transparent</item>
         <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
 <!--        <item name="android:navigationBarColor">?android:colorBackground</item>-->
-<!--        <item name="android:statusBarColor">#00000000</item>-->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
         <item name="android:fontFamily">@font/custom_regular</item>
 <!--        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearanceOverlay.Demo</item>-->
-<!--        <item name="android:ambientShadowAlpha">0.08</item>-->
-<!--        <item name="android:spotShadowAlpha">0.08</item>-->
+        <item name="android:ambientShadowAlpha">0.08</item>
+        <item name="android:spotShadowAlpha">0.08</item>
 
 <!--        <item name="snackbarStyle">@style/MySnackbar</item>-->
 <!--        <item name="snackbarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Snackbar</item>-->
 <!--        <item name="snackbarTextViewStyle">@string/MySnackBarText</item>-->
 <!--        <item name="popupMenuStyle">@style/MyPopup</item>-->
-<!--        <item name="bottomSheetDialogTheme">@style/Sheet</item>-->
+        <item name="bottomSheetDialogTheme">@style/Sheet</item>
 
-<!--        <item name="android:windowContentTransitions">true</item>-->
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="WindowAnimationTransition">

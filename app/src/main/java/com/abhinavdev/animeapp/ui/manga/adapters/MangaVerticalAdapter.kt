@@ -51,7 +51,7 @@ class MangaVerticalAdapter(
         val image = data.getImage()
         val chapters = data.getChapters()
         val volumes = data.getVolumes()
-        val mangaName = data.getName().placeholder()
+        val mangaName = data.getName()
         val mangaType = data.getType()
         val rating = data.getRating()
         val status = data.getStatus()

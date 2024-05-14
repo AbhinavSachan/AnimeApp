@@ -33,7 +33,7 @@ class MalAnimeHorizontalAdapter(
         val rating = data.getRating()
         val rank = data.getRank().placeholder()
         val animeType = data.getType()
-        val animeName = data.getName().placeholder()
+        val animeName = data.getName()
 
         with(holder) {
             with(binding) {

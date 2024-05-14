@@ -10,6 +10,6 @@
         android:startColor="#80000000"
         android:type="radial" />
 
-    <corners android:topLeftRadius="@dimen/_12sdp"/>
+    <corners android:topLeftRadius="@dimen/_12sdp" />
 
 </shape>

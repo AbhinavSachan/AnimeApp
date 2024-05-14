@@ -23,7 +23,7 @@ class MangaBannerAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val item = list[position]
         val context = viewHolder.binding.root.context
-        val image = item.images?.webp?.largeImageUrl
+        val image = item.images?.jpg?.largeImageUrl
         val spotlight = "#${(position + 1)} ${context.getString(R.string.msg_spotlight)}"
         val userPreferredType = SettingsHelper.getPreferredTitleType()
         val mangaName = item.titles?.find { userPreferredType == it.type?.appTitleType }?.title

@@ -31,8 +31,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true
-        vectorDrawables.useSupportLibrary = true
 
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {

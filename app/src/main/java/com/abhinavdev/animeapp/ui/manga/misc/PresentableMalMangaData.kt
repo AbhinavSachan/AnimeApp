@@ -64,12 +64,8 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
         }"
     }
 
-    fun getName(): String? {
+    fun getName(): String {
         val userPreferredType = SettingsHelper.getPreferredTitleType()
-        return when (userPreferredType) {
-            AppTitleType.ROMAJI -> item.node?.title
-            AppTitleType.JAPANESE -> item.node?.alternativeTitles?.ja ?: item.node?.title
-            AppTitleType.ENGLISH -> item.node?.alternativeTitles?.en ?: item.node?.title
-        }
+        return AppTitleType.getTitleFromData(item.node, userPreferredType)
     }
 }

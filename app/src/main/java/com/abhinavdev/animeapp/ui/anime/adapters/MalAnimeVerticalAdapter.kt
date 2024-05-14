@@ -49,7 +49,7 @@ class MalAnimeVerticalAdapter(
         val data = PresentableMalAnimeData(position,list[position])
         val image = data.getImage()
         val episode = data.getEpisode()
-        val animeName = data.getName().placeholder()
+        val animeName = data.getName()
         val animeType = data.getType()
         val rating = data.getRating()
         val rank = data.getRank()

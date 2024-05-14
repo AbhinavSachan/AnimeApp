@@ -21,7 +21,7 @@ object LoginUtil {
     }
 
     fun Context.showLoginDialog(onCancel: (() -> Unit)? = null): BottomSheetDialog {
-        val dialog = BottomSheetDialog(this, R.style.NoBackgroundDialogTheme)
+        val dialog = BottomSheetDialog(this, R.style.NoBackGroundBottomSheetDialog)
         val view = DialogLoginBinding.inflate(LayoutInflater.from(this))
         dialog.setCancelable(false)
 

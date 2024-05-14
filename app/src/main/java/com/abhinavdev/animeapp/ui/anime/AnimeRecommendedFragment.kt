@@ -19,17 +19,18 @@ import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.ui.more.misc.PaginationViewHelper
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.removeItemDecorations
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
+import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -99,6 +100,11 @@ class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomCli
         paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
 
+        val padding = binding.rvList.paddingBottom
+        ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
+            ViewUtil.setBottomPadding(binding.rvList, padding + insets.bottom)
+        }
+
         with(binding.toolbar) {
             tvTitle.text = getString(R.string.msg_top_recommended)
             val viewIcon = when (gridOrList) {
@@ -107,6 +113,10 @@ class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomCli
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
     }
 
@@ -266,7 +276,10 @@ class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomCli
     }
 
     override fun onItemClick(position: Int) {
-
+        val animeId = animeList[position].node?.id
+        if (animeId != null) {
+            parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))
+        }
     }
 
     private fun onNextClick() {

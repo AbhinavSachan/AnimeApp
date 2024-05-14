@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.more.misc
+package com.abhinavdev.animeapp.util.ui
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -12,6 +12,7 @@ import com.abhinavdev.animeapp.databinding.CustomPaginationLayoutBinding
 import com.abhinavdev.animeapp.databinding.DialogPickPageBinding
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyColor
 import com.abhinavdev.animeapp.util.extension.disableError
 import com.abhinavdev.animeapp.util.extension.hideKeyboard
@@ -34,6 +35,10 @@ class PaginationViewHelper(
         setEditButtonVisible(false)
         setNextButtonEnabled(false)
         setPreviousButtonEnabled(false)
+        val padding = binding.clPagination.paddingBottom
+        ViewUtil.setOnApplyUiInsetsListener(binding.clPagination) { insets ->
+            ViewUtil.setBottomPadding(binding.clPagination, padding + insets.bottom)
+        }
     }
 
     fun setPageText(pageNo: Int = 0) {
@@ -63,7 +68,7 @@ class PaginationViewHelper(
     }
 
     fun createEditPageDialog(lastPage: Int, onClick:(Int)->Unit): BottomSheetDialog {
-        val pickPageDialog = BottomSheetDialog(context, R.style.NoBackgroundDialogTheme)
+        val pickPageDialog = BottomSheetDialog(context, R.style.NoBackGroundBottomSheetDialog)
         val view = DialogPickPageBinding.inflate(LayoutInflater.from(context))
 
         with(view) {

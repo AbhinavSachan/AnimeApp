@@ -31,7 +31,8 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
-import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfScreen
+import com.abhinavdev.animeapp.util.extension.getDisplaySize
+import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfGivenHeight
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.showOrInvisible
@@ -146,7 +147,9 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun setTopViewPagerHeight() {
-        binding.svTopAiring.autoImageSlider.setHeightAsPercentageOfScreen(activity,55)
+        activity?.let { getDisplaySize(it) }?.let {
+            binding.svTopAiring.autoImageSlider.setHeightAsPercentageOfGivenHeight(it.height,55)
+        }
     }
 
     private fun setAdapters() {
@@ -485,13 +488,19 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     override fun <T> onItemClick(position: Int, type: T) {
         val apiType = type as MultiContentAdapterType
         when (apiType) {
-            MultiContentAdapterType.TopAiring -> toast("Airing")
-            MultiContentAdapterType.TopPopular -> toast("Popular")
-            MultiContentAdapterType.TopFavourite -> toast("Favourite")
-            MultiContentAdapterType.TopUpcoming -> toast("Upcoming")
-            MultiContentAdapterType.TopRecommended -> toast("Recommended")
-            MultiContentAdapterType.TopRanked -> toast("Ranked")
+            MultiContentAdapterType.TopAiring -> onAnimeClick(airingList[position].malId)
+            MultiContentAdapterType.TopPopular -> onAnimeClick(popularList[position].malId)
+            MultiContentAdapterType.TopFavourite -> onAnimeClick(favouriteList[position].malId)
+            MultiContentAdapterType.TopUpcoming -> onAnimeClick(upcomingList[position].malId)
+            MultiContentAdapterType.TopRecommended -> onAnimeClick(recommendedList[position].node?.id)
+            MultiContentAdapterType.TopRanked -> onAnimeClick(rankedList[position].node?.id)
             else -> {}
+        }
+    }
+
+    private fun onAnimeClick(animeId:Int?){
+        if (animeId != null){
+            parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))
         }
     }
 

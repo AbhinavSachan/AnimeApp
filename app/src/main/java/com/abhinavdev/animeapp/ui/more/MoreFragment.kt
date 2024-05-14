@@ -222,7 +222,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
         list: List<ItemSelectionModelBase>, type: SettingsItemSelectionType
     ) {
         optionBottomSheetDialog =
-            BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+            BottomSheetDialog(requireContext(), R.style.NoBackGroundBottomSheetDialog)
         val view = DialogOptionsBinding.inflate(layoutInflater)
 
         with(view) {
@@ -257,7 +257,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
     }
 
     private fun onLogoutClick() {
-        val dialog = BottomSheetDialog(requireContext(), R.style.NoBackgroundDialogTheme)
+        val dialog = BottomSheetDialog(requireContext(), R.style.NoBackGroundBottomSheetDialog)
         val view = DialogLoginBinding.inflate(layoutInflater)
 
         with(view) {
