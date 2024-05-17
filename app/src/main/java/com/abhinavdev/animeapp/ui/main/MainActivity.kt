@@ -12,6 +12,8 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseActivity
 import com.abhinavdev.animeapp.databinding.ActivityMainBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
+import com.abhinavdev.animeapp.remote.models.enums.MediaType
+import com.abhinavdev.animeapp.ui.anime.AnimeDetailsFragment
 import com.abhinavdev.animeapp.ui.main.adapters.MainFragmentAdapter
 import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
@@ -65,8 +67,9 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
                 navigateToPosition(MainFragmentAdapter.PageType.ANIME)
             }
         }
-        checkLoginIntent(intent)
         init()
+        checkLoginIntent(intent)
+        ifFromLinkNavigateToDetailsPage(intent)
     }
 
     private fun parseIntentData(uri: Uri) {
@@ -80,12 +83,42 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         checkLoginIntent(intent)
+        ifFromLinkNavigateToDetailsPage(intent)
     }
 
     private fun checkLoginIntent(intent: Intent?) {
-        if (intent?.data?.toString()?.startsWith(Const.Links.APP_DEEP_LINK) == true) {
+        if (intent?.dataString?.startsWith(Const.Links.APP_DEEP_LINK) == true) {
             intent.data?.let { parseIntentData(it) }
         }
+    }
+
+    private fun ifFromLinkNavigateToDetailsPage(intent: Intent?) {
+        val data = findMediaIdAndTypeFromIntent(intent?.dataString)
+
+        if (data != null) {
+            val mediaId = data.first
+            val mediaType = MediaType.valueOfOrDefault(data.second)
+            val fragment = when (mediaType) {
+                MediaType.ANIME -> AnimeDetailsFragment.newInstance(mediaId)
+                MediaType.MANGA -> AnimeDetailsFragment.newInstance(mediaId)
+                else-> null
+            }
+            fragment?.let { navigateToFragment(it) }
+        }
+    }
+
+    private fun findMediaIdAndTypeFromIntent(data: String?): Pair<Int, String>? {
+        data?.let { dataString ->
+            // Updated regex to match both types of URLs
+            val regex = Regex("myanimelist\\.net/(\\w+)/(\\d+)(?:/[^/]*)?")
+            val matchResult = regex.find(dataString)
+            matchResult?.let {
+                val mediaType = it.groupValues[1]
+                val mediaId = it.groupValues[2].toIntOrNull()
+                if (mediaId != null) return mediaId to mediaType
+            }
+        }
+        return null
     }
 
     private fun init() {

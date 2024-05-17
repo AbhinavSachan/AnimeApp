@@ -4,6 +4,7 @@ import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.enums.MangaType
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
+import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
@@ -40,10 +41,20 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
         val result = StringBuilder()
         result.append(getType())
         if (chapters != null && chapters > 0) {
-            result.append(" (${chapters.toStringOrUnknown()} ${context.getString(R.string.msg_chapters)})")
+            val chapterRes = if (chapters == 1){
+                R.string.msg_chapter
+            }else{
+                R.string.msg_chapters
+            }
+            result.append(" (${chapters.toStringOrUnknown()} ${context.getString(chapterRes)})")
         }
         if (volumes != null && volumes > 0) {
-            result.append(" (${volumes.toStringOrUnknown()} ${context.getString(R.string.msg_volumes)})")
+            val volumeRes = if (volumes == 1){
+                R.string.msg_volume
+            }else{
+                R.string.msg_volumes
+            }
+            result.append(" (${volumes.toStringOrUnknown()} ${context.getString(volumeRes)})")
         }
         return result.toString()
     }
@@ -52,7 +63,7 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
         return item.status?.showName
     }
 
-    fun getDate(): String {
+    fun getDate(context: Context): String {
         val from = item.published?.prop?.from
         val to = item.published?.prop?.to
         var startDate = ""
@@ -77,7 +88,12 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
                 endDate = cal.time.formatTo().placeholder()
             }
         }
-        return "$startDate to $endDate"
+        val result = StringBuilder()
+        result.append("${startDate.placeholder()} ${context.getString(R.string.msg_to)} ${endDate.placeholder()}")
+        if (startDate.isBlank() && endDate.isBlank()){
+            result.clear().append(Const.Other.UNKNOWN_CHAR)
+        }
+        return result.toString()
     }
 
     fun getName(): String {

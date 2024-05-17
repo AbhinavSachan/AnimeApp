@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.content.pm.verify.domain.DomainVerificationManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Insets
@@ -19,6 +20,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.provider.Settings
 import android.text.Html
 import android.text.Spanned
 import android.util.Base64
@@ -530,6 +532,21 @@ fun Context.openLink(url: String) {
             )
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+fun Context.settingsOpenByDefault(){
+    val intent = Intent(Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS, Uri.parse("package:${packageName}"))
+    startActivity(intent)
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+fun Context.getDomainVerificationLinks(): Map<String, Int>? {
+    val manager = getSystemService(DomainVerificationManager::class.java)
+    val userState = manager.getDomainVerificationUserState(packageName)
+
+// Domains that have passed Android App Links verification.
+    return userState?.hostToStateMap
 }
 
 /** Finds all the browsers installed on the device */

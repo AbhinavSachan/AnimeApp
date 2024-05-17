@@ -4,6 +4,7 @@ import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
+import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
@@ -39,7 +40,12 @@ class PresentableMalAnimeData(val position: Int, val item: MalAnimeData) {
         val result = StringBuilder()
         result.append(getType().uppercase())
         if (episodes != null && episodes > 0){
-            result.append(" (${episodes.toStringOrUnknown()} ${context.getString(R.string.msg_episodes)})")
+            val episodeRes = if (episodes == 1){
+                R.string.msg_episode
+            }else{
+                R.string.msg_episodes
+            }
+            result.append(" (${episodes.toStringOrUnknown()} ${context.getString(episodeRes)})")
         }
         return result.toString()
     }
@@ -48,12 +54,27 @@ class PresentableMalAnimeData(val position: Int, val item: MalAnimeData) {
         return item.node?.status?.showName
     }
 
-    fun getDate(): String {
-        return "${getFormattedDateOrNull(item.node?.startDate).placeholder()} to ${getFormattedDateOrNull(item.node?.endDate).placeholder()}"
+    fun getDate(context: Context): String {
+        val startDate = getFormattedDateOrNull(item.node?.startDate)
+        val endDate = getFormattedDateOrNull(item.node?.endDate)
+
+        val result = StringBuilder()
+        result.append("${startDate.placeholder()} ${context.getString(R.string.msg_to)} ${endDate.placeholder()}")
+        if (startDate.isNullOrBlank() && endDate.isNullOrBlank()){
+            result.clear().append(Const.Other.UNKNOWN_CHAR)
+        }
+        return result.toString()
     }
 
     fun getSeasonWithYear(): String {
-        return "${item.node?.startSeason?.season?.showName.placeholder()} (${item.node?.startSeason?.year.placeholder()})"
+        val season = item.node?.startSeason?.season?.showName
+        val year = (item.node?.startSeason?.year ?: getFormattedDateOrNull(item.node?.startDate, outFormat = "yyyy"))?.toString()
+        val result = StringBuilder()
+        result.append(season.placeholder())
+        if (!year.isNullOrBlank()){
+            result.append(" (${year.placeholder()})")
+        }
+        return result.toString()
     }
 
     fun getName(): String {

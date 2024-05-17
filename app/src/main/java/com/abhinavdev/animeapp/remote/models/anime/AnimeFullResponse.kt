@@ -1,6 +1,7 @@
 package com.abhinavdev.animeapp.remote.models.anime
 
 
+import com.abhinavdev.animeapp.remote.models.BaseModel
 import com.abhinavdev.animeapp.remote.models.BaseModelWithMal
 import com.abhinavdev.animeapp.remote.models.BaseResponse
 import com.abhinavdev.animeapp.remote.models.common.AiredOnData
@@ -39,7 +40,7 @@ data class AnimeData(
     @SerializedName("status") val status: AnimeStatus?,
     @SerializedName("airing") val airing: Boolean?,
     @SerializedName("aired") val airedOn: AiredOnData?,
-    @SerializedName("duration") val duration: String?,
+    @SerializedName("duration") private val duration: String?,
     @SerializedName("rating") val rating: AgeRating?,
     @SerializedName("score") val score: Float?,
     @SerializedName("scored_by") val scoredBy: Int?,
@@ -63,4 +64,55 @@ data class AnimeData(
     @SerializedName("theme") val opEdTheme: OpEdThemeData?,
     @SerializedName("external") val externalLinks: ArrayList<ExternalData>?,
     @SerializedName("streaming") val streamingLinks: ArrayList<StreamingData>?,
-) : BaseModelWithMal()
+) : BaseModelWithMal() {
+    val episodeDuration get() = duration?.let { parseDuration(it) }
+    companion object {
+        fun parseDuration(input: String): EpisodeDuration? {
+            if (input.equals("Unknown", ignoreCase = true)) {
+                return null
+            }
+
+            val isPerEpisode = input.contains("per ep")
+            val cleanedInput = input.replace(" per ep", "").trim()
+            val durationParts = cleanedInput.split(",").map { it.trim() }
+
+            val formattedParts = durationParts.mapNotNull { durationPart ->
+                when {
+                    durationPart.contains("hr") && durationPart.contains("min") -> {
+                        val parts = durationPart.split("hr", "min").map { it.trim() }
+                        if (parts.size == 3 && parts[0].isNotEmpty() && parts[1].isNotEmpty()) {
+                            "${parts[0]}h ${parts[1]}m"
+                        } else null
+                    }
+
+                    durationPart.contains("hr") -> {
+                        val parts = durationPart.split("hr").map { it.trim() }
+                        if (parts.size == 2 && parts[0].isNotEmpty()) {
+                            "${parts[0]}h"
+                        } else null
+                    }
+
+                    durationPart.contains("min") -> {
+                        val parts = durationPart.split("min").map { it.trim() }
+                        if (parts.size == 2 && parts[0].isNotEmpty()) {
+                            "${parts[0]}m"
+                        } else null
+                    }
+
+                    else -> null
+                }
+            }
+
+            if (formattedParts.isEmpty()) {
+                return null
+            }
+
+            val duration = formattedParts.joinToString(", ")
+
+            return EpisodeDuration(duration, isPerEpisode)
+        }
+    }
+}
+
+data class EpisodeDuration(val duration: String, val isPerEpisode: Boolean) : BaseModel()
+

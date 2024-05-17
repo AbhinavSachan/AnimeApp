@@ -73,8 +73,11 @@
     <string name="msg_choose_title_language">Choose Title Language</string>
     <string name="msg_logout_description">Only from within the app, you will still be logged into MAL.</string>
     <string name="msg_rating">Rating</string>
+    <string name="msg_episode">Episode</string>
     <string name="msg_episodes">Episodes</string>
+    <string name="msg_chapter">Chapter</string>
     <string name="msg_chapters">Chapters</string>
+    <string name="msg_volume">Volume</string>
     <string name="msg_volumes">Volumes</string>
     <string name="msg_status">Status</string>
     <string name="msg_sort_by">Sort By</string>
@@ -94,4 +97,6 @@
     <string name="msg_only_single_page">Only Single Page Available</string>
     <string name="msg_invalid_range">Please enter a number in given range.</string>
     <string name="msg_filter_by">Filter By</string>
+    <string name="msg_to">To</string>
+    <string name="msg_per_ep" translatable="false">/Ep</string>
 </resources>

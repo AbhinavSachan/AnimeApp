@@ -59,34 +59,71 @@
                         android:orientation="horizontal"
                         app:layout_constraintGuide_end="@dimen/safe_zone_main_page" />
 
+                    <!--setting margin and size in code-->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_poster_background"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_250sdp"
+                        android:layout_height="@dimen/_370sdp"
                         android:scaleType="centerCrop"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/bg_poster_foreground"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_poster_background"
+                        app:layout_constraintEnd_toEndOf="@id/iv_poster_background"
+                        app:layout_constraintStart_toStartOf="@id/iv_poster_background"
+                        app:layout_constraintTop_toTopOf="@id/iv_poster_background" />
+
+                    <!--setting margin and size in code-->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_poster"
                         android:layout_width="@dimen/_90sdp"
                         android:layout_height="@dimen/_135sdp"
+                        android:layout_marginTop="@dimen/tool_bar_size"
                         android:scaleType="centerCrop"
-                        app:layout_constraintTop_toTopOf="@id/iv_poster_background"
-                        app:layout_constraintBottom_toBottomOf="@id/iv_poster_background"
-                        app:layout_constraintStart_toStartOf="@id/iv_poster_background"
                         app:layout_constraintEnd_toEndOf="@id/iv_poster_background"
+                        app:layout_constraintStart_toStartOf="@id/iv_poster_background"
+                        app:layout_constraintTop_toTopOf="@id/iv_poster_background"
                         app:shapeAppearanceOverlay="@style/CircleImageViewRadius16" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_anime_name"
-                        style="@style/TextStyleFont600"
+                        style="@style/TextStyleFont700"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_16"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/onPrimary"
+                        android:textSize="@dimen/text_size_18"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
-                        app:layout_constraintTop_toBottomOf="@id/iv_poster_background"
+                        app:layout_constraintTop_toBottomOf="@id/iv_poster"
                         tools:text="Demon Slayer" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/iv_rating"
+                        style="@style/CustomLabelImageView"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:src="@drawable/ic_filled_star"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_metadata"
+                        app:layout_constraintEnd_toStartOf="@id/tv_metadata"
+                        app:layout_constraintTop_toTopOf="@id/tv_metadata"
+                        app:tint="@color/onPrimary"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_metadata"
+                        style="@style/TextStyleFont500"
+                        android:textSize="@dimen/text_size_14"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/tv_anime_name"
+                        tools:text="9.7 • 24 Episodes • 2h 25m/Ep • Summer 2021" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

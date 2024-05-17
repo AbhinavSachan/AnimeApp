@@ -6,16 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.marginTop
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentAnimeDetailsBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
+import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
@@ -39,7 +42,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private var animeId: Int = -1
 
-    private var malUrl:String? = null
+    private var malUrl: String? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -92,6 +95,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
                 ViewUtil.setTopPadding(root, insets.top)
             }
         }
+        val posterMargin = binding.ivPoster.marginTop
+        ViewUtil.setOnApplyUiInsetsListener(binding.ivPoster) { insets ->
+            ViewUtil.setTopMargin(binding.ivPoster, posterMargin + insets.top)
+        }
         setTopViewPagerHeight()
         with(binding.emptyLayout) {
             tvEmptyTitle.text = getString(R.string.error_something_went_wrong)
@@ -102,9 +109,9 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
 
     private fun setTopViewPagerHeight() {
         activity?.let { getDisplaySize(it) }?.let {
-            val posterHeight = binding.ivPosterBackground.setHeightAsPercentageOfGivenHeight(it.height,55)
-            binding.ivPoster.setHeightAsPercentageOfGivenHeight(posterHeight,60)
-            binding.ivPoster.setWidthInRatioToHeight(2,3)
+            binding.ivPosterBackground.setHeightAsPercentageOfGivenHeight(it.height, 70)
+            binding.ivPoster.setHeightAsPercentageOfGivenHeight(it.height, 40)
+            binding.ivPoster.setWidthInRatioToHeight(2, 3)
         }
     }
 
@@ -158,10 +165,17 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setData(data: AnimeFullResponse) {
-        data.data?.apply {
+        data.data?.let { anime ->
+            val metaData = generateMetadataString(anime)
+            val shareUrl = anime.url
+            val image = anime.images?.jpg?.largeImageUrl
+            val titles = anime.titles
+            val userPreferredType = SettingsHelper.getPreferredTitleType()
+            val animeName = AppTitleType.getTitleFromData(titles, userPreferredType)
+
             with(binding) {
-                malUrl = url
-                val target = object :CustomTarget<Drawable>(){
+                malUrl = shareUrl
+                val target = object : CustomTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable,
                         transition: Transition<in Drawable>?
@@ -175,12 +189,55 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
                         ivPoster.setImageDrawable(placeholder)
                     }
                 }
-                context?.let { target.loadImage(it,images?.jpg?.largeImageUrl) }
-                val userPreferredType = SettingsHelper.getPreferredTitleType()
-                val animeName = AppTitleType.getTitleFromData(titles,userPreferredType)
+                context?.let { target.loadImage(it,image) }
                 tvAnimeName.text = animeName
+                //if score was added then show start icon
+                if (metaData.first) ivRating.show()
+                tvMetadata.text = metaData.second
             }
         }
+    }
+
+    private fun generateMetadataString(anime: AnimeData): Pair<Boolean, String> {
+        val result = StringBuilder()
+        val duration = anime.episodeDuration
+        val episodes = anime.episodes
+        val year = anime.year ?: anime.airedOn?.prop?.from?.year
+        val season = anime.season?.showName
+        val score = anime.score
+        var isScoreAdded = false
+        val bigDot = " ${Const.Other.BIG_DOT_CHAR} "
+
+        score?.let {
+            isScoreAdded = true
+            result.append(it.toString())
+        }
+        episodes.takeIf { it != null && it > 0 }?.let {
+            if (result.isNotEmpty()) result.append(bigDot)
+            val episodeRes = if (it == 1) {
+                R.string.msg_episode
+            } else {
+                R.string.msg_episodes
+            }
+            result.append(" (${it.toStringOrUnknown()} ${getString(episodeRes)})")
+        }
+        duration?.let {
+            if (result.isNotEmpty()) result.append(bigDot)
+            result.append(it.duration)
+            if (it.isPerEpisode) result.append(getString(R.string.msg_per_ep))
+        }
+        if (season != null || year != null){
+            if (result.isNotEmpty()) result.append(bigDot)
+            season?.let {
+                result.append(it)
+                result.append(" ")
+            }
+            year?.let {
+                result.append(it)
+            }
+        }
+
+        return isScoreAdded to result.toString()
     }
 
     private fun isLoaderVisible(b: Boolean) {

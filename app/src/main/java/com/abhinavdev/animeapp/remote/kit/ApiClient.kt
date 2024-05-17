@@ -21,6 +21,8 @@ object ApiClient {
     private var jikanApiService: JikanApiService? = null
     private var oAuthApiService: OAuthApiService? = null
     private var malApiService: MalApiService? = null
+    private const val MAX_RETRIES = 3
+    private const val RETRY_DELAY_MS = 1000L
 
     var addLoggingInterceptor = false
 
@@ -91,15 +93,20 @@ object ApiClient {
     class RateLimitInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             var response = chain.proceed(chain.request())
+            var tryCount = 0
 
-            //See: https://jikan.docs.apiary.io/#introduction/http-response
-            if (!response.isSuccessful && response.code == 429) {
+//            //See: https://jikan.docs.apiary.io/#introduction/http-response
+            while (!response.isSuccessful && response.code == 429 && tryCount < MAX_RETRIES) {
+                tryCount++
+
+                // Exponential backoff
+                val delay = RETRY_DELAY_MS * tryCount
+                log { "You are being rate limited or the API is being rate limited by MyAnimeList, retrying in $delay milliseconds..." }
                 try {
-                    log { "You are being rate limited or Api is being rate limited by MyAnimeList, retrying in 1 seconds..." }
-                    Thread.sleep(1000L)
+                    Thread.sleep(delay)
                 } catch (_: InterruptedException) {
                 } finally {
-                    response.close() // Close the previous response before making a new request
+                    response.close()
                 }
 
                 response = chain.proceed(chain.request())

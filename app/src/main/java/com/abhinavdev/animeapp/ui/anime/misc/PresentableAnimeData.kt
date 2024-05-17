@@ -4,6 +4,7 @@ import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
+import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
@@ -39,7 +40,12 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
         val result = StringBuilder()
         result.append(getType().uppercase())
         if (episodes != null && episodes > 0){
-            result.append(" (${episodes.toStringOrUnknown()} ${context.getString(R.string.msg_episodes)})")
+            val episodeRes = if (episodes == 1){
+                R.string.msg_episode
+            }else{
+                R.string.msg_episodes
+            }
+            result.append(" (${episodes.toStringOrUnknown()} ${context.getString(episodeRes)})")
         }
         return result.toString()
     }
@@ -48,7 +54,7 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
         return item.status?.showName
     }
 
-    fun getDate(): String {
+    fun getDate(context: Context): String {
         val from = item.airedOn?.prop?.from
         val to = item.airedOn?.prop?.to
         var startDate = ""
@@ -73,11 +79,23 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
                 endDate = cal.time.formatTo().placeholder()
             }
         }
-        return "$startDate to $endDate"
+        val result = StringBuilder()
+        result.append("${startDate.placeholder()} ${context.getString(R.string.msg_to)} ${endDate.placeholder()}")
+        if (startDate.isBlank() && endDate.isBlank()){
+            result.clear().append(Const.Other.UNKNOWN_CHAR)
+        }
+        return result.toString()
     }
 
     fun getSeasonWithYear(): String {
-        return "${item.season?.showName.placeholder()} (${item.year?.toString().placeholder()})"
+        val season = item.season?.showName
+        val year = (item.year  ?: item.airedOn?.prop?.from?.year)?.toString()
+        val result = StringBuilder()
+        result.append(season.placeholder())
+        if (!year.isNullOrBlank()){
+            result.append(" (${year.placeholder()})")
+        }
+        return result.toString()
     }
 
     fun getName(): String {

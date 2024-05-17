@@ -26,6 +26,14 @@
     <color name="primary">#FFFFFF</color>
     <color name="onPrimary">#181f1f</color>
     <color name="secondary">#F4F4F4</color>
+    <color name="secondaryA10">#1AF4F4F4</color>
+    <color name="secondaryA20">#33F4F4F4</color>
+    <color name="secondaryA30">#4DF4F4F4</color>
+    <color name="secondaryA40">#66F4F4F4</color>
+    <color name="secondaryA50">#80F4F4F4</color>
+    <color name="secondaryA60">#99F4F4F4</color>
+    <color name="secondaryA70">#B3F4F4F4</color>
+    <color name="secondaryA80">#CCF4F4F4</color>
     <color name="onSecondary">#181f1f</color>
     <color name="onAccent">#F8F8F8</color>
     <color name="primaryA30">#4DFFFFFF</color>

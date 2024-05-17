@@ -55,7 +55,7 @@ class MangaVerticalAdapter(
         val mangaType = data.getType()
         val rating = data.getRating()
         val status = data.getStatus()
-        val airedOn = data.getDate()
+        val airedOn = data.getDate(context)
         val typeWithChapters = data.getTypeWithChapter(context)
 
         when (holder) {

@@ -4,6 +4,7 @@ import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
+import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
@@ -44,10 +45,20 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
         val result = StringBuilder()
         result.append(getType())
         if (chapters != null && chapters > 0) {
-            result.append(" (${chapters.toStringOrUnknown()} ${context.getString(R.string.msg_chapters)})")
+            val chapterRes = if (chapters == 1){
+                R.string.msg_chapter
+            }else{
+                R.string.msg_chapters
+            }
+            result.append(" (${chapters.toStringOrUnknown()} ${context.getString(chapterRes)})")
         }
         if (volumes != null && volumes > 0) {
-            result.append(" (${volumes.toStringOrUnknown()} ${context.getString(R.string.msg_volumes)})")
+            val volumeRes = if (volumes == 1){
+                R.string.msg_volume
+            }else{
+                R.string.msg_volumes
+            }
+            result.append(" (${volumes.toStringOrUnknown()} ${context.getString(volumeRes)})")
         }
         return result.toString()
     }
@@ -56,12 +67,16 @@ class PresentableMalMangaData(val position: Int, val item: MalMangaData) {
         return item.node?.status?.showName
     }
 
-    fun getDate(): String {
-        return "${getFormattedDateOrNull(item.node?.startDate).placeholder()} to ${
-            getFormattedDateOrNull(
-                item.node?.endDate
-            ).placeholder()
-        }"
+    fun getDate(context: Context): String {
+        val startDate = getFormattedDateOrNull(item.node?.startDate)
+        val endDate = getFormattedDateOrNull(item.node?.endDate)
+
+        val result = StringBuilder()
+        result.append("${startDate.placeholder()} ${context.getString(R.string.msg_to)} ${endDate.placeholder()}")
+        if (startDate.isNullOrBlank() && endDate.isNullOrBlank()) {
+            result.clear().append(Const.Other.UNKNOWN_CHAR)
+        }
+        return result.toString()
     }
 
     fun getName(): String {

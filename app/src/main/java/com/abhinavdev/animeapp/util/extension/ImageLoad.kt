@@ -9,10 +9,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.Target
 
-fun Target<Drawable>.loadBlurImage(context: Context, image: String?) {
-    Glide.with(context).load(image).override(3, 3).into(this)
+fun CustomTarget<Drawable>.loadBlurImage(context: Context, image: String?) {
+    Glide.with(context).load(image).override(5, 5).into(this)
 }
 
 fun AppCompatImageView.loadBlurImage(image: String?) {

@@ -58,7 +58,7 @@ class MalMangaVerticalAdapter(
         val rating = data.getRating()
         val rank = data.getRank()
         val status = data.getStatus()
-        val airedOn = data.getDate()
+        val airedOn = data.getDate(context)
         val typeWithChapters = data.getTypeWithChapter(context)
 
 

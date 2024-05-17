@@ -51,7 +51,7 @@ class AnimeVerticalAdapter(
         val rating = data.getRating()
         val rank = data.getRank()
         val status = data.getStatus()
-        val airedOn = data.getDate()
+        val airedOn = data.getDate(context)
         val season = data.getSeasonWithYear()
         val typeWithEpisodes = data.getTypeWithEpisode(context)
 
