@@ -46,6 +46,6 @@ class MangaBannerAdapter(
         return list.size
     }
 
-    inner class ViewHolder(val binding: RowBannerAnimeBinding) :
+    class ViewHolder(val binding: RowBannerAnimeBinding) :
         SliderViewAdapter.ViewHolder(binding.root)
 }

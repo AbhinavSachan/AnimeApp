@@ -114,7 +114,7 @@ class MalAnimeVerticalAdapter(
         return list.size
     }
 
-    inner class GridViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root){
+    class GridViewHolder(val binding: RowGridListItemBinding) : RecyclerView.ViewHolder(binding.root){
 
         init {
             val savedItemHeight = PrefUtils.getInt(Const.PrefKeys.GRID_ITEM_HEIGHT_KEY)
@@ -133,6 +133,6 @@ class MalAnimeVerticalAdapter(
         }
     }
 
-    inner class ListViewHolder(val binding: RowVerticalListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class ListViewHolder(val binding: RowVerticalListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 }

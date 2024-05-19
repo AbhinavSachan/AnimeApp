@@ -144,6 +144,10 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
         val padding = binding.rvList.paddingBottom
         ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->

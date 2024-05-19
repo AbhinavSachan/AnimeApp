@@ -1,4 +1,4 @@
-import java.util.Properties
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
@@ -41,8 +41,7 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
         }
@@ -51,8 +50,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
             signingConfig = signingConfigs.getByName("release")
@@ -127,6 +125,7 @@ dependencies {
 
     //Glide image library
     implementation(libs.glide)
+    implementation(libs.activity)
     ksp(libs.glide.compiler)
 
     //calendar de-sugaring library
@@ -186,9 +185,7 @@ dependencies {
     implementation(libs.shimmer)
     //some fancy switch
     implementation(libs.switcher)
-    // epoxy recycler view
-    implementation (libs.epoxy)
-    // Add the annotation processor if you are using Epoxy's annotations (recommended)
-    ksp (libs.epoxy.processor)
+    implementation(libs.zoomage)
+    implementation(libs.expandabletextview)
 }
 //https://docs.consumet.org/#tag/anilist

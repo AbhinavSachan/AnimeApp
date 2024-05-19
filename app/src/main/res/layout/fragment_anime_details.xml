@@ -18,6 +18,7 @@
         android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             style="@style/BaseNestedScrollViewAttributes"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -117,13 +118,56 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_metadata"
                         style="@style/TextStyleFont500"
-                        android:textSize="@dimen/text_size_14"
                         android:layout_marginTop="@dimen/_8sdp"
+                        android:textSize="@dimen/text_size_14"
                         app:layout_constrainedWidth="true"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
                         app:layout_constraintTop_toBottomOf="@id/tv_anime_name"
                         tools:text="9.7 • 24 Episodes • 2h 25m/Ep • Summer 2021" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_genre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_23sdp"
+                        android:clipToPadding="false"
+                        android:paddingStart="@dimen/safe_zone_main_page"
+                        android:paddingTop="@dimen/_6sdp"
+                        android:paddingEnd="@dimen/safe_zone_main_page"
+                        android:paddingBottom="@dimen/_6sdp"
+                        app:layout_constraintTop_toBottomOf="@id/tv_metadata"
+                        tools:itemCount="4"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/row_genre"
+                        tools:orientation="horizontal" />
+
+                    <at.blogc.android.views.ExpandableTextView
+                        android:id="@+id/tv_description"
+                        style="@style/TextStyleFont400"
+                        android:layout_width="0dp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:ellipsize="end"
+                        android:gravity="center_horizontal"
+                        android:maxLines="5"
+                        android:textSize="@dimen/text_size_13"
+                        app:animation_duration="300"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/rv_genre"
+                        tools:text="@tools:sample/lorem/random" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_toggle_description"
+                        style="@style/CustomClickableText"
+                        android:paddingHorizontal="@dimen/_8sdp"
+                        android:paddingVertical="@dimen/_4sdp"
+                        android:text="@string/action_read_more"
+                        android:textSize="@dimen/text_size_12"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@id/tv_description"
+                        app:layout_constraintTop_toBottomOf="@id/tv_description"
+                        tools:visibility="visible" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

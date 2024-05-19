@@ -4,8 +4,6 @@ buildscript {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven("https://maven.google.com")
-        maven("https://jitpack.io")
     }
     dependencies {
         classpath(libs.gradle)

@@ -99,4 +99,8 @@
     <string name="msg_filter_by">Filter By</string>
     <string name="msg_to">To</string>
     <string name="msg_per_ep" translatable="false">/Ep</string>
+    <string name="action_read_more">Read more</string>
+    <string name="action_read_less">Read less</string>
+    <string name="msg_background">Background :</string>
+    <string name="msg_synopsis">Synopsis :</string>
 </resources>

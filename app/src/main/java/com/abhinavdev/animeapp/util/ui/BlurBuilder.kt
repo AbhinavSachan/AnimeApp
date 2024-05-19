@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.util
+package com.abhinavdev.animeapp.util.ui
 
 import android.content.Context
 import android.graphics.Bitmap

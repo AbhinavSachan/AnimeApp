@@ -80,20 +80,20 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         checkLoginIntent(intent)
         ifFromLinkNavigateToDetailsPage(intent)
     }
 
-    private fun checkLoginIntent(intent: Intent?) {
-        if (intent?.dataString?.startsWith(Const.Links.APP_DEEP_LINK) == true) {
+    private fun checkLoginIntent(intent: Intent) {
+        if (intent.dataString?.startsWith(Const.Links.APP_DEEP_LINK) == true) {
             intent.data?.let { parseIntentData(it) }
         }
     }
 
-    private fun ifFromLinkNavigateToDetailsPage(intent: Intent?) {
-        val data = findMediaIdAndTypeFromIntent(intent?.dataString)
+    private fun ifFromLinkNavigateToDetailsPage(intent: Intent) {
+        val data = findMediaIdAndTypeFromIntent(intent.dataString)
 
         if (data != null) {
             val mediaId = data.first
@@ -101,7 +101,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
             val fragment = when (mediaType) {
                 MediaType.ANIME -> AnimeDetailsFragment.newInstance(mediaId)
                 MediaType.MANGA -> AnimeDetailsFragment.newInstance(mediaId)
-                else-> null
+                else -> null
             }
             fragment?.let { navigateToFragment(it) }
         }

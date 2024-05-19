@@ -40,7 +40,7 @@ data class AnimeData(
     @SerializedName("status") val status: AnimeStatus?,
     @SerializedName("airing") val airing: Boolean?,
     @SerializedName("aired") val airedOn: AiredOnData?,
-    @SerializedName("duration") private val duration: String?,
+    @SerializedName("duration") private val ogDuration: String?,
     @SerializedName("rating") val rating: AgeRating?,
     @SerializedName("score") val score: Float?,
     @SerializedName("scored_by") val scoredBy: Int?,
@@ -48,7 +48,7 @@ data class AnimeData(
     @SerializedName("popularity") val popularity: Int?,
     @SerializedName("members") val members: Int?,
     @SerializedName("favorites") val favorites: Int?,
-    @SerializedName("synopsis") val synopsis: String?,
+    @SerializedName("synopsis") private val ogSynopsis: String?,
     @SerializedName("background") val background: String?,
     @SerializedName("season") val season: Season?,
     @SerializedName("year") val year: Int?,
@@ -65,7 +65,8 @@ data class AnimeData(
     @SerializedName("external") val externalLinks: ArrayList<ExternalData>?,
     @SerializedName("streaming") val streamingLinks: ArrayList<StreamingData>?,
 ) : BaseModelWithMal() {
-    val episodeDuration get() = duration?.let { parseDuration(it) }
+    val duration get() = ogDuration?.let { parseDuration(it) }
+    val synopsis get() = ogSynopsis?.let { removeWrittenByMalRewrite(it) }
     companion object {
         fun parseDuration(input: String): EpisodeDuration? {
             if (input.equals("Unknown", ignoreCase = true)) {
@@ -110,6 +111,10 @@ data class AnimeData(
             val duration = formattedParts.joinToString(", ")
 
             return EpisodeDuration(duration, isPerEpisode)
+        }
+
+        fun removeWrittenByMalRewrite(text: String): String {
+            return text.replace("\n\n[Written by MAL Rewrite]", "",true)
         }
     }
 }

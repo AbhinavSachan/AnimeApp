@@ -20,7 +20,7 @@ import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.SettingsItemSelectionType
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.LoginUtil.showLoginDialog
+import com.abhinavdev.animeapp.util.ui.LoginUtil.showLoginDialog
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.AppLanguage
 import com.abhinavdev.animeapp.util.appsettings.AppTheme

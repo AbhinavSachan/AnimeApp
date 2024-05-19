@@ -1,12 +1,20 @@
 package com.abhinavdev.animeapp.ui.anime
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.core.view.marginTop
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentAnimeDetailsBinding
@@ -14,12 +22,16 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
+import com.abhinavdev.animeapp.ui.common.adapters.GenreAdapter
+import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
+import com.abhinavdev.animeapp.ui.common.ui.FullScreenImageActivity
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
 import com.abhinavdev.animeapp.util.extension.ViewUtil
+import com.abhinavdev.animeapp.util.extension.applyFont
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.hide
@@ -28,11 +40,13 @@ import com.abhinavdev.animeapp.util.extension.openShareSheet
 import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfGivenHeight
 import com.abhinavdev.animeapp.util.extension.setWidthInRatioToHeight
 import com.abhinavdev.animeapp.util.extension.show
+import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 
-class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
+
+class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.Callback {
     private var _binding: FragmentAnimeDetailsBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -41,8 +55,12 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
     private var isFromSwipe = false
 
     private var animeId: Int = -1
+    private var animeData: AnimeData? = null
 
     private var malUrl: String? = null
+
+    private val genreList: ArrayList<LocalGenreModel> = arrayListOf()
+    private var genreAdapter: GenreAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -99,12 +117,17 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
         ViewUtil.setOnApplyUiInsetsListener(binding.ivPoster) { insets ->
             ViewUtil.setTopMargin(binding.ivPoster, posterMargin + insets.top)
         }
+        ViewUtil.setOnApplyUiInsetsListener(binding.scrollView) { insets ->
+            ViewUtil.setBottomPadding(binding.scrollView, insets.bottom)
+        }
+
         setTopViewPagerHeight()
         with(binding.emptyLayout) {
             tvEmptyTitle.text = getString(R.string.error_something_went_wrong)
             tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
             binding.emptyLayout.ivEmptyIcon.setImageResource(R.drawable.bg_error)
         }
+        binding.tvDescription.setInterpolator(OvershootInterpolator())
     }
 
     private fun setTopViewPagerHeight() {
@@ -116,12 +139,19 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setAdapters() {
-
+        binding.rvGenre.setHasFixedSize(true)
+        genreAdapter = GenreAdapter(genreList, this)
+        genreAdapter?.setHasStableIds(true)
+        binding.rvGenre.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvGenre.adapter = genreAdapter
     }
 
     private fun setListeners() {
         binding.toolbar.ivBack.setOnClickListener(this)
         binding.toolbar.ivExtra.setOnClickListener(this)
+        binding.ivPoster.setOnClickListener(this)
+        binding.tvToggleDescription.setOnClickListener(this)
         binding.swipeRefresh.setOnRefreshListener {
             getData(true)
         }
@@ -131,7 +161,24 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
         when (v) {
             binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> onShareClick()
+            binding.ivPoster -> onImageClick()
+            binding.tvToggleDescription -> onToggleDescriptionClick()
         }
+    }
+
+    private fun onToggleDescriptionClick() {
+        binding.tvDescription.toggle()
+        val toggleText =
+            if (binding.tvDescription.isExpanded) getString(R.string.action_read_more) else getString(
+                R.string.action_read_less
+            )
+        binding.tvToggleDescription.text = toggleText
+    }
+
+    private fun onImageClick() {
+        FullScreenImageActivity.startNewActivity(
+            parentActivity, animeData?.images?.jpg?.largeImageUrl, binding.ivPoster
+        )
     }
 
     private fun onShareClick() {
@@ -164,21 +211,27 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setData(data: AnimeFullResponse) {
         data.data?.let { anime ->
+            animeData = anime
             val metaData = generateMetadataString(anime)
             val shareUrl = anime.url
             val image = anime.images?.jpg?.largeImageUrl
             val titles = anime.titles
             val userPreferredType = SettingsHelper.getPreferredTitleType()
             val animeName = AppTitleType.getTitleFromData(titles, userPreferredType)
+            val description = generateDescription(anime.synopsis, anime.background)
+
+            genreList.clear()
+            genreList.addAll(getGenreLocalList(anime))
+            genreAdapter?.notifyDataSetChanged()
 
             with(binding) {
                 malUrl = shareUrl
                 val target = object : CustomTarget<Drawable>() {
                     override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable>?
+                        resource: Drawable, transition: Transition<in Drawable>?
                     ) {
                         ivPosterBackground.setImageDrawable(resource)
                         ivPoster.setImageDrawable(resource)
@@ -189,18 +242,38 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
                         ivPoster.setImageDrawable(placeholder)
                     }
                 }
-                context?.let { target.loadImage(it,image) }
+                context?.let { target.loadImage(it, image) }
                 tvAnimeName.text = animeName
                 //if score was added then show start icon
                 if (metaData.first) ivRating.show()
+                tvMetadata.showOrHide(metaData.second.isNotBlank())
                 tvMetadata.text = metaData.second
+                tvDescription.text = description
+                if (tvDescription.lineCount >= tvDescription.maxLines) tvToggleDescription.show()
             }
         }
     }
 
+    private fun getGenreLocalList(anime: AnimeData): List<LocalGenreModel> {
+        val list: ArrayList<LocalGenreModel> = arrayListOf()
+        anime.genres?.forEach {
+            list.add(LocalGenreModel(it.malId, it.name))
+        }
+        anime.explicitGenres?.forEach {
+            list.add(LocalGenreModel(it.malId, it.name))
+        }
+        anime.demographics?.forEach {
+            list.add(LocalGenreModel(it.malId, it.name))
+        }
+        anime.themes?.forEach {
+            list.add(LocalGenreModel(it.malId, it.name))
+        }
+        return list
+    }
+
     private fun generateMetadataString(anime: AnimeData): Pair<Boolean, String> {
         val result = StringBuilder()
-        val duration = anime.episodeDuration
+        val duration = anime.duration
         val episodes = anime.episodes
         val year = anime.year ?: anime.airedOn?.prop?.from?.year
         val season = anime.season?.showName
@@ -219,14 +292,14 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
             } else {
                 R.string.msg_episodes
             }
-            result.append(" (${it.toStringOrUnknown()} ${getString(episodeRes)})")
+            result.append(" ${it.toStringOrUnknown()} ${getString(episodeRes)}")
         }
         duration?.let {
             if (result.isNotEmpty()) result.append(bigDot)
             result.append(it.duration)
             if (it.isPerEpisode) result.append(getString(R.string.msg_per_ep))
         }
-        if (season != null || year != null){
+        if (season != null || year != null) {
             if (result.isNotEmpty()) result.append(bigDot)
             season?.let {
                 result.append(it)
@@ -238,6 +311,50 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
         }
 
         return isScoreAdded to result.toString()
+    }
+
+    private fun generateDescription(
+        synopsis: String?, backgroundContent: String?
+    ): SpannableStringBuilder {
+        // Load custom typeface
+        val customTypeface = applyFont(R.font.custom_bold)
+
+        val bgHeading = getString(R.string.msg_background)
+        val spanBgHeading = SpannableString(bgHeading)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && customTypeface != null) {
+            spanBgHeading.setSpan(
+                TypefaceSpan(customTypeface),
+                0,
+                bgHeading.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        val desHeading = getString(R.string.msg_synopsis)
+        val spanDesHeading = SpannableString(desHeading)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && customTypeface != null) {
+            spanDesHeading.setSpan(
+                TypefaceSpan(customTypeface),
+                0,
+                desHeading.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        val result = SpannableStringBuilder()
+        synopsis?.takeIf { it.isNotBlank() }?.let {
+            result.append(spanDesHeading)
+            result.append(" ")
+            result.append(SpannableString(it))
+        }
+        backgroundContent?.takeIf { it.isNotBlank() }?.let {
+            if (result.isNotEmpty()) result.append("\n\n")
+            result.append(spanBgHeading)
+            result.append(" ")
+            result.append(SpannableString(it))
+        }
+
+        return result
     }
 
     private fun isLoaderVisible(b: Boolean) {
@@ -261,6 +378,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener {
     private fun getData(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
         viewModel.getFullAnimeById(animeId)
+    }
+
+    override fun onGenreClick(position: Int) {
+
     }
 
     companion object {

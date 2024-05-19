@@ -99,7 +99,7 @@ class MangaHorizontalAdapter(
         return list.size
     }
 
-    inner class ViewHolder(val binding: RowHorizontalListItemBinding) :
+    class ViewHolder(val binding: RowHorizontalListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
 }

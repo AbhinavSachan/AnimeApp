@@ -16,6 +16,7 @@ import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeStatus
 import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeData
+import com.abhinavdev.animeapp.ui.anime.AnimeDetailsFragment
 import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
@@ -143,6 +144,10 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
+
+            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
+                ViewUtil.setTopPadding(root, insets.top)
+            }
         }
         val padding = binding.rvList.paddingBottom
         ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
@@ -333,7 +338,10 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     override fun onItemClick(position: Int) {
-
+        val animeId = animeList[position].node?.id
+        if (animeId != null) {
+            parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))
+        }
     }
 
     override fun <T> onItemClick(position: Int, type: T) {

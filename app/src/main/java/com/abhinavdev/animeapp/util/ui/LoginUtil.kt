@@ -1,10 +1,11 @@
-package com.abhinavdev.animeapp.util
+package com.abhinavdev.animeapp.util.ui
 
 import android.content.Context
 import android.view.LayoutInflater
 import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
+import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.extension.openCustomTab
 import com.abhinavdev.animeapp.util.extension.openLink
 import com.abhinavdev.animeapp.util.extension.toast

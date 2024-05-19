@@ -331,8 +331,8 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
 
                                 else -> {}
                             }
-                            key.stopShimmerLoading()
                         }
+                        key.stopShimmerLoading()
                     }
 
                     is Resource.Error -> {

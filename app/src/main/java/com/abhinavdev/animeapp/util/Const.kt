@@ -64,6 +64,8 @@ object Const {
     interface BundleExtras {
         companion object {
             const val EXTRA_DATA = "extra_data"
+            const val EXTRA_STRING = "extra_string"
+            const val EXTRA_INT = "extra_int"
             const val EXTRA_ID = "extra_id"
             const val EXTRA_TYPE = "extra_type"
             const val EXTRA_FILTER = "extra_filter"

@@ -4,7 +4,7 @@ import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.remote.kit.ApiClient
 import com.abhinavdev.animeapp.remote.kit.repository.OAuthRepository
 import com.abhinavdev.animeapp.remote.models.malmodels.AccessToken
-import com.abhinavdev.animeapp.util.LoginUtil
+import com.abhinavdev.animeapp.util.ui.LoginUtil
 import retrofit2.Response
 
 class OAuthRepositoryImpl : OAuthRepository {

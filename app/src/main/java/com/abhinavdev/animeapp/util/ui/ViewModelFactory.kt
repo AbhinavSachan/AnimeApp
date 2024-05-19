@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.util
+package com.abhinavdev.animeapp.util.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
