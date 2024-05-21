@@ -23,6 +23,6 @@ enum class UserGender(
     NON_BINARY("nonbinary","Non-Binary");
 
     companion object {
-        val list = entries.map { it.showName }
+        val list = entries
     }
 }

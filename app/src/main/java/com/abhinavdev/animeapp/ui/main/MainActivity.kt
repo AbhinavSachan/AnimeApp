@@ -53,23 +53,25 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         setContentView(binding.root)
 
         viewModel = createViewModel(MainViewModel::class.java)
-        setOnBackPressedListener {
-            testLog { "Back Pressed" }
-            val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-            if (fragment != null) {
-                //first if there is any fragment open close it
-                supportFragmentManager.popBackStackImmediate()
-            } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
-                //if home page just finish activity
-                finish()
-            } else {
-                //if its not home page then back pressing will bring us on home page
-                navigateToPosition(MainFragmentAdapter.PageType.ANIME)
-            }
-        }
+        setOnBackPressedListener(::handleOnBackPressed)
         init()
         checkLoginIntent(intent)
         ifFromLinkNavigateToDetailsPage(intent)
+    }
+
+    private fun handleOnBackPressed(){
+        testLog { "Activity Back" }
+        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        if (fragment != null) {
+            //first if there is any fragment open close it
+            supportFragmentManager.popBackStackImmediate()
+        } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
+            //if home page just finish activity
+            finish()
+        } else {
+            //if its not home page then back pressing will bring us on home page
+            navigateToPosition(MainFragmentAdapter.PageType.ANIME)
+        }
     }
 
     private fun parseIntentData(uri: Uri) {
@@ -205,21 +207,6 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
 //        setStatusBarIconsDark(false)
     }
 
-//    @SuppressLint("MissingSuperCall")
-//    override fun onBackPressed() {
-//        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-//        if (fragment != null) {
-//            //first if there is any fragment open close it
-//            supportFragmentManager.popBackStackImmediate()
-//        } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
-//            //if home page just finish activity
-//            finish()
-//        } else {
-//            //if its not home page then back pressing will bring us on home page
-//            navigateToPosition(MainFragmentAdapter.PageType.ANIME)
-//        }
-//    }
-
     fun isLoaderVisible(b: Boolean) {
         binding.loader.progressOverlay.showOrHide(b)
     }
@@ -242,7 +229,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     fun navigateToFragment(fragment: Fragment) {
-        addFragment(fragment, R.id.nav_host_fragment, true)
+        addFragment(fragment, R.id.nav_host_fragment, true,android.R.transition.slide_bottom)
     }
 
     fun navigateToHome() {

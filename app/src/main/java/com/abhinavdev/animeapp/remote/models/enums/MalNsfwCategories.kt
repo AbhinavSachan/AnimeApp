@@ -22,7 +22,7 @@ enum class MalNsfwCategories(
     companion object {
         fun valueOf(value: String) = entries.firstOrNull { it.search == value }
 
-        var list = entries.map { it.showName }
+        var list = entries
 
     }
 }

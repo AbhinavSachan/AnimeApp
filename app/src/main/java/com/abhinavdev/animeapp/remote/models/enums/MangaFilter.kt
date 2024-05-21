@@ -27,6 +27,6 @@ enum class MangaFilter(
     companion object {
         fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: NONE
 
-        val list = entries.map { it }
+        val list = entries
     }
 }

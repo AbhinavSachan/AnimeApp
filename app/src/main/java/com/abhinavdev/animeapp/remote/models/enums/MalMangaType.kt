@@ -39,7 +39,6 @@ enum class MalMangaType(
 
     companion object {
         fun valueOfOrDefault(value:String?) = entries.find { it.search == value } ?: UNKNOWN
-
-        val list = entries.filter { it != UNKNOWN }.map { it }
+        fun list(sfw: Boolean) = entries.filter { it != UNKNOWN && (!sfw || it != DOUJIN) }
     }
 }

@@ -41,7 +41,7 @@ enum class AgeRating(
     companion object {
         fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: NONE
 
-        fun list(sfw: Boolean) = if (sfw) entries.filter { it != RX }.map { it } else entries.map { it }
+        fun list(sfw: Boolean) = if (sfw) entries.filter { it != RX } else entries
     }
 
 }

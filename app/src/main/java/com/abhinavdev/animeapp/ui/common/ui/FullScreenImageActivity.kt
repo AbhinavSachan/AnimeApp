@@ -73,6 +73,6 @@ class FullScreenImageActivity : BaseActivity() {
         imageUrl = intent.getStringExtra(Const.BundleExtras.EXTRA_STRING)
         binding.myZoomageView.loadImage(imageUrl)
 
-        setOnBackPressedListener(::finish)
+        setOnBackPressedListener { onBackPressedDispatcher.onBackPressed() }
     }
 }

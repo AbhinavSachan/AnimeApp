@@ -19,6 +19,6 @@ enum class GenreType(
     THEMES("themes"),
 
     @SerializedName("demographics")
-    DEMOGRAPHICS("demographics"),
+    DEMOGRAPHICS("demographics");
 
 }

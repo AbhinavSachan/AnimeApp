@@ -22,7 +22,7 @@ enum class MalAnimeSortType(
     companion object {
         fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: UPDATED
 
-        var list = entries.map { it }
+        var list = entries
 
     }
 }

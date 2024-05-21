@@ -114,7 +114,7 @@ class MangaRankingFragment : BaseFragment(), View.OnClickListener, CustomClickLi
     private fun initComponents() {
         paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
-        typeList = MalMangaType.list.map {
+        typeList = MalMangaType.list(SettingsHelper.getSfwEnabled()).map {
             ItemSelectionModelBase(it.search, it.showName).apply {
                 isSelected = mangaType == it
             }

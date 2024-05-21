@@ -37,7 +37,7 @@ android {
 
     buildTypes {
         debug {
-            isDebuggable = true
+            isDebuggable = false
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
@@ -125,7 +125,6 @@ dependencies {
 
     //Glide image library
     implementation(libs.glide)
-    implementation(libs.activity)
     ksp(libs.glide.compiler)
 
     //calendar de-sugaring library
@@ -139,7 +138,6 @@ dependencies {
 //    implementation ("com.google.firebase:firebase-core")
 //    implementation ("com.google.firebase:firebase-auth")
     implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
 
     //play video
 //    implementation ("com.google.android.exoplayer:exoplayer:2.18.7")
@@ -178,13 +176,12 @@ dependencies {
 //    implementation("com.ncorti:slidetoact:0.11.0")
 
     implementation(libs.okhttpprofiler)
-    //micro animations util library
-    implementation(libs.androidanimations)
     implementation(libs.palette.ktx)
     //shimmer loading library
     implementation(libs.shimmer)
     //some fancy switch
     implementation(libs.switcher)
+    //zoom image view
     implementation(libs.zoomage)
     implementation(libs.expandabletextview)
 }

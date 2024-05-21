@@ -29,7 +29,7 @@ enum class Season(
     companion object {
         fun valueOfOrNull(value: String?) = entries.find { it.search == value }
 
-        var list = entries.map { it.showName }
+        var list = entries
 
     }
 

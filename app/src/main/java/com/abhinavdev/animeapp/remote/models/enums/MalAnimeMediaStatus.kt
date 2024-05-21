@@ -13,6 +13,6 @@ enum class MalAnimeMediaStatus(val showName:String) {
     NOT_AIRED("Not Yet Aired");
 
     companion object{
-        val list = entries.map { it.showName }
+        val list = entries
     }
 }

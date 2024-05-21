@@ -1,17 +1,9 @@
 package com.abhinavdev.animeapp.core
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 abstract class BaseFragment : Fragment() {
-    lateinit var baseContext: BaseActivity
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        this.baseContext = (context as? BaseActivity?)!!
-    }
-
     /**
      * Pops the last fragment transaction from the back stack
      * Returns `true` if the pop was successful, `false` otherwise.

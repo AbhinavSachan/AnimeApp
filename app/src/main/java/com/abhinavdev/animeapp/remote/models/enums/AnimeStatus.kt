@@ -20,6 +20,6 @@ enum class AnimeStatus(
     UPCOMING("upcoming","Not Yet Aired");
 
     companion object {
-        val list = entries.map { it.showName }
+        val list = entries
     }
 }

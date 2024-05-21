@@ -399,26 +399,6 @@ fun BottomSheetBehavior<*>.isExpanded(): Boolean {
     return this.state == BottomSheetBehavior.STATE_EXPANDED
 }
 
-fun Context.getRegularFont(): Typeface? {
-    return applyFont(R.font.custom_regular)
-}
-
-fun Context.getMediumFont(): Typeface? {
-    return applyFont(R.font.custom_medium)
-}
-
-fun Context.getSemiBoldFont(): Typeface? {
-    return applyFont(R.font.custom_semi_bold)
-}
-
-fun Context.getBoldFont(): Typeface? {
-    return applyFont(R.font.custom_bold)
-}
-
-fun Context.getExtraBoldFont(): Typeface? {
-    return applyFont(R.font.custom_extra_bold)
-}
-
 /**
  * removes all recyclerview item decorations
  *

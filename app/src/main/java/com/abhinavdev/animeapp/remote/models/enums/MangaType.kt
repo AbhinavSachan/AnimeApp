@@ -43,6 +43,6 @@ enum class MangaType(
     companion object {
         fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: UNKNOWN
 
-        val list = entries.filter { it != UNKNOWN }.map { it }
+        val list = entries.filter { it != UNKNOWN }
     }
 }

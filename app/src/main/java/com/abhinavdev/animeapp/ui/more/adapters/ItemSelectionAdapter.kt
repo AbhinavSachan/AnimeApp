@@ -8,8 +8,7 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowItemSelectionBinding
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
-import com.abhinavdev.animeapp.util.extension.getMediumFont
-import com.abhinavdev.animeapp.util.extension.getRegularFont
+import com.abhinavdev.animeapp.util.extension.applyFont
 
 class ItemSelectionAdapter<T>(
     val list: List<ItemSelectionModelBase>, val listener: OnClickMultiTypeCallback, val type: T
@@ -20,8 +19,8 @@ class ItemSelectionAdapter<T>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
-        regularTypeFace = context.getRegularFont()
-        mediumTypeFace = context.getMediumFont()
+        regularTypeFace = context.applyFont(R.font.custom_regular)
+        mediumTypeFace = context.applyFont(R.font.custom_medium)
 
         val view =
             RowItemSelectionBinding.inflate(LayoutInflater.from(context), parent, false)

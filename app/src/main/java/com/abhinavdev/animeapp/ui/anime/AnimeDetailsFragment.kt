@@ -169,9 +169,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
     private fun onToggleDescriptionClick() {
         binding.tvDescription.toggle()
         val toggleText =
-            if (binding.tvDescription.isExpanded) getString(R.string.action_read_more) else getString(
-                R.string.action_read_less
-            )
+            if (binding.tvDescription.isExpanded) getString(R.string.action_read_more) else getString(R.string.action_read_less)
         binding.tvToggleDescription.text = toggleText
     }
 
@@ -259,8 +257,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
         anime.genres?.forEach {
             list.add(LocalGenreModel(it.malId, it.name))
         }
-        anime.explicitGenres?.forEach {
-            list.add(LocalGenreModel(it.malId, it.name))
+        if (!SettingsHelper.getSfwEnabled()){
+            anime.explicitGenres?.forEach {
+                list.add(LocalGenreModel(it.malId, it.name))
+            }
         }
         anime.demographics?.forEach {
             list.add(LocalGenreModel(it.malId, it.name))

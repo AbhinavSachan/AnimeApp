@@ -18,6 +18,6 @@ enum class MalMangaMediaStatus(val showName:String) {
     @SerializedName("discontinued")
     DISCONTINUED("Discontinued");
     companion object{
-        val list = entries.map { it.showName }
+        val list = entries
     }
 }

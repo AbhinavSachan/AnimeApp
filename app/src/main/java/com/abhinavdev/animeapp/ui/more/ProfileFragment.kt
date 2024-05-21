@@ -90,7 +90,7 @@ class ProfileFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack->parentActivity?.onBackPressed()
+            binding.toolbar.ivBack->parentActivity?.onBackPressedDispatcher?.onBackPressed()
         }
     }
 

@@ -31,6 +31,6 @@ enum class MediaType(
     companion object{
         fun valueOfOrDefault(value:String?) = entries.find { it.search == value } ?: ANIME
 
-        val list = entries.map { it }
+        val list = entries
     }
 }

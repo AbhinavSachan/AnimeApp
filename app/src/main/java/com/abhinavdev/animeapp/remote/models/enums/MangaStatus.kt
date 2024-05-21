@@ -26,6 +26,6 @@ enum class MangaStatus(
     UPCOMING("upcoming","Upcoming");
 
     companion object {
-        val list = entries.map { it.showName }
+        val list = entries
     }
 }

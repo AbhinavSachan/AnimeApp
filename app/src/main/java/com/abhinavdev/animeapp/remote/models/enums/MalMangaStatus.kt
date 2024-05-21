@@ -30,7 +30,7 @@ enum class MalMangaStatus(
     companion object {
         fun valueOfOrDefault(value: String) = entries.find { it.search == value } ?: ALL
 
-        var list = entries.map { it }
+        var list = entries
 
     }
 }
