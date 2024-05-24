@@ -37,19 +37,6 @@ fun AppCompatImageView.loadImage(
         .into(this)
 }
 
-fun AppCompatImageView.loadImage(
-    path: String?,
-    placeHolder: Int,
-) {
-    Glide.with(this.context).load(path)
-        .placeholder(placeHolder)
-        .error(placeHolder)
-        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-        .skipMemoryCache(false)
-        .transition(DrawableTransitionOptions.withCrossFade(300))
-        .into(this)
-}
-
 fun CustomTarget<Drawable>.loadImage(
     context: Context,
     path: String?,

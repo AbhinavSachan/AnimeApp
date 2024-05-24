@@ -20,7 +20,6 @@ import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.SettingsItemSelectionType
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.ui.LoginUtil.showLoginDialog
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.AppLanguage
 import com.abhinavdev.animeapp.util.appsettings.AppTheme
@@ -34,6 +33,7 @@ import com.abhinavdev.animeapp.util.extension.setStatusBarColorAsTheme
 import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.setThemeChangeAnimation
 import com.abhinavdev.animeapp.util.extension.showOrHide
+import com.abhinavdev.animeapp.util.ui.LoginUtil.showLoginDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallback {
@@ -100,7 +100,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
                 isSelected = SettingsHelper.getAppTheme() == it
             }
         }
-        with(binding.toolbar){
+        with(binding.toolbar) {
             ivBack.hide()
             tvTitle.text = getString(R.string.msg_more)
 

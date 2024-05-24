@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.transition.TransitionInflater
 import com.abhinavdev.animeapp.util.appsettings.LocaleHelper
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 
@@ -26,11 +25,11 @@ abstract class BaseActivity : AppCompatActivity() {
      * @param containerId    id of fragment container
      * @param addToBackStack should be added to back stack?
      */
-    open fun addFragment(fragment: Fragment, containerId: Int, addToBackStack: Boolean,animation: Int = -1) {
+    open fun addFragment(fragment: Fragment, containerId: Int, addToBackStack: Boolean,enterAnim:Int = -1,exitAnim:Int = -1) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        if (animation != -1){
-            fragment.enterTransition = TransitionInflater.from(this).inflateTransition(animation)
+        if (enterAnim != -1 && exitAnim != -1){
+            fragmentTransaction.setCustomAnimations(enterAnim,exitAnim,enterAnim,exitAnim)
         }
         fragmentTransaction.add(containerId, fragment)
         if (addToBackStack) {
@@ -46,11 +45,11 @@ abstract class BaseActivity : AppCompatActivity() {
      * @param containerId        id of fragment container
      * @param isAddedToBackStack should be added to back stack?
      */
-    open fun replaceFragment(fragment: Fragment, containerId: Int, isAddedToBackStack: Boolean,animation:Int = -1) {
+    open fun replaceFragment(fragment: Fragment, containerId: Int, isAddedToBackStack: Boolean,enterAnim:Int = -1,exitAnim:Int = -1) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        if (animation != -1){
-            fragment.enterTransition = TransitionInflater.from(this).inflateTransition(animation)
+        if (enterAnim != -1 && exitAnim != -1){
+            fragmentTransaction.setCustomAnimations(enterAnim,exitAnim,enterAnim,exitAnim)
         }
         fragmentTransaction.replace(containerId, fragment, fragment.javaClass.name)
         if (isAddedToBackStack) {

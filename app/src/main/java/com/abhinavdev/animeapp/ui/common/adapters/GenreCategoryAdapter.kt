@@ -7,6 +7,9 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowGenreCategoryBinding
 import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.PrefUtils
+import com.abhinavdev.animeapp.util.extension.getSizeOfView
 
 class GenreCategoryAdapter(val list: List<Genre>, val listener: CustomClickListener) :
     RecyclerView.Adapter<GenreCategoryAdapter.ViewHolder>() {
@@ -36,5 +39,21 @@ class GenreCategoryAdapter(val list: List<Genre>, val listener: CustomClickListe
         return list[position].animeId.toLong()
     }
 
-    class ViewHolder(val binding: RowGenreCategoryBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: RowGenreCategoryBinding) : RecyclerView.ViewHolder(binding.root){
+        init {
+            val savedItemHeight = PrefUtils.getInt(Const.PrefKeys.GENRE_ITEM_HEIGHT_KEY)
+            if (savedItemHeight <= 0){
+                binding.root.getSizeOfView {
+                    val height = (it.width * 2)/3
+                    PrefUtils.setInt(Const.PrefKeys.GENRE_ITEM_HEIGHT_KEY,height)
+                    setItemHeight(height)
+                }
+            }else{
+                setItemHeight(savedItemHeight)
+            }
+        }
+        private fun setItemHeight(height: Int){
+            binding.root.layoutParams.height = height
+        }
+    }
 }

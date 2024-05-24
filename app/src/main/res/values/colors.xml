@@ -114,7 +114,7 @@
 
     <color name="inactive_switch_color">#29787880</color>
     <color name="shimmer_color">#80FF6B6B</color>
-    <color name="genre_layer_color">#99000000</color>
+    <color name="genre_layer_color">#66000000</color>
     <color name="genre_text_color">#F6F6F6</color>
 
 </resources>

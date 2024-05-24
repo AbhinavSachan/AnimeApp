@@ -40,6 +40,7 @@ object Const {
             const val GRID_OR_LIST_KEY = "settings_grid_or_list_key"
             //grid item will have 2:3 size
             const val GRID_ITEM_HEIGHT_KEY = "settings_grid_item_height_key"
+            const val GENRE_ITEM_HEIGHT_KEY = "settings_genre_item_height_key"
 
             //keys to save item limit per reload
             //0 to 1000

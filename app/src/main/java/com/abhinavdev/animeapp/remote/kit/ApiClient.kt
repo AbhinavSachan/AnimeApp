@@ -2,7 +2,6 @@ package com.abhinavdev.animeapp.remote.kit
 
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
-import com.abhinavdev.animeapp.util.extension.log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
@@ -101,7 +100,6 @@ object ApiClient {
 
                 // Exponential backoff
                 val delay = RETRY_DELAY_MS * tryCount
-                log { "You are being rate limited or the API is being rate limited by MyAnimeList, retrying in $delay milliseconds..." }
                 try {
                     Thread.sleep(delay)
                 } catch (_: InterruptedException) {

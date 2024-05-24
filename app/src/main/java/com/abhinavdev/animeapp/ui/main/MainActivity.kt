@@ -23,7 +23,6 @@ import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.showOrHide
-import com.abhinavdev.animeapp.util.extension.testLog
 import com.abhinavdev.animeapp.util.extension.toast
 import com.google.android.material.navigation.NavigationBarView
 
@@ -59,8 +58,7 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         ifFromLinkNavigateToDetailsPage(intent)
     }
 
-    private fun handleOnBackPressed(){
-        testLog { "Activity Back" }
+    private fun handleOnBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         if (fragment != null) {
             //first if there is any fragment open close it
@@ -229,7 +227,13 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     fun navigateToFragment(fragment: Fragment) {
-        addFragment(fragment, R.id.nav_host_fragment, true,android.R.transition.slide_bottom)
+        addFragment(
+            fragment = fragment,
+            containerId = R.id.nav_host_fragment,
+            addToBackStack = true,
+            enterAnim = R.anim.enter_bottom_to_top,
+            exitAnim = R.anim.exit_top_to_bottom
+        )
     }
 
     fun navigateToHome() {

@@ -45,7 +45,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.abhinavdev.animeapp.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textfield.TextInputLayout
 import java.io.ByteArrayOutputStream
@@ -458,5 +457,11 @@ fun View.setHeightAsPercentageOfGivenHeight(screenHeight: Int, percent: Int = 50
 fun View.setWidthInRatioToHeight(ratioWidth: Int, ratioHeight: Int) {
     val layoutParams = this.layoutParams
     layoutParams.width = (layoutParams.height * ratioWidth) / ratioHeight
+    this.layoutParams = layoutParams
+}
+
+fun View.setHeightInRatioToWidth(ratioWidth: Int, ratioHeight: Int) {
+    val layoutParams = this.layoutParams
+    layoutParams.height = (layoutParams.width * ratioHeight) / ratioWidth
     this.layoutParams = layoutParams
 }
