@@ -32,15 +32,15 @@
 
                 <include
                     android:id="@+id/group_my_profile"
-                    layout="@layout/more_click_item_layout" />
+                    layout="@layout/custom_more_click_item_layout" />
 
                 <include
                     android:id="@+id/group_my_anime"
-                    layout="@layout/more_click_item_layout" />
+                    layout="@layout/custom_more_click_item_layout" />
 
                 <include
                     android:id="@+id/group_my_manga"
-                    layout="@layout/more_click_item_layout" />
+                    layout="@layout/custom_more_click_item_layout" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -86,19 +86,19 @@
 
                 <include
                     android:id="@+id/group_app_theme"
-                    layout="@layout/more_select_item_layout" />
+                    layout="@layout/custom_more_select_item_layout" />
 
                 <include
                     android:id="@+id/group_title_type"
-                    layout="@layout/more_select_item_layout" />
+                    layout="@layout/custom_more_select_item_layout" />
 
                 <include
                     android:id="@+id/group_app_language"
-                    layout="@layout/more_select_item_layout" />
+                    layout="@layout/custom_more_select_item_layout" />
 
                 <include
                     android:id="@+id/group_sfw"
-                    layout="@layout/more_switch_item_layout" />
+                    layout="@layout/custom_more_switch_item_layout" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/ll_logout"

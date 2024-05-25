@@ -103,4 +103,10 @@
     <string name="action_read_less">Read less</string>
     <string name="msg_background">Background :</string>
     <string name="msg_synopsis">Synopsis :</string>
+    <string name="msg_stats">Stats</string>
+    <string name="msg_rank">Rank</string>
+    <string name="msg_popularity">Popularity</string>
+    <string name="msg_scored_by">Scored By</string>
+    <string name="msg_members">Members</string>
+    <string name="msg_favourites">Favourites</string>
 </resources>

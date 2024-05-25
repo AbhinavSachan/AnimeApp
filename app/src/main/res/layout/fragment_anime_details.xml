@@ -30,6 +30,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_content"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:layout_height="match_parent">
 
                     <androidx.constraintlayout.widget.Guideline
@@ -91,7 +93,7 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_anime_name"
-                        style="@style/TextStyleFont700"
+                        style="@style/TextStyleFont600"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_15sdp"
@@ -168,6 +170,62 @@
                         app:layout_constraintEnd_toEndOf="@id/tv_description"
                         app:layout_constraintTop_toBottomOf="@id/tv_description"
                         tools:visibility="visible" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_stat_heading"
+                        style="@style/TextStyleFont700"
+                        android:text="@string/msg_stats"
+                        android:textSize="@dimen/text_size_20"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/tv_toggle_description" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/ll_stat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:gravity="center_horizontal"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/tv_stat_heading">
+
+                        <include
+                            android:id="@+id/group_rank"
+                            layout="@layout/custom_stat_item_layout" />
+
+                        <View
+                            style="@style/CustomVerticalDividerView"
+                            android:layout_marginVertical="@dimen/_8sdp" />
+
+                        <include
+                            android:id="@+id/group_popularity"
+                            layout="@layout/custom_stat_item_layout" />
+
+                        <View
+                            style="@style/CustomVerticalDividerView"
+                            android:layout_marginVertical="@dimen/_8sdp" />
+
+                        <include
+                            android:id="@+id/group_scored_by"
+                            layout="@layout/custom_stat_item_layout" />
+
+                        <View
+                            style="@style/CustomVerticalDividerView"
+                            android:layout_marginVertical="@dimen/_8sdp" />
+
+                        <include
+                            android:id="@+id/group_members"
+                            layout="@layout/custom_stat_item_layout" />
+
+                        <View
+                            style="@style/CustomVerticalDividerView"
+                            android:layout_marginVertical="@dimen/_8sdp" />
+
+                        <include
+                            android:id="@+id/group_favourite"
+                            layout="@layout/custom_stat_item_layout" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

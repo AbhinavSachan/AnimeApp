@@ -33,7 +33,7 @@
 
                 <include
                     android:id="@+id/group_type"
-                    layout="@layout/filter_sort_item_layout"
+                    layout="@layout/custom_filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_6sdp"
@@ -42,7 +42,7 @@
 
                 <include
                     android:id="@+id/group_status"
-                    layout="@layout/filter_sort_item_layout"
+                    layout="@layout/custom_filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_6sdp"
@@ -51,7 +51,7 @@
 
                 <include
                     android:id="@+id/group_age_rating"
-                    layout="@layout/filter_sort_item_layout"
+                    layout="@layout/custom_filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

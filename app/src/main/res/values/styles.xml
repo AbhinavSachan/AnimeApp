@@ -283,6 +283,12 @@
         <item name="sliderStartAutoCycle">true</item>
     </style>
 
+    <style name="CustomVerticalDividerView">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/bg_line_divider</item>
+    </style>
+
     <style name="TabLayoutStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/_28sdp</item>

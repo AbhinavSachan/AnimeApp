@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -29,14 +31,17 @@ import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import com.abhinavdev.animeapp.util.extension.NumExtensions.formatOrNull
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyFont
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.hide
+import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.openShareSheet
+import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfGivenHeight
 import com.abhinavdev.animeapp.util.extension.setWidthInRatioToHeight
 import com.abhinavdev.animeapp.util.extension.show
@@ -44,6 +49,8 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 
 class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.Callback {
@@ -55,12 +62,14 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
     private var isFromSwipe = false
 
     private var animeId: Int = -1
-    private var animeData: AnimeData? = null
+    private var posterImageUrl: String? = null
 
     private var malUrl: String? = null
 
     private val genreList: ArrayList<LocalGenreModel> = arrayListOf()
     private var genreAdapter: GenreAdapter? = null
+
+    private val coroutine = CoroutineScope(Dispatchers.IO)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -169,13 +178,15 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
     private fun onToggleDescriptionClick() {
         binding.tvDescription.toggle()
         val toggleText =
-            if (binding.tvDescription.isExpanded) getString(R.string.action_read_more) else getString(R.string.action_read_less)
+            if (binding.tvDescription.isExpanded) getString(R.string.action_read_more) else getString(
+                R.string.action_read_less
+            )
         binding.tvToggleDescription.text = toggleText
     }
 
     private fun onImageClick() {
         FullScreenImageActivity.startNewActivity(
-            parentActivity, animeData?.images?.jpg?.largeImageUrl, binding.ivPoster
+            parentActivity, posterImageUrl, binding.ivPoster
         )
     }
 
@@ -212,21 +223,25 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
     @SuppressLint("NotifyDataSetChanged")
     private fun setData(data: AnimeFullResponse) {
         data.data?.let { anime ->
-            animeData = anime
+            posterImageUrl = anime.images?.jpg?.largeImageUrl
+            malUrl = anime.url
             val metaData = generateMetadataString(anime)
-            val shareUrl = anime.url
-            val image = anime.images?.jpg?.largeImageUrl
             val titles = anime.titles
             val userPreferredType = SettingsHelper.getPreferredTitleType()
             val animeName = AppTitleType.getTitleFromData(titles, userPreferredType)
             val description = generateDescription(anime.synopsis, anime.background)
+            val rank = "#${anime.rank?.formatOrNull().placeholder()}"
+            val popularity = "#${anime.popularity?.formatOrNull().placeholder()}"
+            val scoredBy = anime.scoredBy?.formatOrNull().placeholder()
+            val members = anime.members?.formatOrNull().placeholder()
+            val favourites = anime.favorites?.formatOrNull().placeholder()
 
             genreList.clear()
-            genreList.addAll(getGenreLocalList(anime))
+            val fetchedGenreList = getGenreLocalList(anime)
+            genreList.addAll(fetchedGenreList)
             genreAdapter?.notifyDataSetChanged()
 
             with(binding) {
-                malUrl = shareUrl
                 val target = object : CustomTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable, transition: Transition<in Drawable>?
@@ -240,34 +255,44 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
                         ivPoster.setImageDrawable(placeholder)
                     }
                 }
-                context?.let { target.loadImage(it, image) }
+                context?.let { target.loadImage(it, posterImageUrl) }
                 tvAnimeName.text = animeName
                 //if score was added then show start icon
                 if (metaData.first) ivRating.show()
                 tvMetadata.showOrHide(metaData.second.isNotBlank())
                 tvMetadata.text = metaData.second
                 tvDescription.text = description
-                if (tvDescription.lineCount >= tvDescription.maxLines) tvToggleDescription.show()
+
+                //setting all the stats
+                groupRank.tvHeading.text = getString(R.string.msg_rank)
+                groupRank.tvText.text = rank
+                groupPopularity.tvHeading.text = getString(R.string.msg_popularity)
+                groupPopularity.tvText.text = popularity
+                groupScoredBy.tvHeading.text = getString(R.string.msg_scored_by)
+                groupScoredBy.tvText.text = scoredBy
+                groupMembers.tvHeading.text = getString(R.string.msg_members)
+                groupMembers.tvText.text = members
+                groupFavourite.tvHeading.text = getString(R.string.msg_favourites)
+                groupFavourite.tvText.text = favourites
+
+                if (clContent.isHidden()) clContent.show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (tvDescription.lineCount >= tvDescription.maxLines) tvToggleDescription.show()
+                },10)
             }
         }
     }
 
     private fun getGenreLocalList(anime: AnimeData): List<LocalGenreModel> {
         val list: ArrayList<LocalGenreModel> = arrayListOf()
-        anime.genres?.forEach {
-            list.add(LocalGenreModel(it.malId, it.name))
+        anime.genres?.map { LocalGenreModel(it.malId, it.name) }?.let { list.addAll(it) }
+        if (!SettingsHelper.getSfwEnabled()) {
+            anime.explicitGenres?.map { LocalGenreModel(it.malId, it.name) }
+                ?.let { list.addAll(it) }
+
         }
-        if (!SettingsHelper.getSfwEnabled()){
-            anime.explicitGenres?.forEach {
-                list.add(LocalGenreModel(it.malId, it.name))
-            }
-        }
-        anime.demographics?.forEach {
-            list.add(LocalGenreModel(it.malId, it.name))
-        }
-        anime.themes?.forEach {
-            list.add(LocalGenreModel(it.malId, it.name))
-        }
+        anime.demographics?.map { LocalGenreModel(it.malId, it.name) }?.let { list.addAll(it) }
+        anime.themes?.map { LocalGenreModel(it.malId, it.name) }?.let { list.addAll(it) }
         return list
     }
 

@@ -8,7 +8,7 @@ object NumExtensions {
 
     private val numberFormat: NumberFormat = NumberFormat.getInstance()
 
-    fun Number.format(): String? = try {
+    fun Number.formatOrNull(): String? = try {
         numberFormat.format(this)
     } catch (e: IllegalArgumentException) {
         null

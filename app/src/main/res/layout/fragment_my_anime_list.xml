@@ -33,7 +33,7 @@
 
                 <include
                     android:id="@+id/group_status"
-                    layout="@layout/filter_sort_item_layout"
+                    layout="@layout/custom_filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
@@ -42,7 +42,7 @@
 
                 <include
                     android:id="@+id/group_sort"
-                    layout="@layout/filter_sort_item_layout"
+                    layout="@layout/custom_filter_sort_item_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

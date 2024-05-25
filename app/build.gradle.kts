@@ -37,7 +37,7 @@ android {
 
     buildTypes {
         debug {
-            isDebuggable = true
+            isDebuggable = false
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(
@@ -76,6 +76,12 @@ android {
                 add("META-INF/INDEX.LIST")
                 add("META-INF/io.netty.versions.properties")
             }
+        }
+    }
+    bundle{
+        language {
+            @Suppress("UnstableApiUsage")
+            enableSplit = false
         }
     }
     lint {
