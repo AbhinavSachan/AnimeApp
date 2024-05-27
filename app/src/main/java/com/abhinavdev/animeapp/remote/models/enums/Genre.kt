@@ -264,5 +264,7 @@ enum class Genre(
         fun listManga(sfw: Boolean) =
             entries.filter { it.mangaId != -1 && (!sfw || it.sfw) }.sortedBy { it.showName }
 
+        fun listOfExplicitGenre() = entries.filter { !it.sfw }
+
     }
 }

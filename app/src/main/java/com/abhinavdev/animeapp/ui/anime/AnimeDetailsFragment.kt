@@ -23,6 +23,8 @@ import com.abhinavdev.animeapp.databinding.FragmentAnimeDetailsBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
+import com.abhinavdev.animeapp.remote.models.common.MalUrlData
+import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.adapters.GenreAdapter
 import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
@@ -236,12 +238,14 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
             val members = anime.members?.formatOrNull().placeholder()
             val favourites = anime.favorites?.formatOrNull().placeholder()
 
-            genreList.clear()
-            val fetchedGenreList = getGenreLocalList(anime)
-            genreList.addAll(fetchedGenreList)
-            genreAdapter?.notifyDataSetChanged()
-
             with(binding) {
+                genreList.clear()
+                val fetchedGenreList = getGenreLocalList(anime)
+                genreList.addAll(fetchedGenreList)
+                genreAdapter?.notifyDataSetChanged()
+
+                rvGenre.showOrHide(fetchedGenreList.isNotEmpty())
+
                 val target = object : CustomTarget<Drawable>() {
                     override fun onResourceReady(
                         resource: Drawable, transition: Transition<in Drawable>?
@@ -266,14 +270,28 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
                 //setting all the stats
                 groupRank.tvHeading.text = getString(R.string.msg_rank)
                 groupRank.tvText.text = rank
+
                 groupPopularity.tvHeading.text = getString(R.string.msg_popularity)
                 groupPopularity.tvText.text = popularity
+
                 groupScoredBy.tvHeading.text = getString(R.string.msg_scored_by)
                 groupScoredBy.tvText.text = scoredBy
+
                 groupMembers.tvHeading.text = getString(R.string.msg_members)
                 groupMembers.tvText.text = members
+
                 groupFavourite.tvHeading.text = getString(R.string.msg_favourites)
                 groupFavourite.tvText.text = favourites
+
+                //setting all the titles
+                groupRomaji.tvHeading.text = getString(R.string.msg_romaji)
+                groupRomaji.tvText.text = AppTitleType.getTitleFromData(anime.titles,AppTitleType.ROMAJI)
+
+                groupEnglish.tvHeading.text = getString(R.string.msg_english)
+                groupEnglish.tvText.text = AppTitleType.getTitleFromData(anime.titles,AppTitleType.ENGLISH)
+
+                groupJapanese.tvHeading.text = getString(R.string.msg_japanese)
+                groupJapanese.tvText.text = AppTitleType.getTitleFromData(anime.titles,AppTitleType.JAPANESE)
 
                 if (clContent.isHidden()) clContent.show()
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -284,15 +302,25 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
     }
 
     private fun getGenreLocalList(anime: AnimeData): List<LocalGenreModel> {
+        val sfw = SettingsHelper.getSfwEnabled()
         val list: ArrayList<LocalGenreModel> = arrayListOf()
-        anime.genres?.map { LocalGenreModel(it.malId, it.name) }?.let { list.addAll(it) }
-        if (!SettingsHelper.getSfwEnabled()) {
-            anime.explicitGenres?.map { LocalGenreModel(it.malId, it.name) }
-                ?.let { list.addAll(it) }
+        val allGenres = Genre.listOfExplicitGenre()
 
+        // Helper function to filter and map genres
+        fun filterAndMapGenres(genres: List<MalUrlData>?): List<LocalGenreModel> {
+            return genres?.filter { !sfw || allGenres.none { genre -> genre.animeId == it.malId } }
+                ?.map { LocalGenreModel(it.malId, it.name) }
+                ?: emptyList()
         }
-        anime.demographics?.map { LocalGenreModel(it.malId, it.name) }?.let { list.addAll(it) }
-        anime.themes?.map { LocalGenreModel(it.malId, it.name) }?.let { list.addAll(it) }
+
+        // Add all filtered and mapped genres to the list
+        list.addAll(filterAndMapGenres(anime.genres))
+        if (!sfw) {
+            list.addAll(filterAndMapGenres(anime.explicitGenres))
+        }
+        list.addAll(filterAndMapGenres(anime.demographics))
+        list.addAll(filterAndMapGenres(anime.themes))
+
         return list
     }
 

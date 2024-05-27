@@ -113,7 +113,7 @@ fun View.show() {
 }
 
 fun View.isHidden(): Boolean {
-    return visibility == View.GONE
+    return visibility == View.GONE || visibility == View.INVISIBLE
 }
 
 fun View.isVisible(): Boolean {

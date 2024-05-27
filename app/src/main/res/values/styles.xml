@@ -69,6 +69,7 @@
     <style name="BaseNestedScrollViewAttributes">
         <item name="android:fillViewport">true</item>
         <item name="android:clipToPadding">false</item>
+        <item name="android:scrollbars">none</item>
     </style>
 
     <style name="TopPaddingStyle">

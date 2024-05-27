@@ -109,4 +109,8 @@
     <string name="msg_scored_by">Scored By</string>
     <string name="msg_members">Members</string>
     <string name="msg_favourites">Favourites</string>
+    <string name="msg_more_info">More Info</string>
+    <string name="msg_romaji">Romaji:</string>
+    <string name="msg_english">English:</string>
+    <string name="msg_japanese">Japanese:</string>
 </resources>

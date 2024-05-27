@@ -1,15 +1,14 @@
 package com.abhinavdev.animeapp.ui.common.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import com.abhinavdev.animeapp.core.BaseActivity
 import com.abhinavdev.animeapp.databinding.ActivityFullScreenImageBinding
-import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.show
@@ -22,13 +21,14 @@ class FullScreenImageActivity : BaseActivity() {
 
     companion object {
         private const val TRANSITION_NAME = "image_transition"
+        private const val EXTRA_IMAGE_URL = "extra_image_url"
 
         /**
          * Don't have to do anything just call this fun it will add transitionName
          */
         @JvmStatic
         fun startNewActivity(
-            activity: AppCompatActivity?,
+            activity: Activity?,
             imageUrl: String?,
             imageViewForTransition: AppCompatImageView? = null
         ) {
@@ -44,7 +44,7 @@ class FullScreenImageActivity : BaseActivity() {
                 null
             }
             val intent = Intent(activity, FullScreenImageActivity::class.java).apply {
-                putExtra(Const.BundleExtras.EXTRA_STRING, imageUrl)
+                putExtra(EXTRA_IMAGE_URL, imageUrl)
             }
             activity?.startActivity(intent, options?.toBundle())
         }
@@ -70,7 +70,7 @@ class FullScreenImageActivity : BaseActivity() {
             }
         }
 
-        imageUrl = intent.getStringExtra(Const.BundleExtras.EXTRA_STRING)
+        imageUrl = intent.getStringExtra(EXTRA_IMAGE_URL)
         binding.myZoomageView.loadImage(imageUrl)
 
         setOnBackPressedListener { onBackPressedDispatcher.onBackPressed() }
