@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView android:id="@+id/sv_stats"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:gravity="center_horizontal">
+
+        <include
+            android:id="@+id/group_rank"
+            layout="@layout/custom_stat_item_layout" />
+
+        <View
+            style="@style/CustomVerticalDividerView"
+            android:layout_marginVertical="@dimen/_8sdp" />
+
+        <include
+            android:id="@+id/group_popularity"
+            layout="@layout/custom_stat_item_layout" />
+
+        <View
+            style="@style/CustomVerticalDividerView"
+            android:layout_marginVertical="@dimen/_8sdp" />
+
+        <include
+            android:id="@+id/group_scored_by"
+            layout="@layout/custom_stat_item_layout" />
+
+        <View
+            style="@style/CustomVerticalDividerView"
+            android:layout_marginVertical="@dimen/_8sdp" />
+
+        <include
+            android:id="@+id/group_members"
+            layout="@layout/custom_stat_item_layout" />
+
+        <View
+            style="@style/CustomVerticalDividerView"
+            android:layout_marginVertical="@dimen/_8sdp" />
+
+        <include
+            android:id="@+id/group_favourite"
+            layout="@layout/custom_stat_item_layout" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</HorizontalScrollView>

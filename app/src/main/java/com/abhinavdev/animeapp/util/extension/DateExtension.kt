@@ -1,6 +1,8 @@
 package com.abhinavdev.animeapp.util.extension
 
 import android.content.Context
+import com.abhinavdev.animeapp.R
+import com.abhinavdev.animeapp.remote.models.common.AiredOnData
 import com.abhinavdev.animeapp.util.Const
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -346,6 +348,38 @@ fun getDaysDifference(cal1: Calendar, cal2: Calendar): Long {
     val endTime = cal2.timeInMillis
     val diffTime = endTime - startTime
     return diffTime / (1000 * 60 * 60 * 24)
+}
+fun AiredOnData?.getAiredDate(context: Context?):String{
+    val from = this?.prop?.from
+    val to = this?.prop?.to
+    var startDate = ""
+    var endDate = ""
+    if (from != null) {
+        val day = from.day
+        val month = from.month
+        val year = from.year
+        val cal = Calendar.getInstance()
+        if (day != null && month != null && year != null){
+            cal.set(year, month, day)
+            startDate = cal.time.formatTo().placeholder()
+        }
+    }
+    if (to != null) {
+        val day = to.day
+        val month = to.month
+        val year = to.year
+        val cal = Calendar.getInstance()
+        if (day != null && month != null && year != null){
+            cal.set(year, month, day)
+            endDate = cal.time.formatTo().placeholder()
+        }
+    }
+    val result = StringBuilder()
+    result.append("${startDate.placeholder()} ${context?.getString(R.string.msg_to) ?: "To"} ${endDate.placeholder()}")
+    if (startDate.isBlank() && endDate.isBlank()){
+        result.clear().append(Const.Other.UNKNOWN_CHAR)
+    }
+    return result.toString()
 }
 /*
 @RequiresApi(Build.VERSION_CODES.O)

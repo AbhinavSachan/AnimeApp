@@ -33,6 +33,6 @@ enum class DayOfWeek(
     SUNDAY(java.time.DayOfWeek.SUNDAY, "sunday"),
 
     @SerializedName("other")
-    OTHER(null, "other")
+    OTHER(null, "other");
 
 }

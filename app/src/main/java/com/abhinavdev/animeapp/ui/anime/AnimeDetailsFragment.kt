@@ -23,6 +23,7 @@ import com.abhinavdev.animeapp.databinding.FragmentAnimeDetailsBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
+import com.abhinavdev.animeapp.remote.models.common.BroadcastData.Companion.convertBroadcastToLocalTime
 import com.abhinavdev.animeapp.remote.models.common.MalUrlData
 import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
@@ -38,6 +39,7 @@ import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyFont
 import com.abhinavdev.animeapp.util.extension.createViewModel
+import com.abhinavdev.animeapp.util.extension.getAiredDate
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.isHidden
@@ -230,17 +232,27 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
             val metaData = generateMetadataString(anime)
             val titles = anime.titles
             val userPreferredType = SettingsHelper.getPreferredTitleType()
+            val otherTitleTypes = AppTitleType.list.filter { it != userPreferredType }
             val animeName = AppTitleType.getTitleFromData(titles, userPreferredType)
             val description = generateDescription(anime.synopsis, anime.background)
+            val otherTitles = generateOtherTitles(AppTitleType.getSynonymTitles(anime.titles))
             val rank = "#${anime.rank?.formatOrNull().placeholder()}"
             val popularity = "#${anime.popularity?.formatOrNull().placeholder()}"
             val scoredBy = anime.scoredBy?.formatOrNull().placeholder()
             val members = anime.members?.formatOrNull().placeholder()
             val favourites = anime.favorites?.formatOrNull().placeholder()
+            val fetchedGenreList = getGenreLocalList(anime)
+            val airingDate = anime.airedOn.getAiredDate(context)
+            val status = anime.status?.showName
+            val isAiring = anime.airing ?: false
+            val broadcastDate = anime.broadcast?.convertBroadcastToLocalTime().placeholder()
+            val animeSource = anime.source
+            val studios = anime.studios?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
+            val producers = anime.producers?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
+            val licensors = anime.licensors?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
 
             with(binding) {
                 genreList.clear()
-                val fetchedGenreList = getGenreLocalList(anime)
                 genreList.addAll(fetchedGenreList)
                 genreAdapter?.notifyDataSetChanged()
 
@@ -268,35 +280,92 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
                 tvDescription.text = description
 
                 //setting all the stats
-                groupRank.tvHeading.text = getString(R.string.msg_rank)
-                groupRank.tvText.text = rank
+                with(groupStats) {
+                    groupRank.tvHeading.text = getString(R.string.msg_rank)
+                    groupRank.tvText.text = rank
 
-                groupPopularity.tvHeading.text = getString(R.string.msg_popularity)
-                groupPopularity.tvText.text = popularity
+                    groupPopularity.tvHeading.text = getString(R.string.msg_popularity)
+                    groupPopularity.tvText.text = popularity
 
-                groupScoredBy.tvHeading.text = getString(R.string.msg_scored_by)
-                groupScoredBy.tvText.text = scoredBy
+                    groupScoredBy.tvHeading.text = getString(R.string.msg_scored_by)
+                    groupScoredBy.tvText.text = scoredBy
 
-                groupMembers.tvHeading.text = getString(R.string.msg_members)
-                groupMembers.tvText.text = members
+                    groupMembers.tvHeading.text = getString(R.string.msg_members)
+                    groupMembers.tvText.text = members
 
-                groupFavourite.tvHeading.text = getString(R.string.msg_favourites)
-                groupFavourite.tvText.text = favourites
+                    groupFavourite.tvHeading.text = getString(R.string.msg_favourites)
+                    groupFavourite.tvText.text = favourites
+                }
 
-                //setting all the titles
-                groupRomaji.tvHeading.text = getString(R.string.msg_romaji)
-                groupRomaji.tvText.text = AppTitleType.getTitleFromData(anime.titles,AppTitleType.ROMAJI)
+                //setting all the more information
+                with(groupMoreInfo) {
+                    //titles
+                    otherTitleTypes.forEachIndexed { index, appTitleType ->
+                        if (index == 0) {
+                            groupTitleOne.tvHeading.text = when (appTitleType) {
+                                AppTitleType.ROMAJI -> {
+                                    getString(R.string.msg_romaji_colon)
+                                }
 
-                groupEnglish.tvHeading.text = getString(R.string.msg_english)
-                groupEnglish.tvText.text = AppTitleType.getTitleFromData(anime.titles,AppTitleType.ENGLISH)
+                                AppTitleType.ENGLISH -> {
+                                    getString(R.string.msg_english_colon)
+                                }
 
-                groupJapanese.tvHeading.text = getString(R.string.msg_japanese)
-                groupJapanese.tvText.text = AppTitleType.getTitleFromData(anime.titles,AppTitleType.JAPANESE)
+                                AppTitleType.JAPANESE -> {
+                                    getString(R.string.msg_japanese_colon)
+                                }
+                            }
+                            groupTitleOne.tvText.text =
+                                AppTitleType.getTitleFromData(anime.titles, appTitleType)
+                        }
+                        if (index == 1) {
+                            groupTitleTwo.tvHeading.text = when (appTitleType) {
+                                AppTitleType.ROMAJI -> {
+                                    getString(R.string.msg_romaji_colon)
+                                }
+
+                                AppTitleType.ENGLISH -> {
+                                    getString(R.string.msg_english_colon)
+                                }
+
+                                AppTitleType.JAPANESE -> {
+                                    getString(R.string.msg_japanese_colon)
+                                }
+                            }
+                            groupTitleTwo.tvText.text =
+                                AppTitleType.getTitleFromData(anime.titles, appTitleType)
+                        }
+                    }
+                    if (otherTitles.isNotBlank()) groupTitleOther.root.show()
+                    groupTitleOther.tvHeading.text = getString(R.string.msg_others_colon)
+                    groupTitleOther.tvText.text = otherTitles
+
+                    //other details
+                    groupDate.tvHeading.text = getString(R.string.msg_aired_on_colon)
+                    groupDate.tvText.text = airingDate
+                    groupStatus.tvHeading.text = getString(R.string.msg_status_colon)
+                    groupStatus.tvText.text = status
+                    if (isAiring) groupBroadcast.root.show()
+                    groupBroadcast.tvHeading.text = getString(R.string.msg_broadcast_colon)
+                    groupBroadcast.tvText.text = broadcastDate
+                    if (!animeSource.isNullOrBlank()) groupSource.root.show()
+                    groupSource.tvHeading.text = getString(R.string.msg_source_colon)
+                    groupSource.tvText.text = animeSource
+                    if (!studios.isNullOrBlank()) groupStudios.root.show()
+                    groupStudios.tvHeading.text = getString(R.string.msg_studios_colon)
+                    groupStudios.tvText.text = studios
+                    if (!producers.isNullOrBlank()) groupProducers.root.show()
+                    groupProducers.tvHeading.text = getString(R.string.msg_producers_colon)
+                    groupProducers.tvText.text = producers
+                    if (!licensors.isNullOrBlank()) groupLicensors.root.show()
+                    groupLicensors.tvHeading.text = getString(R.string.msg_licensors_colon)
+                    groupLicensors.tvText.text = licensors
+                }
 
                 if (clContent.isHidden()) clContent.show()
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (tvDescription.lineCount >= tvDescription.maxLines) tvToggleDescription.show()
-                },10)
+                }, 10)
             }
         }
     }
@@ -309,8 +378,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
         // Helper function to filter and map genres
         fun filterAndMapGenres(genres: List<MalUrlData>?): List<LocalGenreModel> {
             return genres?.filter { !sfw || allGenres.none { genre -> genre.animeId == it.malId } }
-                ?.map { LocalGenreModel(it.malId, it.name) }
-                ?: emptyList()
+                ?.map { LocalGenreModel(it.malId, it.name) } ?: emptyList()
         }
 
         // Add all filtered and mapped genres to the list
@@ -372,7 +440,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
         // Load custom typeface
         val customTypeface = applyFont(R.font.custom_bold)
 
-        val bgHeading = getString(R.string.msg_background)
+        val bgHeading = getString(R.string.msg_background_colon)
         val spanBgHeading = SpannableString(bgHeading)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && customTypeface != null) {
             spanBgHeading.setSpan(
@@ -383,7 +451,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
             )
         }
 
-        val desHeading = getString(R.string.msg_synopsis)
+        val desHeading = getString(R.string.msg_synopsis_colon)
         val spanDesHeading = SpannableString(desHeading)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && customTypeface != null) {
             spanDesHeading.setSpan(
@@ -398,13 +466,51 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, GenreAdapter.
         synopsis?.takeIf { it.isNotBlank() }?.let {
             result.append(spanDesHeading)
             result.append(" ")
-            result.append(SpannableString(it))
+            result.append(it)
         }
         backgroundContent?.takeIf { it.isNotBlank() }?.let {
             if (result.isNotEmpty()) result.append("\n\n")
             result.append(spanBgHeading)
             result.append(" ")
-            result.append(SpannableString(it))
+            result.append(it)
+        }
+
+        return result
+    }
+
+    private fun generateOtherTitles(
+        otherTitles: List<String>
+    ): SpannableStringBuilder {
+        // Load custom typeface
+        val result = SpannableStringBuilder()
+
+        otherTitles.forEachIndexed { index, s ->
+            val heading = "${index + 1}:"
+            if (otherTitles.size > 1) {
+                if (result.isNotEmpty()) result.append("\n")
+                result.append(heading)
+                result.append(" ")
+            }
+            result.append(s)
+        }
+
+        return result
+    }
+
+    private fun generateMalUrlNames(
+        studios: List<MalUrlData>
+    ): SpannableStringBuilder {
+        // Load custom typeface
+        val result = SpannableStringBuilder()
+
+        studios.forEachIndexed { index, studio ->
+            val heading = "${index + 1}:"
+            if (studios.size > 1) {
+                if (result.isNotEmpty()) result.append("\n")
+                result.append(heading)
+                result.append(" ")
+            }
+            result.append(studio.name)
         }
 
         return result

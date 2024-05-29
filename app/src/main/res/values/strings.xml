@@ -101,8 +101,8 @@
     <string name="msg_per_ep" translatable="false">/Ep</string>
     <string name="action_read_more">Read more</string>
     <string name="action_read_less">Read less</string>
-    <string name="msg_background">Background :</string>
-    <string name="msg_synopsis">Synopsis :</string>
+    <string name="msg_background_colon">Background:</string>
+    <string name="msg_synopsis_colon">Synopsis:</string>
     <string name="msg_stats">Stats</string>
     <string name="msg_rank">Rank</string>
     <string name="msg_popularity">Popularity</string>
@@ -110,7 +110,16 @@
     <string name="msg_members">Members</string>
     <string name="msg_favourites">Favourites</string>
     <string name="msg_more_info">More Info</string>
-    <string name="msg_romaji">Romaji:</string>
-    <string name="msg_english">English:</string>
-    <string name="msg_japanese">Japanese:</string>
+    <string name="msg_romaji_colon">Romaji:</string>
+    <string name="msg_english_colon">English:</string>
+    <string name="msg_japanese_colon">Japanese:</string>
+    <string name="msg_others_colon">Others:</string>
+    <string name="msg_aired_on_colon">Aired on:</string>
+    <string name="msg_status_colon">Status:</string>
+    <string name="msg_broadcast_colon">Broadcasts:</string>
+    <string name="msg_source_colon">Source:</string>
+    <string name="msg_studios_colon">Studios:</string>
+    <string name="msg_producers_colon">Producers:</string>
+    <string name="msg_licensors_colon">Licensors:</string>
+
 </resources>

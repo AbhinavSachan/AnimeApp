@@ -130,7 +130,7 @@
 
                 <View
                     android:id="@+id/view_logout"
-                    style="@style/MoreDLView" />
+                    style="@style/CustomHorizontalDividerView" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

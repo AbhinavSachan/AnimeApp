@@ -449,7 +449,7 @@ fun getDisplaySize(activity: Activity): Size {
  * default placeholder is "-"
  */
 fun String?.placeholder(placeholder: String = Const.Other.UNKNOWN_CHAR): String {
-    return if (this.isNullOrBlank()) {
+    return if (this.isNullOrBlank() || this == "null") {
         placeholder
     } else {
         this

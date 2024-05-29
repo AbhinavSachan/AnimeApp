@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="@dimen/_8sdp"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/group_title_one"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_title_two"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_title_other"
+        android:visibility="gone"
+        tools:visibility="visible"
+        layout="@layout/custom_title_item_layout" />
+
+    <View
+        style="@style/CustomHorizontalDividerView"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginHorizontal="@dimen/_16sdp" />
+
+    <include
+        android:id="@+id/group_date"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_status"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_broadcast"
+        android:visibility="gone"
+        tools:visibility="visible"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_source"
+        android:visibility="gone"
+        tools:visibility="visible"
+        layout="@layout/custom_title_item_layout" />
+
+    <View
+        style="@style/CustomHorizontalDividerView"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginHorizontal="@dimen/_16sdp" />
+
+    <include
+        android:id="@+id/group_studios"
+        android:visibility="gone"
+        tools:visibility="visible"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_producers"
+        android:visibility="gone"
+        tools:visibility="visible"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
+        android:id="@+id/group_licensors"
+        android:visibility="gone"
+        tools:visibility="visible"
+        layout="@layout/custom_title_item_layout" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

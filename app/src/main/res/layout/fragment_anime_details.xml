@@ -180,90 +180,45 @@
                         app:layout_constraintStart_toStartOf="@id/guide_start"
                         app:layout_constraintTop_toBottomOf="@id/tv_toggle_description" />
 
-                    <HorizontalScrollView
-                        android:id="@+id/sv_stats"
+                    <include
+                        android:id="@+id/group_stats"
+                        layout="@layout/custom_stats_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constrainedWidth="true"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
-                        app:layout_constraintTop_toBottomOf="@id/tv_stat_heading">
+                        app:layout_constraintTop_toBottomOf="@id/tv_stat_heading" />
 
-                        <androidx.appcompat.widget.LinearLayoutCompat
-                            android:id="@+id/ll_stats"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_4sdp"
-                            android:gravity="center_horizontal">
-
-                            <include
-                                android:id="@+id/group_rank"
-                                layout="@layout/custom_stat_item_layout" />
-
-                            <View
-                                style="@style/CustomVerticalDividerView"
-                                android:layout_marginVertical="@dimen/_8sdp" />
-
-                            <include
-                                android:id="@+id/group_popularity"
-                                layout="@layout/custom_stat_item_layout" />
-
-                            <View
-                                style="@style/CustomVerticalDividerView"
-                                android:layout_marginVertical="@dimen/_8sdp" />
-
-                            <include
-                                android:id="@+id/group_scored_by"
-                                layout="@layout/custom_stat_item_layout" />
-
-                            <View
-                                style="@style/CustomVerticalDividerView"
-                                android:layout_marginVertical="@dimen/_8sdp" />
-
-                            <include
-                                android:id="@+id/group_members"
-                                layout="@layout/custom_stat_item_layout" />
-
-                            <View
-                                style="@style/CustomVerticalDividerView"
-                                android:layout_marginVertical="@dimen/_8sdp" />
-
-                            <include
-                                android:id="@+id/group_favourite"
-                                layout="@layout/custom_stat_item_layout" />
-                        </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    </HorizontalScrollView>
+                    <View
+                        android:id="@+id/divider_stat"
+                        style="@style/CustomHorizontalDividerView"
+                        app:layout_constrainedWidth="true"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/group_stats" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_more_heading"
                         style="@style/TextStyleFont600"
-                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
                         android:text="@string/msg_more_info"
                         android:textSize="@dimen/text_size_16"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
-                        app:layout_constraintTop_toBottomOf="@id/sv_stats" />
+                        app:layout_constraintTop_toBottomOf="@id/divider_stat" />
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <include
+                        android:id="@+id/group_more_info"
+                        layout="@layout/custom_more_info_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginTop="@dimen/_8sdp"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
-                        app:layout_constraintTop_toBottomOf="@id/tv_more_heading">
+                        app:layout_constraintTop_toBottomOf="@id/tv_more_heading" />
 
-                        <include
-                            android:id="@+id/group_romaji"
-                            layout="@layout/custom_title_item_layout" />
-                        <include
-                            android:id="@+id/group_english"
-                            layout="@layout/custom_title_item_layout" />
-                        <include
-                            android:id="@+id/group_japanese"
-                            layout="@layout/custom_title_item_layout" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

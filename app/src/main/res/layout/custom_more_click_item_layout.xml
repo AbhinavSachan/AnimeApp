@@ -33,6 +33,6 @@
             android:src="@drawable/ic_forward" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <View style="@style/MoreDLView" />
+    <View style="@style/CustomHorizontalDividerView" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

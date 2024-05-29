@@ -4,14 +4,11 @@ import android.content.Context
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.remote.models.enums.MangaType
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
-import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.toStringOrUnknown
-import com.abhinavdev.animeapp.util.extension.formatTo
 import com.abhinavdev.animeapp.util.extension.formatToOneDigitAfterDecimalOrNull
-import com.abhinavdev.animeapp.util.extension.placeholder
-import java.util.Calendar
+import com.abhinavdev.animeapp.util.extension.getAiredDate
 
 class PresentableMangaData(val position: Int, val item: MangaData) {
 
@@ -64,36 +61,7 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
     }
 
     fun getDate(context: Context): String {
-        val from = item.published?.prop?.from
-        val to = item.published?.prop?.to
-        var startDate = ""
-        var endDate = ""
-        if (from != null) {
-            val day = from.day
-            val month = from.month
-            val year = from.year
-            val cal = Calendar.getInstance()
-            if (day != null && month != null && year != null) {
-                cal.set(year, month, day)
-                startDate = cal.time.formatTo().placeholder()
-            }
-        }
-        if (to != null) {
-            val day = to.day
-            val month = to.month
-            val year = to.year
-            val cal = Calendar.getInstance()
-            if (day != null && month != null && year != null) {
-                cal.set(year, month, day)
-                endDate = cal.time.formatTo().placeholder()
-            }
-        }
-        val result = StringBuilder()
-        result.append("${startDate.placeholder()} ${context.getString(R.string.msg_to)} ${endDate.placeholder()}")
-        if (startDate.isBlank() && endDate.isBlank()){
-            result.clear().append(Const.Other.UNKNOWN_CHAR)
-        }
-        return result.toString()
+        return item.published.getAiredDate(context)
     }
 
     fun getName(): String {

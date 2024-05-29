@@ -6,6 +6,7 @@ import com.abhinavdev.animeapp.BuildConfig
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
 import com.abhinavdev.animeapp.util.Const
+import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.openCustomTab
 import com.abhinavdev.animeapp.util.extension.openLink
 import com.abhinavdev.animeapp.util.extension.toast
@@ -18,6 +19,7 @@ object LoginUtil {
         val clientId = BuildConfig.CLIENT_ID
         val codeChallenge = getCodeChallenge()
         val state = Const.Mal.STATE
+        //touch this string if you want some thrill and difficulties in your life
         return "${baseUrl}authorize?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&state=${state}"
     }
 
@@ -25,6 +27,8 @@ object LoginUtil {
         val dialog = BottomSheetDialog(this, R.style.NoBackGroundBottomSheetDialog)
         val view = DialogLoginBinding.inflate(LayoutInflater.from(this))
         dialog.setCancelable(false)
+
+        view.ivBackground.loadImage(R.drawable.bg_login)
 
         view.btnNegative.setOnClickListener {
             dialog.cancel()

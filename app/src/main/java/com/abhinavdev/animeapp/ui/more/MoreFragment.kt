@@ -3,6 +3,8 @@ package com.abhinavdev.animeapp.ui.more
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogLoginBinding
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
+import com.abhinavdev.animeapp.databinding.DialogSfwDisableBinding
 import com.abhinavdev.animeapp.databinding.FragmentMoreBinding
 import com.abhinavdev.animeapp.databinding.InflationLoaderLayoutBinding
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
@@ -29,6 +32,7 @@ import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
+import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.setStatusBarColorAsTheme
 import com.abhinavdev.animeapp.util.extension.setTheme
 import com.abhinavdev.animeapp.util.extension.setThemeChangeAnimation
@@ -253,6 +257,14 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
     private fun onSfwClick() {
         val isChecked = binding.groupSfw.switchItem.isChecked
         binding.groupSfw.switchItem.setChecked(!isChecked, true)
+        if (isChecked) {
+            val sfwDialog = showSfwDisableDialog()
+            //gif has 26 frames and every frame was playing on 80ms delay
+            //means 26*80= 2080
+            Handler(Looper.getMainLooper()).postDelayed({
+                sfwDialog.cancel()
+            },2100)
+        }
         PrefUtils.setBoolean(Const.PrefKeys.SFW_ENABLE_KEY, !isChecked)
     }
 
@@ -265,6 +277,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             tvDescription.text = getString(R.string.msg_logout_des)
             btnNegative.text = getString(R.string.msg_cancel)
             btnPositive.text = getString(R.string.msg_okay)
+            ivBackground.loadImage(R.drawable.bg_logout)
             checkbox.hide()
         }
 
@@ -277,6 +290,17 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
         }
         dialog.setContentView(view.root)
         dialog.show()
+    }
+    private fun showSfwDisableDialog() :BottomSheetDialog{
+        val dialog = BottomSheetDialog(requireContext(), R.style.NoBackGroundBottomSheetDialog)
+        val view = DialogSfwDisableBinding.inflate(layoutInflater)
+
+        with(view) {
+            ivBackground.loadImage(R.drawable.bg_nsfw)
+        }
+        dialog.setContentView(view.root)
+        dialog.show()
+        return dialog
     }
 
     override fun <T> onItemClick(position: Int, type: T) {
