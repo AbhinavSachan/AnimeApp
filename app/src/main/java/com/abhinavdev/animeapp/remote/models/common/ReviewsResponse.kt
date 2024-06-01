@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ReviewsResponse(
     @SerializedName("pagination") val pagination: PaginationData?
-) : BaseResponse<List<ReviewData>>()
+) : BaseResponse<ArrayList<ReviewData>>()
 
 data class ReviewData(
     @SerializedName("user") val user: AnimeUserData?,

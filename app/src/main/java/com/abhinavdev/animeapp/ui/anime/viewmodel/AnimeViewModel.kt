@@ -14,6 +14,8 @@ import com.abhinavdev.animeapp.remote.kit.sources.AnimeRepositoryImpl
 import com.abhinavdev.animeapp.remote.kit.sources.MalRepositoryImpl
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
 import com.abhinavdev.animeapp.remote.models.anime.AnimeSearchResponse
+import com.abhinavdev.animeapp.remote.models.common.RecommendationsResponse
+import com.abhinavdev.animeapp.remote.models.common.ReviewsResponse
 import com.abhinavdev.animeapp.remote.models.enums.AgeRating
 import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
@@ -34,6 +36,29 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
             repository.getFullAnimeById(animeId)
         }
     }
+
+    private val _animeRecommendationResponse =
+        MutableLiveData<Event<Resource<RecommendationsResponse>>>()
+    val animeRecommendationResponse: LiveData<Event<Resource<RecommendationsResponse>>> =
+        _animeRecommendationResponse
+
+    fun getAnimeRecommendations(animeId: Int) = viewModelScope.launch {
+        _animeRecommendationResponse.fetchData(getApplication()) {
+            repository.getAnimeRecommendations(animeId)
+        }
+    }
+
+    private val _reviewsResponse = MutableLiveData<Event<Resource<ReviewsResponse>>>()
+    val reviewsResponse: LiveData<Event<Resource<ReviewsResponse>>> = _reviewsResponse
+
+    fun getAnimeReviews(animeId: Int, page: Int, preliminary: Boolean, spoiler: Boolean) =
+        viewModelScope.launch {
+            _reviewsResponse.fetchData(getApplication()) {
+                repository.getAnimeReviews(
+                    animeId = animeId, pageNo = page, preliminary = preliminary, spoiler = spoiler
+                )
+            }
+        }
 
     private val _topAnimeResponse = MutableLiveData<Event<Resource<AnimeSearchResponse>>>()
     val topAnimeResponse: LiveData<Event<Resource<AnimeSearchResponse>>> = _topAnimeResponse
@@ -60,7 +85,8 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val _animeRecommendedResponse = MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
+    private val _animeRecommendedResponse =
+        MutableLiveData<Event<Resource<MalMyAnimeListResponse>>>()
     val animeRecommendedResponse: LiveData<Event<Resource<MalMyAnimeListResponse>>> =
         _animeRecommendedResponse
 

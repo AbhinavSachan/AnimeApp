@@ -263,7 +263,7 @@ class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomCli
                     tvEmptyDesc.text = getString(R.string.msg_empty_list_des)
                     R.drawable.bg_empty_list
                 }
-                binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
+                ivEmptyIcon.setImageResource(imageRes)
             }
         }
         binding.rvList.showOrHide(!isListEmpty)

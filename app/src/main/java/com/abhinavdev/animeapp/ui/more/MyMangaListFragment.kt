@@ -325,7 +325,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                     tvEmptyDesc.text = getString(R.string.msg_empty_manga_list_des)
                     R.drawable.bg_empty_my_list
                 }
-                binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
+                ivEmptyIcon.setImageResource(imageRes)
             }
         }
         binding.rvList.showOrHide(!isListEmpty)

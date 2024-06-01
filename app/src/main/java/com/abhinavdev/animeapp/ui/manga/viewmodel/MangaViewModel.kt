@@ -40,8 +40,9 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
     fun getTopManga(
         type: MangaType, filter: MangaFilter, page: Int, limit: Int
     ) = viewModelScope.launch {
+        val sfw = SettingsHelper.getSfwEnabled()
         _topMangaResponse.fetchData(getApplication()) {
-            repository.getTopManga(type, filter, page, limit)
+            repository.getTopManga(type, filter,sfw, page, limit)
         }
     }
 
@@ -80,13 +81,14 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
         val page = 1
         val limit = 10
         val offset = 0
+        val sfw = SettingsHelper.getSfwEnabled()
         val isAuthenticated = SettingsHelper.getIsAuthenticated()
 
         _allResponse.postValue(Event(true))
 
         _airingResponse.fetchData(getApplication()){
             repository.getTopManga(
-                mangaType, MangaFilter.PUBLISHING, page, limit
+                mangaType, MangaFilter.PUBLISHING,sfw, page, limit
             )
         }
         if (isAuthenticated) {
@@ -98,17 +100,17 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
         }
         _popularResponse.fetchData(getApplication()){
             repository.getTopManga(
-                mangaType, MangaFilter.BY_POPULARITY, page, limit
+                mangaType, MangaFilter.BY_POPULARITY,sfw, page, limit
             )
         }
         _favouriteResponse.fetchData(getApplication()){
             repository.getTopManga(
-                mangaType, MangaFilter.FAVORITE, page, limit
+                mangaType, MangaFilter.FAVORITE,sfw, page, limit
             )
         }
         _upcomingResponse.fetchData(getApplication()){
             repository.getTopManga(
-                mangaType, MangaFilter.UPCOMING, page, limit
+                mangaType, MangaFilter.UPCOMING,sfw, page, limit
             )
         }
         _allResponse.postValue(Event(false))

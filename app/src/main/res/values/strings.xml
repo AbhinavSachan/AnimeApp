@@ -116,10 +116,16 @@
     <string name="msg_others_colon">Others:</string>
     <string name="msg_aired_on_colon">Aired on:</string>
     <string name="msg_status_colon">Status:</string>
-    <string name="msg_broadcast_colon">Broadcasts:</string>
+    <string name="msg_broadcast_colon">Broadcast:</string>
     <string name="msg_source_colon">Source:</string>
     <string name="msg_studios_colon">Studios:</string>
     <string name="msg_producers_colon">Producers:</string>
     <string name="msg_licensors_colon">Licensors:</string>
+    <string name="msg_recommended">Recommended</string>
+    <string name="msg_reviews">Reviews</string>
+    <string name="msg_preliminary">Preliminary</string>
+    <string name="msg_spoiler">Spoiler</string>
+    <string name="msg_empty_recommendations_list_des">There aren\'t any recommendations related from this anime.</string>
+    <string name="msg_empty_review_list_des">Looks like reviews haven\'t been posted.</string>
 
 </resources>

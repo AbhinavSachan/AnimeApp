@@ -9,13 +9,14 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_empty_icon"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_220sdp"
+        android:layout_height="@dimen/_230sdp"
         app:layout_constraintBottom_toTopOf="@id/tv_empty_title"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/_30sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:src="@drawable/bg_empty_my_list" />
+        tools:src="@drawable/bg_empty_recommendation_list" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_empty_title"

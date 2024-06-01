@@ -637,6 +637,7 @@ interface JikanApiService {
     suspend fun getTopManga(
         @Query("type") mangaType: String,
         @Query("filter") mangaFilter: String,
+        @Query("sfw") sfw: Boolean,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
     ): Response<MangaSearchResponse>

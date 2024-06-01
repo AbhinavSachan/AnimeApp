@@ -193,9 +193,9 @@
                     <View
                         android:id="@+id/divider_stat"
                         style="@style/CustomHorizontalDividerView"
-                        app:layout_constrainedWidth="true"
                         android:layout_marginHorizontal="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_8sdp"
+                        app:layout_constrainedWidth="true"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
                         app:layout_constraintTop_toBottomOf="@id/group_stats" />
@@ -219,6 +219,51 @@
                         app:layout_constraintStart_toStartOf="@id/guide_start"
                         app:layout_constraintTop_toBottomOf="@id/tv_more_heading" />
 
+                    <com.flyco.tablayout.SegmentTabLayout
+                        android:id="@+id/segment_tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/bg_white_bor_accent_rounded"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/group_more_info"
+                        app:tl_bar_stroke_width="0dp"
+                        app:tl_indicator_anim_enable="true"
+                        app:tl_indicator_color="@color/accent"
+                        app:tl_indicator_corner_radius="@dimen/_100sdp"
+                        app:tl_tab_padding="@dimen/_8sdp"
+                        app:tl_textSelectColor="@color/onAccent"
+                        app:tl_textUnselectColor="@color/fontTextPrimary"
+                        app:tl_textsize="@dimen/text_size_15" />
+
+                    <include
+                        android:id="@+id/group_recommended"
+                        layout="@layout/custom_rv_recommended_details_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        app:layout_constraintTop_toBottomOf="@id/segment_tab_layout" />
+
+                    <include
+                        android:id="@+id/group_review_options"
+                        layout="@layout/custom_anime_details_review_options"
+                        android:layout_width="0dp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="@id/guide_end"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/segment_tab_layout" />
+
+                    <include
+                        android:id="@+id/group_reviews"
+                        layout="@layout/custom_rv_recommended_details_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@id/group_review_options" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

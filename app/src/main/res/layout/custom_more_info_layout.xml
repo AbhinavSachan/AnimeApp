@@ -70,4 +70,10 @@
         tools:visibility="visible"
         layout="@layout/custom_title_item_layout" />
 
+    <View
+        style="@style/CustomHorizontalDividerView"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginHorizontal="@dimen/_16sdp" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>

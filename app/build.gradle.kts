@@ -190,5 +190,6 @@ dependencies {
     //zoom image view
     implementation(libs.zoomage)
     implementation(libs.expandabletextview)
+    implementation(libs.flycotablayout)
 }
 //https://docs.consumet.org/#tag/anilist

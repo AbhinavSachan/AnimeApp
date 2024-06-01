@@ -126,9 +126,9 @@ class MangaRepositoryImpl : MangaRepository {
     }
 
     override suspend fun getTopManga(
-        type: MangaType, filter: MangaFilter, page: Int, limit: Int
+        type: MangaType, filter: MangaFilter, sfw: Boolean, page: Int, limit: Int
     ): Response<MangaSearchResponse> {
-        return apiService.getTopManga(type.search, filter.search, page, limit)
+        return apiService.getTopManga(type.search, filter.search,sfw, page, limit)
     }
 
     override suspend fun getMangaGenres(filter: GenreType): Response<ClubMembersResponse> {

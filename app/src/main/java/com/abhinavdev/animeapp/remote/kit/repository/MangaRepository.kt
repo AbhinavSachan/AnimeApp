@@ -85,6 +85,7 @@ interface MangaRepository {
     suspend fun getTopManga(
         type: MangaType,
         filter: MangaFilter,
+        sfw: Boolean,
         page: Int,
         limit: Int,
     ): Response<MangaSearchResponse>

@@ -309,7 +309,7 @@ class AnimeRankingFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                     tvEmptyDesc.text = getString(R.string.msg_empty_list_des)
                     R.drawable.bg_empty_list
                 }
-                binding.emptyLayout.ivEmptyIcon.setImageResource(imageRes)
+                ivEmptyIcon.setImageResource(imageRes)
             }
         }
         binding.rvList.showOrHide(!isListEmpty)
