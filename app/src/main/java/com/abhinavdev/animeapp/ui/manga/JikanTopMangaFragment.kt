@@ -369,7 +369,6 @@ class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickL
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun runPostOptionClick() {
         page = 1
         optionBottomSheetDialog?.cancel()

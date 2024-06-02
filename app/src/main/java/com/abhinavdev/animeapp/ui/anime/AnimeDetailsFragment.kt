@@ -5,8 +5,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -32,7 +30,9 @@ import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeRecommendationAdapter
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.adapters.GenreAdapter
+import com.abhinavdev.animeapp.ui.common.adapters.ReviewAdapter
 import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
 import com.abhinavdev.animeapp.ui.common.ui.FullScreenImageActivity
 import com.abhinavdev.animeapp.ui.main.MainActivity
@@ -65,7 +65,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 
-class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickListener, GenreAdapter.Callback {
+class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+    OnClickMultiTypeCallback, GenreAdapter.Callback {
     private var _binding: FragmentAnimeDetailsBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -81,13 +82,15 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
     private val genreList: ArrayList<LocalGenreModel> = arrayListOf()
     private var genreAdapter: GenreAdapter? = null
 
-    private val recommendationList  = arrayListOf<RecommendationsData>()
-    private var recommendationAdapter:AnimeRecommendationAdapter? = null
+    private val recommendationList = arrayListOf<RecommendationsData>()
+    private var recommendationAdapter: AnimeRecommendationAdapter? = null
 
     private val reviewList: ArrayList<ReviewData> = arrayListOf()
+    private var reviewAdapter: ReviewAdapter? = null
     private var page = 1
     private val isFirstPage get() = page == 1
-    private var paginationHelper:PaginationViewHelper? = null
+    private var paginationHelper: PaginationViewHelper? = null
+    private var shouldScrollToTop: Boolean = false
 
     private var selectedTabPosition = 0
     private val coroutine = CoroutineScope(Dispatchers.IO)
@@ -139,12 +142,13 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
         setupTopImage()
         setupEmptyLayout()
 
-        val tabList = arrayOf(getString(R.string.msg_recommended),getString(R.string.msg_reviews))
+        val tabList = arrayOf(getString(R.string.msg_recommended), getString(R.string.msg_reviews))
         binding.segmentTabLayout.setTabData(tabList)
-        paginationHelper = context?.let { PaginationViewHelper(binding.groupReviews.groupPagination, it) }
+        paginationHelper =
+            context?.let { PaginationViewHelper(binding.groupReviews.groupPagination, it) }
     }
 
-    private fun setupEmptyLayout(){
+    private fun setupEmptyLayout() {
         with(binding.emptyLayout) {
             tvEmptyTitle.text = getString(R.string.error_something_went_wrong)
             tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
@@ -152,7 +156,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
         }
     }
 
-    private fun setupToolbar(){
+    private fun setupToolbar() {
         with(binding.toolbar) {
             ivBack.show()
             ivExtra.show()
@@ -163,18 +167,31 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
             }
         }
     }
+
     private fun updatePageNo() {
         //in mal api's we have to send offset but in jikan page no that's why we are adding one to show correct page no
         paginationHelper?.setPageText(page)
     }
 
-    private fun setupTopImage(){
+    private fun setupTopImage() {
         val posterMargin = binding.ivPoster.marginTop
         ViewUtil.setOnApplyUiInsetsListener(binding.ivPoster) { insets ->
             ViewUtil.setTopMargin(binding.ivPoster, posterMargin + insets.top)
         }
-        ViewUtil.setOnApplyUiInsetsListener(binding.scrollView) { insets ->
-            ViewUtil.setBottomPadding(binding.scrollView, insets.bottom)
+        val paddingBottom = binding.groupReviews.rvRecommended.paddingBottom
+        val paddingRecyclerView =
+            resources.getDimensionPixelSize(R.dimen.recycler_view_bottom_padding)
+        ViewUtil.setOnApplyUiInsetsListener(binding.groupReviews.rvRecommended) { insets ->
+            ViewUtil.setBottomPadding(
+                binding.groupReviews.rvRecommended,
+                insets.bottom + paddingRecyclerView
+            )
+        }
+        ViewUtil.setOnApplyUiInsetsListener(binding.groupRecommended.rvRecommended) { insets ->
+            ViewUtil.setBottomPadding(
+                binding.groupRecommended.rvRecommended,
+                insets.bottom + paddingBottom
+            )
         }
 
         setTopViewPagerHeight()
@@ -189,19 +206,25 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
     }
 
     private fun setAdapters() {
-        binding.rvGenre.setHasFixedSize(true)
         genreAdapter = GenreAdapter(genreList, this)
         genreAdapter?.setHasStableIds(true)
+        binding.rvGenre.setHasFixedSize(true)
         binding.rvGenre.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvGenre.adapter = genreAdapter
 
-        binding.groupRecommended.rvRecommended.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         recommendationAdapter = AnimeRecommendationAdapter(recommendationList, this)
         recommendationAdapter?.setHasStableIds(true)
+        binding.groupRecommended.rvRecommended.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.groupRecommended.rvRecommended.addItemDecoration(GridSpacing(2, 16, false))
         binding.groupRecommended.rvRecommended.layoutManager = GridLayoutManager(context, 2)
         binding.groupRecommended.rvRecommended.adapter = recommendationAdapter
+
+        reviewAdapter = ReviewAdapter(reviewList, this)
+        reviewAdapter?.setHasStableIds(true)
+        binding.groupReviews.rvRecommended.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
+        binding.groupReviews.rvRecommended.layoutManager = LinearLayoutManager(context)
+        binding.groupReviews.rvRecommended.adapter = reviewAdapter
     }
 
     private fun setListeners() {
@@ -209,18 +232,20 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
         binding.toolbar.ivExtra.setOnClickListener(this)
         binding.ivPoster.setOnClickListener(this)
         binding.tvToggleDescription.setOnClickListener(this)
-        binding.segmentTabLayout.setOnTabSelectListener(object :OnTabSelectListener{
+        binding.segmentTabLayout.setOnTabSelectListener(object : OnTabSelectListener {
             override fun onTabSelect(position: Int) {
                 selectedTabPosition = position
-                if (position == 0){
+                if (position == 0) {
                     binding.groupReviews.root.hide()
                     binding.groupReviewOptions.root.hide()
+                    binding.groupReviews.groupPagination.root.hide()
                     binding.groupRecommended.root.show()
                     if (recommendationList.isEmpty()) getRecommendedAnime()
-                }else{
+                } else {
                     binding.groupRecommended.root.hide()
                     binding.groupReviews.root.show()
                     binding.groupReviewOptions.root.show()
+                    binding.groupReviews.groupPagination.root.show()
                     if (reviewList.isEmpty()) getAnimeReviews()
                 }
             }
@@ -233,11 +258,13 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
             getData(true)
         }
         binding.groupReviewOptions.cbPreliminary.setOnCheckedChangeListener { _, _ ->
-            getAnimeReviews()
+            runPostOptionClick()
         }
         binding.groupReviewOptions.cbSpoiler.setOnCheckedChangeListener { _, _ ->
-            getAnimeReviews()
+            runPostOptionClick()
         }
+        paginationHelper?.onNextPageClick { onNextClick() }
+        paginationHelper?.onPreviousPageClick { onPreviousClick() }
     }
 
     override fun onClick(v: View?) {
@@ -247,6 +274,23 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
             binding.ivPoster -> onImageClick()
             binding.tvToggleDescription -> onToggleDescriptionClick()
         }
+    }
+
+    private fun onNextClick() {
+        increaseOffset()
+        scrollToTop()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun onPreviousClick() {
+        decreaseOffset()
+        scrollToTop()
+        commonFetchListAfterOptionChange()
+    }
+
+    private fun runPostOptionClick() {
+        page = 1
+        commonFetchListAfterOptionChange()
     }
 
     private fun onToggleDescriptionClick() {
@@ -319,21 +363,21 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
-                        response.data?.data?.let {
+                        response.data?.data?.takeIf { it.isNotEmpty() }?.let {
                             setReviewData(it)
                         }
                         isReviewLoading(false)
-                        val hasNext = response.data?.data?.isNotEmpty() ?: false
-                        if (hasNext) updatePageNo()
-                        paginationHelper?.setEditButtonVisible(true)
+                        val hasNext = response.data?.data?.let { it.size == 20 || it.isNotEmpty() } ?: false
+                        if (hasNext || isFirstPage) updatePageNo()
+                        if (!hasNext) decreaseOffset()
+                        //if its first time api running then don't have to show this message
+                        if (!hasNext && !isFirstPage) toast(getString(R.string.msg_no_more_reviews))
                         //if this is not the first page then enable previous button
                         paginationHelper?.setPreviousButtonEnabled(!isFirstPage)
                         //if api has next page then enable next button
                         paginationHelper?.setNextButtonEnabled(hasNext)
                         //if first page then check if list is empty
-                        if (isFirstPage) {
-                            showEmptyReviewLayout(false)
-                        }
+                        if (isFirstPage) showEmptyReviewLayout(false)
                     }
 
                     is Resource.Error -> {
@@ -350,27 +394,37 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setReviewData(data: ArrayList<ReviewData>) {
         reviewList.clear()
         reviewList.addAll(data)
+        reviewAdapter?.notifyDataSetChanged()
+    }
+
+    private fun scrollToTop() {
+        binding.scrollView.post {
+            val targetPosition = binding.segmentTabLayout.top - 70
+            binding.scrollView.smoothScrollTo(0, targetPosition)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setRecommendedData(data: ArrayList<RecommendationsData>) {
         recommendationList.clear()
-        if (data.size > 20) {
-            recommendationList.addAll(data.subList(0, 20))
+        val itemCount = 30
+        if (data.size > itemCount) {
+            recommendationList.addAll(data.subList(0, itemCount))
         } else {
             recommendationList.addAll(data)
         }
         recommendationAdapter?.notifyDataSetChanged()
     }
 
-    private fun isReviewLoading(isLoading: Boolean){
+    private fun isReviewLoading(isLoading: Boolean) {
         binding.groupReviews.loader.root.showOrHide(isLoading)
     }
 
-    private fun isRecommendedLoading(isLoading: Boolean){
+    private fun isRecommendedLoading(isLoading: Boolean) {
         binding.groupRecommended.loader.root.showOrHide(isLoading)
     }
 
@@ -388,7 +442,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
                     R.drawable.bg_empty_review_list
                 }
                 val bottomPadding = resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._45sdp)
-                ViewUtil.setBottomPadding(tvEmptyDesc,bottomPadding)
+                ViewUtil.setBottomPadding(tvEmptyDesc, bottomPadding)
                 ivEmptyIcon.setImageResource(imageRes)
             }
         }
@@ -410,7 +464,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
                     R.drawable.bg_empty_recommendation_list
                 }
                 val bottomPadding = resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._45sdp)
-                ViewUtil.setBottomPadding(tvEmptyDesc,bottomPadding)
+                ViewUtil.setBottomPadding(tvEmptyDesc, bottomPadding)
                 ivEmptyIcon.setImageResource(imageRes)
             }
         }
@@ -442,8 +496,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
             val broadcastDate = anime.broadcast?.convertBroadcastToLocalTime().placeholder()
             val animeSource = anime.source
             val studios = anime.studios?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
-            val producers = anime.producers?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
-            val licensors = anime.licensors?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
+            val producers =
+                anime.producers?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
+            val licensors =
+                anime.licensors?.takeIf { it.isNotEmpty() }?.let { generateMalUrlNames(it) }
 
             with(binding) {
                 genreList.clear()
@@ -473,6 +529,12 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
                 tvMetadata.text = metaData.second
                 tvDescription.text = description
 
+                tvDescription.post {
+                    if (tvDescription.lineCount >= tvDescription.maxLines) {
+                        tvDescription.setInterpolator(OvershootInterpolator())
+                        tvToggleDescription.show()
+                    }
+                }
                 //setting all the stats
                 with(groupStats) {
                     groupRank.tvHeading.text = getString(R.string.msg_rank)
@@ -557,12 +619,6 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
                 }
 
                 if (clContent.isHidden()) clContent.show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    if (tvDescription.lineCount >= tvDescription.maxLines) {
-                        tvDescription.setInterpolator(OvershootInterpolator())
-                        tvToggleDescription.show()
-                    }
-                }, 10)
             }
         }
     }
@@ -736,25 +792,43 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener,CustomClickLis
         viewModel.getFullAnimeById(animeId)
     }
 
-    private fun getRecommendedAnime(){
+    private fun getRecommendedAnime() {
         viewModel.getAnimeRecommendations(animeId)
     }
 
-    private fun getAnimeReviews(){
+    private fun getAnimeReviews() {
         val preliminary = binding.groupReviewOptions.cbPreliminary.isChecked
         val spoiler = binding.groupReviewOptions.cbSpoiler.isChecked
-        viewModel.getAnimeReviews(animeId,page,preliminary,spoiler)
+        viewModel.getAnimeReviews(animeId, page, preliminary, spoiler)
     }
 
     override fun onGenreClick(position: Int) {
 
     }
 
+    override fun <T> onItemClick(position: Int, type: T) {
+        //handle review clicks
+    }
+
     override fun onItemClick(position: Int) {
+        //handle recommendations list item click
         val animeId = recommendationList[position].entry?.malId
         if (animeId != null) {
             parentActivity?.navigateToFragment(newInstance(animeId))
         }
+    }
+
+    private fun commonFetchListAfterOptionChange() {
+        shouldScrollToTop = true
+        getAnimeReviews()
+    }
+
+    private fun increaseOffset() {
+        page += 1
+    }
+
+    private fun decreaseOffset() {
+        if (page != 1) page -= 1
     }
 
     companion object {

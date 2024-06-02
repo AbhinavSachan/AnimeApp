@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_8sdp"
+    android:background="@drawable/bg_white_corner_12">
+
+    <at.blogc.android.views.ExpandableTextView
+        android:id="@+id/tv_review"
+        style="@style/TextStyleFont400"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/_11sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="8"
+        android:textSize="@dimen/text_size_13"
+        app:animation_duration="300"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@tools:sample/lorem/random" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_11sdp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_review"
+        app:layout_constraintTop_toBottomOf="@id/tv_review"
+        app:shapeAppearanceOverlay="@style/CircleImageView"
+        tools:src="@drawable/bg_error_placeholder" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_user_name"
+        style="@style/TextStyleFont500"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintStart_toEndOf="@id/iv_profile"
+        app:layout_constraintTop_toTopOf="@id/iv_profile"
+        tools:text="User Name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_date"
+        style="@style/TextStyleFont500"
+        android:textColor="@color/fontTextSecondary"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintStart_toStartOf="@id/tv_user_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_name"
+        tools:text="Reviewed on - 03 Jun 2024" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_score"
+        style="@style/TextStyleFont600"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toBottomOf="@id/tv_date"
+        app:layout_constraintEnd_toEndOf="@id/tv_review"
+        app:layout_constraintTop_toTopOf="@id/tv_user_name"
+        tools:text="8/10" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_score_heading"
+        style="@style/TextStyleFont400"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:text="@string/msg_rated_colon"
+        android:textColor="@color/fontTextSecondary"
+        android:textSize="@dimen/text_size_13"
+        app:layout_constraintBottom_toBottomOf="@id/tv_date"
+        app:layout_constraintEnd_toStartOf="@id/tv_score"
+        app:layout_constraintTop_toTopOf="@id/tv_user_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

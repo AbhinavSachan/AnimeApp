@@ -16,7 +16,6 @@
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/cb_spoiler"
         style="@style/CustomCheckBoxStyle"
-        android:checked="true"
         android:text="@string/msg_spoiler"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

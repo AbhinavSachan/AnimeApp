@@ -21,6 +21,7 @@
         layout="@layout/custom_title_item_layout" />
 
     <View
+        android:id="@+id/divider_first"
         style="@style/CustomHorizontalDividerView"
         android:layout_marginBottom="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_4sdp"
@@ -47,6 +48,7 @@
         layout="@layout/custom_title_item_layout" />
 
     <View
+        android:id="@+id/divider_second"
         style="@style/CustomHorizontalDividerView"
         android:layout_marginBottom="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_4sdp"
@@ -71,6 +73,7 @@
         layout="@layout/custom_title_item_layout" />
 
     <View
+        android:id="@+id/divider_third"
         style="@style/CustomHorizontalDividerView"
         android:layout_marginBottom="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_4sdp"
