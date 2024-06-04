@@ -3,7 +3,6 @@ package com.abhinavdev.animeapp.ui.main
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
@@ -24,9 +23,9 @@ import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
-import com.google.android.material.navigation.NavigationBarView
+import com.abhinavdev.animeapp.util.ui.curved_bottom_navigation.CbnMenuItem
 
-class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
+class MainActivity : BaseActivity() {
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -129,7 +128,21 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun initComponents() {
-
+        val menuItems = arrayOf(
+            CbnMenuItem(
+                R.drawable.ic_anime_inactive, //normal icon
+                R.drawable.ic_anime_active, //selected icon
+            ),
+            CbnMenuItem(
+                R.drawable.ic_manga_inactive,
+                R.drawable.ic_manga_active,
+            ),
+            CbnMenuItem(
+                R.drawable.ic_more_inactive,
+                R.drawable.ic_more_active,
+            )
+        )
+        binding.bottomNavBar.setMenuItems(menuItems, 0)
     }
 
     private fun setAdapters() {
@@ -140,7 +153,13 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun setListeners() {
-        binding.bottomNavBar.setOnItemSelectedListener(this)
+        binding.bottomNavBar.setOnMenuItemClickListener { _, index ->
+            when (index) {
+                0 -> navigateToPosition(MainFragmentAdapter.PageType.ANIME)
+                1 -> navigateToPosition(MainFragmentAdapter.PageType.MANGA)
+                2 -> navigateToPosition(MainFragmentAdapter.PageType.MORE)
+            }
+        }
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 currentPageType = rootFragmentTypes[position]
@@ -148,6 +167,14 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
                 updateSelectedItemId()
             }
         })
+    }
+
+    private fun navigateToPosition(type: MainFragmentAdapter.PageType): Boolean {
+        if (currentPageType != type) {
+            val position = rootFragmentTypes.indexOf(type)
+            binding.viewPager.setCurrentItem(position, false)
+        }
+        return true
     }
 
     private fun setObservers() {
@@ -209,23 +236,6 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
         binding.loader.progressOverlay.showOrHide(b)
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.navigation_anime -> navigateToPosition(MainFragmentAdapter.PageType.ANIME)
-            R.id.navigation_manga -> navigateToPosition(MainFragmentAdapter.PageType.MANGA)
-            R.id.navigation_more -> navigateToPosition(MainFragmentAdapter.PageType.MORE)
-            else -> false
-        }
-    }
-
-    private fun navigateToPosition(type: MainFragmentAdapter.PageType): Boolean {
-        if (currentPageType != type) {
-            val position = rootFragmentTypes.indexOf(type)
-            binding.viewPager.setCurrentItem(position, false)
-        }
-        return true
-    }
-
     fun navigateToFragment(fragment: Fragment) {
         addFragment(
             fragment = fragment,
@@ -243,15 +253,14 @@ class MainActivity : BaseActivity(), NavigationBarView.OnItemSelectedListener {
     }
 
     private fun updateSelectedItemId() {
-
-        val selectedItemId = when (currentPageType) {
+        val selectedItemId =  currentPageType.position/*when (currentPageType) {
             MainFragmentAdapter.PageType.ANIME -> R.id.navigation_anime
             MainFragmentAdapter.PageType.MANGA -> R.id.navigation_manga
             MainFragmentAdapter.PageType.MORE -> R.id.navigation_more
-        }
+        }*/
 
         // Update the bottom navigation bar
-        binding.bottomNavBar.selectedItemId = selectedItemId
+        binding.bottomNavBar.onMenuItemClick(selectedItemId)
     }
 
     fun logout() {

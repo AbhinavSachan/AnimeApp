@@ -10,30 +10,43 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_3sdp"
-        android:background="@drawable/bg_bottom_nav_bar_shadow"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavBar" />
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/_3sdp"-->
+<!--        android:background="@drawable/bg_bottom_nav_bar_shadow"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/bottomNavBar" />-->
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.abhinavdev.animeapp.util.ui.curved_bottom_navigation.CurvedBottomNavigationView
         android:id="@+id/bottomNavBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary"
-        app:itemActiveIndicatorStyle="@null"
-        app:itemIconSize="@dimen/_20sdp"
-        app:itemIconTint="@color/bottom_navigation_icon_selector"
-        app:itemPaddingTop="@dimen/_17sdp"
-        app:itemTextAppearanceActive="@style/BottomNavigationTextAppearanceActive"
-        app:itemTextAppearanceInactive="@style/BottomNavigationTextAppearanceInactive"
-        app:itemTextColor="@color/selector_bottom_nav_text_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_pager"
-        app:menu="@menu/main_bottom_menu" />
+        app:cbn_animDuration="200"
+        app:cbn_elevation="@dimen/_4sdp"
+        app:cbn_bg="@color/primary"
+        app:cbn_fabElevation="@dimen/_6sdp"
+        app:cbn_fabBg="@color/accent"
+        app:cbn_selectedColor="@color/onAccent"
+        app:cbn_unSelectedColor="@color/black"
+        android:layout_height="wrap_content" />
+
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/bottomNavBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/primary"-->
+<!--        app:itemActiveIndicatorStyle="@null"-->
+<!--        app:itemIconSize="@dimen/_20sdp"-->
+<!--        app:itemIconTint="@color/bottom_navigation_icon_selector"-->
+<!--        app:itemPaddingTop="@dimen/_17sdp"-->
+<!--        app:itemTextAppearanceActive="@style/BottomNavigationTextAppearanceActive"-->
+<!--        app:itemTextAppearanceInactive="@style/BottomNavigationTextAppearanceInactive"-->
+<!--        app:itemTextColor="@color/selector_bottom_nav_text_color"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/view_pager"-->
+<!--        app:menu="@menu/main_bottom_menu" />-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

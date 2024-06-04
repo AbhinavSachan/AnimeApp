@@ -446,8 +446,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                 ivEmptyIcon.setImageResource(imageRes)
             }
         }
-        binding.groupReviews.rvRecommended.showOrHide(!isListEmpty)
-        binding.groupReviews.emptyLayout.root.showOrHide(isListEmpty)
+        binding.groupRecommended.emptyLayout.root.post {
+            binding.groupRecommended.rvRecommended.showOrHide(!isListEmpty)
+            binding.groupRecommended.emptyLayout.root.showOrHide(isListEmpty)
+        }
     }
 
     private fun showEmptyRecommendedLayout(isError: Boolean) {
@@ -468,8 +470,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                 ivEmptyIcon.setImageResource(imageRes)
             }
         }
-        binding.groupRecommended.rvRecommended.showOrHide(!isListEmpty)
-        binding.groupRecommended.emptyLayout.root.showOrHide(isListEmpty)
+        binding.groupRecommended.emptyLayout.root.post {
+            binding.groupRecommended.rvRecommended.showOrHide(!isListEmpty)
+            binding.groupRecommended.emptyLayout.root.showOrHide(isListEmpty)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

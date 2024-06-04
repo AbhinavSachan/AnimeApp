@@ -35,6 +35,7 @@ import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.FontRes
 import androidx.annotation.LayoutRes
@@ -73,6 +74,14 @@ fun Context.applyFont(@FontRes resId: Int): Typeface? {
 
 fun Fragment.applyFont(@FontRes resId: Int): Typeface? {
     return ResourcesCompat.getFont(requireContext(), resId)
+}
+
+fun Context.applyDimen(@DimenRes resId: Int): Int {
+    return resources.getDimensionPixelSize(resId)
+}
+
+fun Fragment.applyDimen(@DimenRes resId: Int): Int {
+    return resources.getDimensionPixelSize(resId)
 }
 
 fun Bitmap.getCircularBitmap(): Bitmap {

@@ -29,6 +29,7 @@ import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
+import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
@@ -111,6 +112,12 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
                 ViewUtil.setTopPadding(root, insets.top)
             }
+        }
+
+        val bottomBarHeight = applyDimen(R.dimen.cbn_height)
+        val salt = applyDimen(R.dimen.bottom_bar_height_salt)
+        ViewUtil.setOnApplyUiInsetsListener(binding.nestedScrollView) { insets ->
+            ViewUtil.setBottomPadding(binding.nestedScrollView, insets.bottom + bottomBarHeight + salt)
         }
 
         //setting clickable from xml is not working

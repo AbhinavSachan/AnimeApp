@@ -30,6 +30,7 @@ import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
+import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfGivenHeight
@@ -122,6 +123,11 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
             ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
                 ViewUtil.setTopPadding(root, insets.top)
             }
+        }
+        val bottomBarHeight = applyDimen(R.dimen.cbn_height)
+        val salt = applyDimen(R.dimen.bottom_bar_height_salt)
+        ViewUtil.setOnApplyUiInsetsListener(binding.nestedScrollView) { insets ->
+            ViewUtil.setBottomPadding(binding.nestedScrollView, insets.bottom + bottomBarHeight + salt)
         }
         setAllTitles()
         setTopViewPagerHeight()
