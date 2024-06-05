@@ -24,6 +24,8 @@ object Const {
 
             //key to save title language type in settings
             const val PREFERRED_TITLE_TYPE_KEY = "settings_preferred_title_type_key"
+            // key to save media type if user want to see anime or manga
+            const val APP_MEDIA_TYPE_KEY = "settings_app_media_type_key"
 
             //key to save language in settings
             const val APP_LANGUAGE_KEY = "settings_app_language_key"

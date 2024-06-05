@@ -35,6 +35,7 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
+import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.removeItemDecorations
@@ -137,6 +138,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             groupSort.tvItem.text = sort.showName
         }
         with(binding.toolbar) {
+            ivBack.hide()
             tvTitle.text = getString(R.string.msg_my_anime_list)
             val viewIcon = when (gridOrList) {
                 GRID -> R.drawable.ic_list_view
@@ -149,11 +151,20 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                 ViewUtil.setTopPadding(root, insets.top)
             }
         }
-        val padding = binding.rvList.paddingBottom
+        val rvBPadding = binding.rvList.paddingBottom
+        val bottomBarHeight = applyDimen(R.dimen.cbn_height)
+        val salt = applyDimen(R.dimen.bottom_bar_height_salt)
         ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
-            ViewUtil.setBottomPadding(binding.rvList, padding + insets.bottom)
+            ViewUtil.setBottomPadding(
+                binding.rvList, insets.bottom + rvBPadding + bottomBarHeight + salt
+            )
         }
-
+        val paginationBPadding = binding.groupPagination.clPagination.paddingBottom
+        ViewUtil.setOnApplyUiInsetsListener(binding.groupPagination.clPagination) { insets ->
+            ViewUtil.setBottomPadding(
+                binding.groupPagination.clPagination, insets.bottom + paginationBPadding + bottomBarHeight + salt
+            )
+        }
     }
 
     private fun updatePageNo() {
@@ -188,7 +199,6 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     }
 
     private fun setListeners() {
-        binding.toolbar.ivBack.setOnClickListener(this)
         binding.toolbar.ivExtra.setOnClickListener(this)
         binding.groupStatus.llItem.setOnClickListener(this)
         binding.groupSort.llItem.setOnClickListener(this)
@@ -201,7 +211,6 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
             binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
             binding.groupSort.llItem -> openOptionDialog(sortList, ListOptionsType.SORT)

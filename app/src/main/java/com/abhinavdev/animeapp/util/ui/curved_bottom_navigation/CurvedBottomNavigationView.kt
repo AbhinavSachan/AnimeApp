@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -13,11 +14,13 @@ import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -690,71 +693,6 @@ class CurvedBottomNavigationView @JvmOverloads constructor(
         }
     }
 
-    //    private fun computeCurve(offsetX: Int, w: Int) {
-//        // store the current offset (useful when animating)
-//        this.cellOffsetX = offsetX
-//        // first curve
-//        firstCurveStart.apply {
-//            x = offsetX + (w / 2) - curveHalfWidth
-//            y = bottomNavOffsetY
-//        }
-//        firstCurveEnd.apply {
-//            x = offsetX + (w / 2f)
-//            y = layoutHeight - curveBottomOffset
-//        }
-//        firstCurveControlPoint1.apply {
-//            x = firstCurveStart.x + topControlX
-//            y = topControlY
-//        }
-//        firstCurveControlPoint2.apply {
-//            x = firstCurveEnd.x - bottomControlX
-//            y = firstCurveEnd.y - bottomControlY
-//        }
-//
-//        // second curve
-//        secondCurveStart.set(firstCurveEnd.x, firstCurveEnd.y)
-//        secondCurveEnd.apply {
-//            x = offsetX + (w / 2) + curveHalfWidth
-//            y = bottomNavOffsetY
-//        }
-//        secondCurveControlPoint1.apply {
-//            x = secondCurveStart.x + bottomControlX
-//            y = secondCurveStart.y - bottomControlY
-//        }
-//        secondCurveControlPoint2.apply {
-//            x = secondCurveEnd.x - topControlX
-//            y = topControlY
-//        }
-//
-//        // generate the path
-//        path.reset()
-//        path.moveTo(0f, bottomNavOffsetY)
-//        // horizontal line from left to the start of first curve
-//        path.lineTo(firstCurveStart.x, firstCurveStart.y)
-//        // add the first curve
-//        path.cubicTo(
-//            firstCurveControlPoint1.x,
-//            firstCurveControlPoint1.y,
-//            firstCurveControlPoint2.x,
-//            firstCurveControlPoint2.y,
-//            firstCurveEnd.x,
-//            firstCurveEnd.y
-//        )
-//        // add the second curve
-//        path.cubicTo(
-//            secondCurveControlPoint1.x,
-//            secondCurveControlPoint1.y,
-//            secondCurveControlPoint2.x,
-//            secondCurveControlPoint2.y,
-//            secondCurveEnd.x,
-//            secondCurveEnd.y
-//        )
-//        // continue to draw the remaining portion of the bottom navigation
-//        path.lineTo(width.toFloat(), bottomNavOffsetY)
-//        path.lineTo(width.toFloat(), height.toFloat())
-//        path.lineTo(0f, height.toFloat())
-//        path.close()
-//    }
     private fun computeCurve(offsetX: Int, w: Int) {
         this.cellOffsetX = offsetX
 
@@ -767,6 +705,7 @@ class CurvedBottomNavigationView @JvmOverloads constructor(
         generatePath()
     }
 
+    private val smoothnessMultiplier = 0.1f
 
     private fun setupFirstCurve(offsetX: Int, w: Int) {
         firstCurveStart.apply {
@@ -779,11 +718,11 @@ class CurvedBottomNavigationView @JvmOverloads constructor(
         }
         firstCurveControlPoint1.apply {
             x = firstCurveStart.x + topControlX
-            y = topControlY
+            y = firstCurveStart.y - smoothnessMultiplier
         }
         firstCurveControlPoint2.apply {
             x = firstCurveEnd.x - bottomControlX
-            y = firstCurveEnd.y - bottomControlY
+            y = firstCurveEnd.y + smoothnessMultiplier
         }
     }
 
@@ -795,49 +734,13 @@ class CurvedBottomNavigationView @JvmOverloads constructor(
         }
         secondCurveControlPoint1.apply {
             x = secondCurveStart.x + bottomControlX
-            y = secondCurveStart.y - bottomControlY
+            y = secondCurveStart.y + smoothnessMultiplier
         }
         secondCurveControlPoint2.apply {
             x = secondCurveEnd.x - topControlX
-            y = topControlY
+            y = secondCurveEnd.y - smoothnessMultiplier
         }
     }
-    //a boxy but without point
-//    private val smoothnessMultiplier = 0.1f
-//    private fun setupFirstCurve(offsetX: Int, w: Int) {
-//        firstCurveStart.apply {
-//            x = offsetX + (w / 2) - curveHalfWidth
-//            y = bottomNavOffsetY
-//        }
-//        firstCurveEnd.apply {
-//            x = offsetX + (w / 2f)
-//            y = layoutHeight - curveBottomOffset
-//        }
-//        firstCurveControlPoint1.apply {
-//            x = firstCurveStart.x + topControlX
-//            y = firstCurveStart.y - smoothnessMultiplier // Adjusted for smoother curve
-//        }
-//        firstCurveControlPoint2.apply {
-//            x = firstCurveEnd.x - bottomControlX
-//            y = firstCurveEnd.y + smoothnessMultiplier // Adjusted for smoother curve
-//        }
-//    }
-//
-//    private fun setupSecondCurve(offsetX: Int, w: Int) {
-//        secondCurveStart.set(firstCurveEnd.x, firstCurveEnd.y)
-//        secondCurveEnd.apply {
-//            x = offsetX + (w / 2) + curveHalfWidth
-//            y = bottomNavOffsetY
-//        }
-//        secondCurveControlPoint1.apply {
-//            x = secondCurveStart.x + bottomControlX
-//            y = secondCurveStart.y + smoothnessMultiplier // Adjusted for smoother curve
-//        }
-//        secondCurveControlPoint2.apply {
-//            x = secondCurveEnd.x - topControlX
-//            y = secondCurveEnd.y - smoothnessMultiplier // Adjusted for smoother curve
-//        }
-//    }
 
     private fun generatePath() {
         path.reset()
@@ -873,12 +776,24 @@ class CurvedBottomNavigationView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
     }
 
+    private val fabBounds = RectF()
+    private var fabClickListener: ((Int) -> Unit)? = null
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (!isMenuInitialized) {
             return
         }
-        canvas.drawCircle(centerX, curCenterY, fabSize / 2f, fabPaint)
+
+        val fabRadius = fabSize / 2f
+        fabBounds.set(
+            centerX - fabRadius,
+            curCenterY - fabRadius,
+            centerX + fabRadius,
+            curCenterY + fabRadius
+        )
+
+        canvas.drawCircle(centerX, curCenterY, fabRadius, fabPaint)
         // draw the AVD within the circle
         menuAVDs[fabIconIndex].setBounds(
             (centerX - menuIcons[fabIconIndex].intrinsicWidth / 2).toInt(),
@@ -891,4 +806,18 @@ class CurvedBottomNavigationView @JvmOverloads constructor(
         canvas.drawPath(path, navPaint)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (fabBounds.contains(event.x, event.y)) {
+                fabClickListener?.invoke(fabIconIndex)
+                return true
+            }
+        }
+        return super.onTouchEvent(event)
+    }
+
+    fun setOnFabClickListener(listener: (Int) -> Unit) {
+        fabClickListener = listener
+    }
 }

@@ -130,5 +130,8 @@
     <string name="msg_empty_recommendations_list_des">There aren\'t any recommendations related from this anime.</string>
     <string name="msg_empty_review_list_des">Looks like reviews haven\'t been posted.</string>
     <string name="msg_no_more_reviews">There aren\'t anymore reviews.</string>
+    <string name="msg_search_anime">Search Anime</string>
+    <string name="msg_genres">Genres</string>
+    <string name="msg_search_manga">Search Manga</string>
 
 </resources>

@@ -18,6 +18,7 @@ import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.FadeTransformation
+import com.abhinavdev.animeapp.util.appsettings.AppMediaType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
@@ -31,13 +32,15 @@ class MainActivity : BaseActivity() {
     }
 
     private val rootFragmentTypes: List<MainFragmentAdapter.PageType> = arrayListOf(
-        MainFragmentAdapter.PageType.ANIME,
-        MainFragmentAdapter.PageType.MANGA,
+        MainFragmentAdapter.PageType.HOME,
+        MainFragmentAdapter.PageType.GENRE,
+        MainFragmentAdapter.PageType.SEARCH,
+        MainFragmentAdapter.PageType.MY_LIST,
         MainFragmentAdapter.PageType.MORE,
     )
 
     private var fragmentAdapter: MainFragmentAdapter? = null
-    private var currentPageType: MainFragmentAdapter.PageType = MainFragmentAdapter.PageType.ANIME
+    private var currentPageType: MainFragmentAdapter.PageType = MainFragmentAdapter.PageType.HOME
 
     private lateinit var viewModel: MainViewModel
 
@@ -62,12 +65,12 @@ class MainActivity : BaseActivity() {
         if (fragment != null) {
             //first if there is any fragment open close it
             supportFragmentManager.popBackStackImmediate()
-        } else if (currentPageType == MainFragmentAdapter.PageType.ANIME) {
+        } else if (currentPageType == MainFragmentAdapter.PageType.HOME) {
             //if home page just finish activity
             finish()
         } else {
             //if its not home page then back pressing will bring us on home page
-            navigateToPosition(MainFragmentAdapter.PageType.ANIME)
+            navigateToPosition(MainFragmentAdapter.PageType.HOME)
         }
     }
 
@@ -128,25 +131,50 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initComponents() {
+        val mediaType = SettingsHelper.getAppMediaType()
+
+        val homeInactiveIcon: Int
+        val homeActiveIcon: Int
+
+        when (mediaType) {
+            AppMediaType.ANIME -> {
+                homeInactiveIcon = R.drawable.ic_anime_inactive
+                homeActiveIcon = R.drawable.ic_anime_active
+            }
+
+            AppMediaType.MANGA -> {
+                homeInactiveIcon = R.drawable.ic_manga_inactive
+                homeActiveIcon = R.drawable.ic_manga_active
+            }
+        }
+
         val menuItems = arrayOf(
             CbnMenuItem(
-                R.drawable.ic_anime_inactive, //normal icon
-                R.drawable.ic_anime_active, //selected icon
-            ),
-            CbnMenuItem(
-                R.drawable.ic_manga_inactive,
-                R.drawable.ic_manga_active,
-            ),
-            CbnMenuItem(
+                homeInactiveIcon, //normal icon
+                homeActiveIcon, //selected icon
+            ), CbnMenuItem(
+                R.drawable.ic_genre_inactive,
+                R.drawable.ic_genre_active,
+            ), CbnMenuItem(
+                R.drawable.ic_search_inactive,
+                R.drawable.ic_search_active,
+            ), CbnMenuItem(
+                R.drawable.ic_my_list_inactive,
+                R.drawable.ic_my_list_active,
+            ), CbnMenuItem(
                 R.drawable.ic_more_inactive,
                 R.drawable.ic_more_active,
             )
         )
         binding.bottomNavBar.setMenuItems(menuItems, 0)
+        binding.bottomNavBar.setOnFabClickListener {
+
+        }
     }
 
     private fun setAdapters() {
-        fragmentAdapter = MainFragmentAdapter(this, rootFragmentTypes)
+        fragmentAdapter =
+            MainFragmentAdapter(this, rootFragmentTypes, SettingsHelper.getAppMediaType())
         binding.viewPager.adapter = fragmentAdapter
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.setPageTransformer(FadeTransformation())
@@ -155,9 +183,11 @@ class MainActivity : BaseActivity() {
     private fun setListeners() {
         binding.bottomNavBar.setOnMenuItemClickListener { _, index ->
             when (index) {
-                0 -> navigateToPosition(MainFragmentAdapter.PageType.ANIME)
-                1 -> navigateToPosition(MainFragmentAdapter.PageType.MANGA)
-                2 -> navigateToPosition(MainFragmentAdapter.PageType.MORE)
+                0 -> navigateToPosition(MainFragmentAdapter.PageType.HOME)
+                1 -> navigateToPosition(MainFragmentAdapter.PageType.GENRE)
+                2 -> navigateToPosition(MainFragmentAdapter.PageType.SEARCH)
+                3 -> navigateToPosition(MainFragmentAdapter.PageType.MY_LIST)
+                4 -> navigateToPosition(MainFragmentAdapter.PageType.MORE)
             }
         }
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -171,8 +201,7 @@ class MainActivity : BaseActivity() {
 
     private fun navigateToPosition(type: MainFragmentAdapter.PageType): Boolean {
         if (currentPageType != type) {
-            val position = rootFragmentTypes.indexOf(type)
-            binding.viewPager.setCurrentItem(position, false)
+            binding.viewPager.setCurrentItem(type.position, false)
         }
         return true
     }
@@ -253,7 +282,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun updateSelectedItemId() {
-        val selectedItemId =  currentPageType.position/*when (currentPageType) {
+        val selectedItemId = currentPageType.position/*when (currentPageType) {
             MainFragmentAdapter.PageType.ANIME -> R.id.navigation_anime
             MainFragmentAdapter.PageType.MANGA -> R.id.navigation_manga
             MainFragmentAdapter.PageType.MORE -> R.id.navigation_more

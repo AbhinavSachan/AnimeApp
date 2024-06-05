@@ -18,8 +18,10 @@ import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
+import com.abhinavdev.animeapp.util.extension.applyDimen
+import com.abhinavdev.animeapp.util.extension.hide
 
-class GenreFragment : BaseFragment(), View.OnClickListener,CustomClickListener {
+class GenreFragment : BaseFragment(), View.OnClickListener, CustomClickListener {
     private var _binding: FragmentGenreBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -65,27 +67,31 @@ class GenreFragment : BaseFragment(), View.OnClickListener,CustomClickListener {
     private fun initComponents() {
         val sfw = SettingsHelper.getSfwEnabled()
         mediaType = MediaType.valueOfOrDefault(arguments?.getString(Const.BundleExtras.EXTRA_TYPE))
-        genreList = when(mediaType){
+        genreList = when (mediaType) {
             MediaType.ANIME -> Genre.listAnime(sfw)
             MediaType.MANGA -> Genre.listManga(sfw)
             else -> Genre.listAnime(sfw)
         }
         with(binding.toolbar) {
-            tvTitle.text = getString(R.string.msg_my_profile)
+            ivBack.hide()
+            tvTitle.text = getString(R.string.msg_genres)
 
             ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
                 ViewUtil.setTopPadding(root, insets.top)
             }
         }
-        with(binding.emptyLayout) {
-            tvEmptyTitle.text = getString(R.string.error_something_went_wrong)
-            tvEmptyDesc.text = getString(R.string.msg_empty_error_des)
-            binding.emptyLayout.ivEmptyIcon.setImageResource(R.drawable.bg_error)
+        val rvBPadding = binding.rvList.paddingBottom
+        val bottomBarHeight = applyDimen(R.dimen.cbn_height)
+        val salt = applyDimen(R.dimen.bottom_bar_height_salt)
+        ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
+            ViewUtil.setBottomPadding(
+                binding.rvList, insets.bottom + rvBPadding + bottomBarHeight + salt
+            )
         }
     }
 
     private fun setAdapters() {
-        adapter = GenreCategoryAdapter(genreList,this)
+        adapter = GenreCategoryAdapter(genreList, this)
         adapter?.setHasStableIds(true)
         binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
         binding.rvList.addItemDecoration(GridSpacing(2, 16, false))
@@ -94,12 +100,12 @@ class GenreFragment : BaseFragment(), View.OnClickListener,CustomClickListener {
     }
 
     private fun setListeners() {
-        binding.toolbar.ivBack.setOnClickListener(this)
+
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
+
         }
     }
 
@@ -113,9 +119,9 @@ class GenreFragment : BaseFragment(), View.OnClickListener,CustomClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(type:MediaType) = GenreFragment().apply {
+        fun newInstance(type: MediaType) = GenreFragment().apply {
             arguments = Bundle().apply {
-                putString(Const.BundleExtras.EXTRA_TYPE,type.search)
+                putString(Const.BundleExtras.EXTRA_TYPE, type.search)
             }
         }
     }
