@@ -94,10 +94,9 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
                 binding.rvList, insets.bottom + rvBPadding + bottomBarHeight + salt
             )
         }
-        val paginationBPadding = binding.groupPagination.clPagination.paddingBottom
         ViewUtil.setOnApplyUiInsetsListener(binding.groupPagination.clPagination) { insets ->
             ViewUtil.setBottomPadding(
-                binding.groupPagination.clPagination, insets.bottom + paginationBPadding + bottomBarHeight + salt
+                binding.groupPagination.clPagination, insets.bottom + bottomBarHeight + salt
             )
         }
     }

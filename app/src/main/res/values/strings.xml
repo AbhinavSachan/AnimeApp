@@ -116,6 +116,7 @@
     <string name="msg_others_colon">Others:</string>
     <string name="msg_aired_on_colon">Aired on:</string>
     <string name="msg_status_colon">Status:</string>
+    <string name="msg_show_type_colon">Show type:</string>
     <string name="msg_broadcast_colon">Broadcast:</string>
     <string name="msg_source_colon">Source:</string>
     <string name="msg_studios_colon">Studios:</string>
@@ -133,5 +134,7 @@
     <string name="msg_search_anime">Search Anime</string>
     <string name="msg_genres">Genres</string>
     <string name="msg_search_manga">Search Manga</string>
+    <string name="msg_restart_app_description">Restart the app to see changes.</string>
+    <string name="msg_restart_now">Restart Now</string>
 
 </resources>

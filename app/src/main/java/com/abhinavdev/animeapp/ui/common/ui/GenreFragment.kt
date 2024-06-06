@@ -80,12 +80,11 @@ class GenreFragment : BaseFragment(), View.OnClickListener, CustomClickListener 
                 ViewUtil.setTopPadding(root, insets.top)
             }
         }
-        val rvBPadding = binding.rvList.paddingBottom
         val bottomBarHeight = applyDimen(R.dimen.cbn_height)
         val salt = applyDimen(R.dimen.bottom_bar_height_salt)
         ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
             ViewUtil.setBottomPadding(
-                binding.rvList, insets.bottom + rvBPadding + bottomBarHeight + salt
+                binding.rvList, insets.bottom + bottomBarHeight + salt
             )
         }
     }

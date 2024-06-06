@@ -10,27 +10,27 @@ enum class AnimeType(
     val search: String,
     val showName: String,
 ) {
-    @SerializedName("All")
+    @SerializedName("All", alternate = ["all"])
     ALL("", "All"),
 
     UNKNOWN("", "Unknown"),
 
-    @SerializedName("TV")
+    @SerializedName("TV", alternate = ["tv"])
     TV("tv", "Tv"),
 
-    @SerializedName("OVA")
+    @SerializedName("OVA", alternate = ["ova"])
     OVA("ova", "Ova"),
 
-    @SerializedName("ONA")
+    @SerializedName("ONA", alternate = ["ona"])
     ONA("ona", "Ona"),
 
-    @SerializedName("Movie")
+    @SerializedName("Movie", alternate = ["movie"])
     MOVIE("movie", "Movie"),
 
-    @SerializedName("Special")
+    @SerializedName("Special", alternate = ["TV Special"])
     SPECIAL("special", "Special"),
 
-    @SerializedName("Music")
+    @SerializedName("Music", alternate = ["music"])
     MUSIC("music", "Music");
 
     companion object {

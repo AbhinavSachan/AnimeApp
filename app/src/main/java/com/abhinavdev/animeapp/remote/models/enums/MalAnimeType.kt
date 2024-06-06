@@ -24,10 +24,13 @@ enum class MalAnimeType(
     @SerializedName("ova")
     OVA("ova", "Ova"),
 
+    @SerializedName("ona")
+    ONA("ona", "Ona"),
+
     @SerializedName("movie")
     MOVIE("movie", "Movie"),
 
-    @SerializedName("special", alternate = ["tv_special","ona"])
+    @SerializedName("special", alternate = ["tv_special"])
     SPECIAL("special", "Special"),
 
     @SerializedName("bypopularity")

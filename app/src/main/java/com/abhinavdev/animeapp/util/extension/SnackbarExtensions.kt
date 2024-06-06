@@ -1,62 +1,55 @@
 package com.abhinavdev.animeapp.util.extension
 
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
-import android.graphics.Color
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.annotation.IntegerRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import java.lang.ref.WeakReference
 
-@SuppressLint("ResourceType")
-inline fun View.snack(
-    @IntegerRes messageRes: Int,
-    length: Int = Snackbar.LENGTH_LONG,
-    f: Snackbar.() -> Unit
-) {
-    snack(resources.getString(messageRes), length, f)
+fun Fragment.snackbar(message: String, actionString: String? = null,bottomMargin:Int = -1, action: (() -> Unit)? = null) {
+    val act = WeakReference(activity).get() ?: return
+    act.runOnUiThread {
+        val rootView = act.window.decorView.findViewById<View>(android.R.id.content)
+        val snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+
+        ViewUtil.useLayoutParams(snackbar.view,
+            object : ViewUtil.UseLayoutParamsCallback<FrameLayout.LayoutParams> {
+                override fun onUse(params: FrameLayout.LayoutParams) {
+                    params.gravity = Gravity.BOTTOM
+                    params.width = MATCH_PARENT
+                    if (bottomMargin != -1) ViewUtil.setBottomMargin(snackbar.view,bottomMargin)
+                }
+            })
+        snackbar.setAction(actionString) {
+            action?.invoke()
+        }
+        snackbar.show()
+    }
 }
 
+fun Activity.snackbar(input: String, actionString: String? = null, action: (() -> Unit)? = null) {
+    runOnUiThread {
+        val rootView = window.decorView.findViewById<View>(android.R.id.content)
+        val snackbar = Snackbar.make(rootView, input, Snackbar.LENGTH_LONG)
 
-inline fun View.snack(message: String, length: Int = Snackbar.LENGTH_LONG, f: Snackbar.() -> Unit) {
-    val snack = Snackbar.make(this, message, length)
-    snack.f()
-    snack.show()
-}
-
-fun View.showSnack(message: String, length: Int = Snackbar.LENGTH_LONG) {
-    val snack = Snackbar.make(this, message, length)
-    snack.show()
-}
-
-inline fun View.errorSnack(
-    message: String,
-    length: Int = Snackbar.LENGTH_LONG,
-    f: Snackbar.() -> Unit
-) {
-    val snack = Snackbar.make(this, message, length)
-    snack.f()
-    snack.setActionTextColor(Color.parseColor("#FFFFFF"))
-    snack.view.setBackgroundColor(Color.parseColor("#C62828"))
-    snack.show()
-}
-
-fun View.errorSnack(message: String, length: Int = Snackbar.LENGTH_LONG) {
-    val snack = Snackbar.make(this, message, length)
-    snack.setActionTextColor(Color.parseColor("#FFFFFF"))
-    snack.view.setBackgroundColor(Color.parseColor("#C62828"))
-    snack.show()
-}
-
-@SuppressLint("ResourceType")
-fun Snackbar.action(@IntegerRes actionRes: Int, color: Int? = null, listener: (View) -> Unit) {
-    action(view.resources.getString(actionRes), color, listener)
-}
-
-fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {
-    setAction(action, listener)
-    color?.let { setActionTextColor(color) }
+        ViewUtil.useLayoutParams(snackbar.view,
+            object : ViewUtil.UseLayoutParamsCallback<FrameLayout.LayoutParams> {
+                override fun onUse(params: FrameLayout.LayoutParams) {
+                    params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
+                    params.width = WRAP_CONTENT
+                }
+            })
+        snackbar.setAction(actionString) {
+            action?.invoke()
+        }
+        snackbar.show()
+    }
 }
 
 fun Context.toast(message: String) {

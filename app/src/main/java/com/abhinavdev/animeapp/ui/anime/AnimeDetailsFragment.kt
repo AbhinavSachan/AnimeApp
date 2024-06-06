@@ -26,6 +26,7 @@ import com.abhinavdev.animeapp.remote.models.common.BroadcastData.Companion.conv
 import com.abhinavdev.animeapp.remote.models.common.MalUrlData
 import com.abhinavdev.animeapp.remote.models.common.RecommendationsData
 import com.abhinavdev.animeapp.remote.models.common.ReviewData
+import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeRecommendationAdapter
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
@@ -495,6 +496,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
             val favourites = anime.favorites?.formatOrNull().placeholder()
             val fetchedGenreList = getGenreLocalList(anime)
             val airingDate = anime.airedOn.getAiredDate(context)
+            val showType = AnimeType.valueOfOrDefault(anime.type?.search).showName /*its to prevent from showing null*/
             val status = anime.status?.showName
             val isAiring = anime.airing ?: false
             val broadcastDate = anime.broadcast?.convertBroadcastToLocalTime().placeholder()
@@ -605,6 +607,8 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                     groupDate.tvText.text = airingDate
                     groupStatus.tvHeading.text = getString(R.string.msg_status_colon)
                     groupStatus.tvText.text = status
+                    groupShowType.tvHeading.text = getString(R.string.msg_show_type_colon)
+                    groupShowType.tvText.text = showType
                     if (isAiring) groupBroadcast.root.show()
                     groupBroadcast.tvHeading.text = getString(R.string.msg_broadcast_colon)
                     groupBroadcast.tvText.text = broadcastDate

@@ -23,10 +23,11 @@ class ApplicationClass : Application() {
 
     override fun onCreate() {
         sInstance = this
+        val theme = SettingsHelper.getAppTheme()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            setApplicationTheme(SettingsHelper.getAppTheme())
+            setApplicationTheme(theme)
         }
-        setTheme(SettingsHelper.getAppTheme())
+        setTheme(theme)
         super.onCreate()
 
         ApiClient.addLoggingInterceptor = BuildConfig.DEBUG

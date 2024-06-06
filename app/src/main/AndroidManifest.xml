@@ -20,7 +20,7 @@
 
     <application
         android:name=".ApplicationClass"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:configChanges="locale|layoutDirection"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"

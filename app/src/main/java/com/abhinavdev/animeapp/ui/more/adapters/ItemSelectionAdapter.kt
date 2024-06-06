@@ -55,10 +55,17 @@ fun List<ItemSelectionModelBase>.setOptionSelected(
     currentPosition: Int,
     onOptionSelect: (ItemSelectionModelBase) -> Unit
 ) {
-    //find if any item is selected then deselect it
-    find { it.isSelected }?.isSelected = false
     val currentItem = get(currentPosition)
-    //now select on which user just clicked
-    currentItem.isSelected = true
-    onOptionSelect(currentItem)
+
+    // Check if the current item is already selected
+    if (!currentItem.isSelected) {
+        // Deselect any previously selected item
+        find { it.isSelected }?.isSelected = false
+
+        // Select the new item
+        currentItem.isSelected = true
+
+        // Run the callback with the newly selected item
+        onOptionSelect(currentItem)
+    }
 }

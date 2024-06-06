@@ -34,10 +34,9 @@ import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
 import com.abhinavdev.animeapp.util.extension.loadImage
-import com.abhinavdev.animeapp.util.extension.setStatusBarColorAsTheme
-import com.abhinavdev.animeapp.util.extension.setTheme
-import com.abhinavdev.animeapp.util.extension.setThemeChangeAnimation
+import com.abhinavdev.animeapp.util.extension.restartApp
 import com.abhinavdev.animeapp.util.extension.showOrHide
+import com.abhinavdev.animeapp.util.extension.snackbar
 import com.abhinavdev.animeapp.util.ui.LoginUtil.showLoginDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -317,7 +316,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
                     binding.groupAppLanguage.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.APP_LANGUAGE_KEY, it.id)
-                    parentActivity?.navigateToHome()
+                    showRestartSnackBar { context?.let { it1 -> restartApp(it1) } }
                 }
             }
 
@@ -326,7 +325,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
                     binding.groupTitleType.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.PREFERRED_TITLE_TYPE_KEY, it.id)
-                    parentActivity?.navigateToHome()
+                    showRestartSnackBar { context?.let { it1 -> restartApp(it1) } }
                 }
             }
 
@@ -335,13 +334,19 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
                     binding.groupAppTheme.tvHint.text = it.name
                     runCommonOptionFunction()
                     PrefUtils.setString(Const.PrefKeys.APP_THEME_KEY, it.id)
-                    val theme = AppTheme.valueOfOrDefault(it.id)
-                    activity?.setThemeChangeAnimation()
-                    setTheme(theme)
-                    activity?.setStatusBarColorAsTheme(theme)
+                    showRestartSnackBar { context?.let { it1 -> restartApp(it1) } }
                 }
             }
         }
+    }
+
+    private fun showRestartSnackBar(action:()->Unit) {
+        snackbar(
+            message = getString(R.string.msg_restart_app_description),
+            actionString = getString(R.string.msg_restart_now),
+            bottomMargin = applyDimen(R.dimen.cbn_height) + applyDimen(R.dimen.bottom_bar_height_salt),
+            action = action
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")

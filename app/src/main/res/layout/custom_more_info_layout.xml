@@ -28,6 +28,10 @@
         android:layout_marginHorizontal="@dimen/_16sdp" />
 
     <include
+        android:id="@+id/group_show_type"
+        layout="@layout/custom_title_item_layout" />
+
+    <include
         android:id="@+id/group_date"
         layout="@layout/custom_title_item_layout" />
 

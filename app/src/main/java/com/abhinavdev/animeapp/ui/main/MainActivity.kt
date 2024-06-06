@@ -22,6 +22,7 @@ import com.abhinavdev.animeapp.util.appsettings.AppMediaType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
+import com.abhinavdev.animeapp.util.extension.log
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
 import com.abhinavdev.animeapp.util.ui.curved_bottom_navigation.CbnMenuItem
@@ -130,6 +131,11 @@ class MainActivity : BaseActivity() {
         setObservers()
     }
 
+    override fun recreate() {
+        super.recreate()
+        log("life test") { "recreated" }
+        init()
+    }
     private fun initComponents() {
         val mediaType = SettingsHelper.getAppMediaType()
 
