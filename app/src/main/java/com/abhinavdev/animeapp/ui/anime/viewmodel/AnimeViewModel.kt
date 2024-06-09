@@ -22,6 +22,7 @@ import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class AnimeViewModel(application: Application) : AndroidViewModel(application) {
@@ -130,36 +131,48 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
         _allResponse.postValue(Event(true))
 
         _airingResponse.fetchData(getApplication()) {
-            repository.getTopAnime(
-                animeType, AnimeFilter.AIRING, ageRating, sfw, page, limit
-            )
+            async {
+                repository.getTopAnime(
+                    animeType, AnimeFilter.AIRING, ageRating, sfw, page, limit
+                )
+            }.await()
         }
         if (isAuthenticated) {
             _rankingResponse.fetchData(getApplication()) {
-                malRepository.getAnimeRanking(
-                    MalAnimeType.ALL, limit, offset
-                )
+                async {
+                    malRepository.getAnimeRanking(
+                        MalAnimeType.ALL, limit, offset
+                    )
+                }.await()
             }
             _recommendedResponse.fetchData(getApplication()) {
-                malRepository.getRecommendedAnime(
-                    limit, offset
-                )
+                async {
+                    malRepository.getRecommendedAnime(
+                        limit, offset
+                    )
+                }.await()
             }
         }
         _popularResponse.fetchData(getApplication()) {
-            repository.getTopAnime(
-                animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
-            )
+            async {
+                repository.getTopAnime(
+                    animeType, AnimeFilter.BY_POPULARITY, ageRating, sfw, page, limit
+                )
+            }.await()
         }
         _favouriteResponse.fetchData(getApplication()) {
-            repository.getTopAnime(
-                animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
-            )
+            async {
+                repository.getTopAnime(
+                    animeType, AnimeFilter.FAVORITE, ageRating, sfw, page, limit
+                )
+            }.await()
         }
         _upcomingResponse.fetchData(getApplication()) {
-            repository.getTopAnime(
-                animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
-            )
+            async {
+                repository.getTopAnime(
+                    animeType, AnimeFilter.UPCOMING, ageRating, sfw, page, limit
+                )
+            }.await()
         }
         _allResponse.postValue(Event(false))
     }

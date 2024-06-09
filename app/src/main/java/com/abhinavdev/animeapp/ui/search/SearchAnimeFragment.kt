@@ -9,10 +9,10 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentSearchBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
-import com.abhinavdev.animeapp.remote.models.users.UserFullProfileResponse
+import com.abhinavdev.animeapp.remote.models.anime.AnimeSearchResponse
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
+import com.abhinavdev.animeapp.ui.search.viewmodels.SearchViewModel
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyDimen
@@ -20,16 +20,23 @@ import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.toast
+import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 
 class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
-    private lateinit var viewModel: MoreViewModel
+    private lateinit var viewModel: SearchViewModel
 
     private var gridOrList: AdapterType = AdapterType.GRID
 
     private var isFromSwipe = false
+
+    private var page = 1
+    private var limit = SettingsHelper.getJikanListLimit()
+    private val isFirstPage get() = page == 1
+    private var paginationHelper: PaginationViewHelper? = null
+    private var shouldScrollToTop: Boolean = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,7 +55,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = createViewModel(MoreViewModel::class.java)
+        viewModel = createViewModel(SearchViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -68,7 +75,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
         setAdapters()
         setListeners()
         setObservers()
-        getProfile(false)
+
     }
 
     private fun initComponents() {
@@ -107,7 +114,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
 
     private fun setListeners() {
         binding.swipeRefresh.setOnRefreshListener {
-            getProfile(true)
+            getSearchResult(true)
         }
     }
 
@@ -117,7 +124,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setObservers() {
-        viewModel.userFullProfileResponse.observe(viewLifecycleOwner) { event ->
+        viewModel.searchAnimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
@@ -140,7 +147,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun setData(data: UserFullProfileResponse) {
+    private fun setData(data: AnimeSearchResponse) {
 
     }
 
@@ -152,10 +159,22 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun getProfile(fromSwipe: Boolean){
+    private fun getSearchResult(fromSwipe: Boolean){
         isFromSwipe = fromSwipe
-        val userName = SettingsHelper.getMalProfile()?.name
-        userName?.let { viewModel.getUserFullProfile(it) }
+        viewModel.getAnimeBySearch(page = page, limit = limit)
+    }
+
+    private fun commonFetchListAfterOptionChange() {
+        shouldScrollToTop = true
+        getSearchResult(false)
+    }
+
+    private fun increaseOffset() {
+        page += 1
+    }
+
+    private fun decreaseOffset() {
+        if (page != 1) page -= 1
     }
 
     companion object {

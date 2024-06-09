@@ -1,2 +1,2 @@
-rootProject.name = "FairyTail"
+rootProject.name = "Mugen"
 include(":app")

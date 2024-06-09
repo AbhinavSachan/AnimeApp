@@ -10,6 +10,8 @@ enum class AnimeStatus(
     val search: String,
     val showName: String,
 ) {
+    ALL("","All"),
+
     @SerializedName("Airing", alternate = ["Currently Airing"])
     AIRING("airing","Currently Airing"),
 
@@ -20,6 +22,7 @@ enum class AnimeStatus(
     UPCOMING("upcoming","Not Yet Aired");
 
     companion object {
+        fun valueOfOrDefault(value:String?) = entries.find { value == it.search } ?: ALL
         val list = entries
     }
 }

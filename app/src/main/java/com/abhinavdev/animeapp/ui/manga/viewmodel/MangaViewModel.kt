@@ -19,6 +19,7 @@ import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MangaViewModel(application: Application) : AndroidViewModel(application) {
@@ -87,31 +88,41 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
         _allResponse.postValue(Event(true))
 
         _airingResponse.fetchData(getApplication()){
-            repository.getTopManga(
-                mangaType, MangaFilter.PUBLISHING,sfw, page, limit
-            )
+            async {
+                repository.getTopManga(
+                    mangaType, MangaFilter.PUBLISHING,sfw, page, limit
+                )
+            }.await()
         }
         if (isAuthenticated) {
             _rankingResponse.fetchData(getApplication()){
-                malRepository.getMangaRanking(
-                    MalMangaType.ALL, limit, offset
-                )
+                async {
+                    malRepository.getMangaRanking(
+                        MalMangaType.ALL, limit, offset
+                    )
+                }.await()
             }
         }
         _popularResponse.fetchData(getApplication()){
-            repository.getTopManga(
-                mangaType, MangaFilter.BY_POPULARITY,sfw, page, limit
-            )
+            async {
+                repository.getTopManga(
+                    mangaType, MangaFilter.BY_POPULARITY,sfw, page, limit
+                )
+            }.await()
         }
         _favouriteResponse.fetchData(getApplication()){
-            repository.getTopManga(
-                mangaType, MangaFilter.FAVORITE,sfw, page, limit
-            )
+            async {
+                repository.getTopManga(
+                    mangaType, MangaFilter.FAVORITE,sfw, page, limit
+                )
+            }.await()
         }
         _upcomingResponse.fetchData(getApplication()){
-            repository.getTopManga(
-                mangaType, MangaFilter.UPCOMING,sfw, page, limit
-            )
+            async {
+                repository.getTopManga(
+                    mangaType, MangaFilter.UPCOMING,sfw, page, limit
+                )
+            }.await()
         }
         _allResponse.postValue(Event(false))
     }

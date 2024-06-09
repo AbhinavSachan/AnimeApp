@@ -81,19 +81,19 @@ class MangaRepositoryImpl : MangaRepository {
         limit: Int,
         query: String,
         type: MangaType,
-        score: Int,
-        minScore: Int,
-        maxScore: Int,
+        score: Int?,
+        minScore: Int?,
+        maxScore: Int?,
         status: MangaStatus,
         sfw: Boolean,
-        genres: Int,
-        genresExclude: Int,
+        genres: String,
+        genresExclude: String,
         orderBy: MangaOrderBy,
         sort: SortOrder,
-        letter: Int,
-        magazines: Int,
-        startDate: Int,
-        endDate: Int
+        letter: String,
+        magazines: String,
+        startDate: String,
+        endDate: String
     ): Response<MangaSearchResponse> {
         return apiService.getMangaBySearch(
             unapproved,
