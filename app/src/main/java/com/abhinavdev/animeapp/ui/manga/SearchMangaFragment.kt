@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.search
+package com.abhinavdev.animeapp.ui.manga
 
 import android.content.Context
 import android.os.Bundle
@@ -9,10 +9,10 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentSearchBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
-import com.abhinavdev.animeapp.remote.models.anime.AnimeSearchResponse
+import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.main.MainActivity
-import com.abhinavdev.animeapp.ui.search.viewmodels.SearchViewModel
+import com.abhinavdev.animeapp.ui.manga.viewmodel.MangaViewModel
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyDimen
@@ -22,11 +22,11 @@ import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.toast
 import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 
-class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
+class SearchMangaFragment : BaseFragment(), View.OnClickListener {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
-    private lateinit var viewModel: SearchViewModel
+    private lateinit var viewModel: MangaViewModel
 
     private var gridOrList: AdapterType = AdapterType.GRID
 
@@ -55,7 +55,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = createViewModel(SearchViewModel::class.java)
+        viewModel = createViewModel(MangaViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -75,13 +75,13 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
         setAdapters()
         setListeners()
         setObservers()
-
+        getSearchResult(false)
     }
 
     private fun initComponents() {
         with(binding.toolbar) {
             ivBack.hide()
-            tvTitle.text = getString(R.string.msg_search_anime)
+            tvTitle.text = getString(R.string.msg_search_manga)
             val viewIcon = when (gridOrList) {
                 AdapterType.GRID -> R.drawable.ic_list_view
                 AdapterType.LIST -> R.drawable.ic_grid_view
@@ -124,7 +124,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun setObservers() {
-        viewModel.searchAnimeResponse.observe(viewLifecycleOwner) { event ->
+        viewModel.searchMangaResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
@@ -147,7 +147,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun setData(data: AnimeSearchResponse) {
+    private fun setData(data: MangaSearchResponse) {
 
     }
 
@@ -161,7 +161,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
 
     private fun getSearchResult(fromSwipe: Boolean){
         isFromSwipe = fromSwipe
-        viewModel.getAnimeBySearch(page = page, limit = limit)
+        viewModel.getMangaBySearch(page = page, limit = limit)
     }
 
     private fun commonFetchListAfterOptionChange() {
@@ -179,6 +179,6 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance() = SearchAnimeFragment()
+        fun newInstance() = SearchMangaFragment()
     }
 }

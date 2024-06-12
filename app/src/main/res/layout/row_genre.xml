@@ -13,8 +13,8 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_genre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/TextStyleFont500"
+        android:textSize="@dimen/text_size_13"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

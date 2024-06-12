@@ -10,8 +10,8 @@ import com.abhinavdev.animeapp.ui.manga.MangaHomeFragment
 import com.abhinavdev.animeapp.ui.more.MoreFragment
 import com.abhinavdev.animeapp.ui.more.MyAnimeListFragment
 import com.abhinavdev.animeapp.ui.more.MyMangaListFragment
-import com.abhinavdev.animeapp.ui.search.SearchAnimeFragment
-import com.abhinavdev.animeapp.ui.search.SearchMangaFragment
+import com.abhinavdev.animeapp.ui.anime.SearchAnimeFragment
+import com.abhinavdev.animeapp.ui.manga.SearchMangaFragment
 import com.abhinavdev.animeapp.util.appsettings.AppMediaType
 
 class MainFragmentAdapter(

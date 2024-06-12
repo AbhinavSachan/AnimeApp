@@ -51,7 +51,7 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_next_page"
             style="@style/TextStyleFont500"
-            android:text="@string/msg_next"
+            android:text="@string/action_next"
             android:textColor="@color/onAccent"
             android:textSize="@dimen/text_size_13" />
 

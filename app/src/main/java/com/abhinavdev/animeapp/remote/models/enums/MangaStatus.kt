@@ -10,6 +10,8 @@ enum class MangaStatus(
     val search: String,
     val showName: String,
 ) {
+    ALL("","All"),
+
     @SerializedName("Publishing")
     PUBLISHING("publishing","Publishing"),
 
@@ -25,7 +27,9 @@ enum class MangaStatus(
     @SerializedName("Upcoming", alternate = ["TBP", "To be published", "Not yet published"])
     UPCOMING("upcoming","Upcoming");
 
+
     companion object {
+        fun valueOfOrDefault(value:String?) = entries.find { value == it.search } ?: ALL
         val list = entries
     }
 }

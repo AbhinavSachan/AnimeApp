@@ -368,7 +368,8 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                             setReviewData(it)
                         }
                         isReviewLoading(false)
-                        val hasNext = response.data?.data?.let { it.size == 20 || it.isNotEmpty() } ?: false
+                        val hasNext =
+                            response.data?.data?.let { it.size == 20 || it.isNotEmpty() } ?: false
                         if (hasNext || isFirstPage) updatePageNo()
                         if (!hasNext) decreaseOffset()
                         //if its first time api running then don't have to show this message
@@ -496,7 +497,8 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
             val favourites = anime.favorites?.formatOrNull().placeholder()
             val fetchedGenreList = getGenreLocalList(anime)
             val airingDate = anime.airedOn.getAiredDate(context)
-            val showType = AnimeType.valueOfOrDefault(anime.type?.search).showName /*its to prevent from showing null*/
+            val showType =
+                AnimeType.valueOfOrDefault(anime.type?.search).showName /*its to prevent from showing null*/
             val status = anime.status?.showName
             val isAiring = anime.airing ?: false
             val broadcastDate = anime.broadcast?.convertBroadcastToLocalTime().placeholder()
@@ -535,12 +537,6 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                 tvMetadata.text = metaData.second
                 tvDescription.text = description
 
-                tvDescription.post {
-                    if (tvDescription.lineCount >= tvDescription.maxLines) {
-                        tvDescription.setInterpolator(OvershootInterpolator())
-                        tvToggleDescription.show()
-                    }
-                }
                 //setting all the stats
                 with(groupStats) {
                     groupRank.tvHeading.text = getString(R.string.msg_rank)
@@ -627,6 +623,12 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                 }
 
                 if (clContent.isHidden()) clContent.show()
+                tvDescription.post {
+                    if (tvDescription.lineCount >= tvDescription.maxLines) {
+                        tvDescription.setInterpolator(OvershootInterpolator())
+                        tvToggleDescription.show()
+                    }
+                }
             }
         }
     }

@@ -14,7 +14,6 @@ buildscript {
 }
 plugins {
     alias(libs.plugins.devtools.ksp) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
 }
 allprojects {
     repositories {

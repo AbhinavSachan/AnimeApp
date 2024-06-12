@@ -49,7 +49,7 @@
     <string name="msg_app_theme">App Theme</string>
     <string name="msg_sfw">SFW (Safe for work)</string>
     <string name="msg_title_language">Title Language</string>
-    <string name="msg_sfw_description">If Enabled, this feature ensures content is safe, by filtering out potentially sensitive or explicit material.(This feature is still in beta version.)</string>
+    <string name="msg_sfw_description">If enabled, this feature ensures content is safe by filtering out potentially sensitive or explicit material. (This feature is still in beta.)</string>
     <string name="msg_language_description">Select preferred app language</string>
     <string name="msg_title_lang_description">Select preferred title language\n(this doesn\'t depend on app language)</string>
     <string name="msg_theme_description">Select the app theme you like</string>
@@ -63,7 +63,7 @@
     <string name="msg_empty_manga_list_des">Oops! It seems you haven\'t added any manga to the list.</string>
     <string name="msg_empty_anime_list_des">Oops! It seems you haven\'t added any anime to the list.</string>
     <string name="msg_list_empty">Oops! List is empty</string>
-    <string name="msg_empty_list_des">Looks like we haven\'t found any data, Please try different filters.</string>
+    <string name="msg_empty_list_des">It looks like we haven\'t found any data. Please try different filters.</string>
     <string name="msg_seach_list_empty">No results!</string>
     <string name="msg_empty_seach_list_des">Please try different search.</string>
     <string name="msg_empty_error_des">Oops! It seems we\'ve run into some error.</string>
@@ -90,12 +90,12 @@
     <string name="msg_choose_type">Choose Type</string>
     <string name="msg_page">Page</string>
     <string name="msg_previous">Previous</string>
-    <string name="msg_next">Next</string>
+    <string name="action_next">Next</string>
     <string name="msg_enter_page">Enter Page No.</string>
     <string name="action_submit">Submit</string>
     <string name="msg_between">Between</string>
     <string name="msg_only_single_page">Only Single Page Available</string>
-    <string name="msg_invalid_range">Please enter a number in given range.</string>
+    <string name="msg_invalid_range">Please enter a number in the given range.</string>
     <string name="msg_filter_by">Filter By</string>
     <string name="msg_to">To</string>
     <string name="msg_per_ep" translatable="false">/Ep</string>
@@ -128,13 +128,15 @@
     <string name="msg_reviewed_on">Reviewed on</string>
     <string name="msg_preliminary">Preliminary</string>
     <string name="msg_spoiler">Spoiler</string>
-    <string name="msg_empty_recommendations_list_des">There aren\'t any recommendations related from this anime.</string>
-    <string name="msg_empty_review_list_des">Looks like reviews haven\'t been posted.</string>
-    <string name="msg_no_more_reviews">There aren\'t anymore reviews.</string>
+    <string name="msg_empty_recommendations_list_des">There aren\'t any recommendations related to this anime.</string>
+    <string name="msg_empty_review_list_des">It looks like reviews haven\'t been posted.</string>
+    <string name="msg_no_more_reviews">There aren\'t any more reviews.</string>
     <string name="msg_search_anime">Search Anime</string>
     <string name="msg_genres">Genres</string>
     <string name="msg_search_manga">Search Manga</string>
-    <string name="msg_restart_app_description">Restart the app to see changes.</string>
+    <string name="msg_restart_app_description">Restart the app to see the changes.</string>
     <string name="msg_restart_now">Restart Now</string>
+    <string name="action_add_to_list">Add To List</string>
+    <string name="action_watch_now">Watch Now</string>
 
 </resources>

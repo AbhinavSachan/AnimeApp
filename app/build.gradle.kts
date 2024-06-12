@@ -155,7 +155,7 @@ dependencies {
 //    implementation ("com.google.android.play:core:1.10.3")
 
     //One Signal SDK
-//    implementation ("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+//    implementation ("com.onesignal:OneSignal:5.1.14")
 
     //Image Crop Picker
 //    implementation("com.vanniktech:android-image-cropper:4.5.0")

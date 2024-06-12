@@ -14,7 +14,10 @@ import com.abhinavdev.animeapp.remote.kit.sources.MalRepositoryImpl
 import com.abhinavdev.animeapp.remote.kit.sources.MangaRepositoryImpl
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.enums.MangaFilter
+import com.abhinavdev.animeapp.remote.models.enums.MangaOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.MangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MangaType
+import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaResponse
 import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
@@ -126,4 +129,52 @@ class MangaViewModel(application: Application) : AndroidViewModel(application) {
         }
         _allResponse.postValue(Event(false))
     }
+
+    private val _searchMangaResponse = MutableLiveData<Event<Resource<MangaSearchResponse>>>()
+    val searchMangaResponse: LiveData<Event<Resource<MangaSearchResponse>>> = _searchMangaResponse
+
+    fun getMangaBySearch(
+        unapproved: Boolean = false,
+        page: Int,
+        limit: Int,
+        query: String = "",
+        type: MangaType = MangaType.ALL,
+        score: Int? = null,/*either score or min/max score should be sent*/
+        minScore: Int? = null,
+        maxScore: Int? = null,
+        status: MangaStatus = MangaStatus.ALL,
+        genres: String = "",
+        genresExclude: String = "",
+        orderBy: MangaOrderBy = MangaOrderBy.POPULARITY,
+        sort: SortOrder = SortOrder.ASCENDING,
+        letter: String = "",
+        magazines: String = "",
+        startDate: String = "",
+        endDate: String = ""
+    ) = viewModelScope.launch {
+        _searchMangaResponse.fetchData(getApplication()) {
+            val sfw = SettingsHelper.getSfwEnabled()
+            repository.getMangaBySearch(
+                unapproved = unapproved,
+                page = page,
+                limit = limit,
+                query = query,
+                type = type,
+                score = score,
+                minScore = minScore,
+                maxScore = maxScore,
+                status = status,
+                sfw = sfw,
+                genres = genres,
+                genresExclude = genresExclude,
+                orderBy = orderBy,
+                sort = sort,
+                letter = letter,
+                magazines = magazines,
+                startDate = startDate,
+                endDate = endDate
+            )
+        }
+    }
+
 }

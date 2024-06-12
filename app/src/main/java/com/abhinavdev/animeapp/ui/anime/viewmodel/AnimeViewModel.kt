@@ -18,8 +18,11 @@ import com.abhinavdev.animeapp.remote.models.common.RecommendationsResponse
 import com.abhinavdev.animeapp.remote.models.common.ReviewsResponse
 import com.abhinavdev.animeapp.remote.models.enums.AgeRating
 import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
+import com.abhinavdev.animeapp.remote.models.enums.AnimeOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
+import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.async
@@ -175,5 +178,54 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
             }.await()
         }
         _allResponse.postValue(Event(false))
+    }
+
+    private val _searchAnimeResponse = MutableLiveData<Event<Resource<AnimeSearchResponse>>>()
+    val searchAnimeResponse: LiveData<Event<Resource<AnimeSearchResponse>>> = _searchAnimeResponse
+
+    fun getAnimeBySearch(
+        unapproved: Boolean = false,
+        page: Int,
+        limit: Int,
+        query: String = "",
+        type: AnimeType = AnimeType.ALL,
+        score: Int? = null,/*either score or min/max score should be sent*/
+        minScore: Int? = null,
+        maxScore: Int? = null,
+        status: AnimeStatus = AnimeStatus.ALL,
+        rating: AgeRating = AgeRating.NONE,
+        genres: String = "",
+        genresExclude: String = "",
+        orderBy: AnimeOrderBy = AnimeOrderBy.POPULARITY,
+        sort: SortOrder = SortOrder.ASCENDING,
+        letter: String = "",
+        producers: String = "",
+        startDate: String = "",
+        endDate: String = ""
+    ) = viewModelScope.launch {
+        _searchAnimeResponse.fetchData(getApplication()) {
+            val sfw = SettingsHelper.getSfwEnabled()
+            repository.getAnimeBySearch(
+                sfw = sfw,
+                unapproved = unapproved,
+                page = page,
+                limit = limit,
+                query = query,
+                type = type,
+                score = score,
+                minScore = minScore,
+                maxScore = maxScore,
+                status = status,
+                rating = rating,
+                genres = genres,
+                genresExclude = genresExclude,
+                orderBy = orderBy,
+                sort = sort,
+                letter = letter,
+                producers = producers,
+                startDate = startDate,
+                endDate = endDate
+            )
+        }
     }
 }
