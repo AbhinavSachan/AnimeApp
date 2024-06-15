@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="@dimen/_8sdp"
     android:orientation="vertical">
 
@@ -16,16 +16,16 @@
 
     <include
         android:id="@+id/group_title_other"
+        layout="@layout/custom_title_item_layout"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/custom_title_item_layout" />
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/divider_first"
         style="@style/CustomHorizontalDividerView"
-        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_4sdp"
-        android:layout_marginHorizontal="@dimen/_16sdp" />
+        android:layout_marginBottom="@dimen/_8sdp" />
 
     <include
         android:id="@+id/group_show_type"
@@ -41,46 +41,46 @@
 
     <include
         android:id="@+id/group_broadcast"
+        layout="@layout/custom_title_item_layout"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/custom_title_item_layout" />
+        tools:visibility="visible" />
 
     <include
         android:id="@+id/group_source"
+        layout="@layout/custom_title_item_layout"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/custom_title_item_layout" />
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/divider_second"
         style="@style/CustomHorizontalDividerView"
-        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_4sdp"
-        android:layout_marginHorizontal="@dimen/_16sdp" />
+        android:layout_marginBottom="@dimen/_8sdp" />
 
     <include
         android:id="@+id/group_studios"
+        layout="@layout/custom_title_item_layout"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/custom_title_item_layout" />
+        tools:visibility="visible" />
 
     <include
         android:id="@+id/group_producers"
+        layout="@layout/custom_title_item_layout"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/custom_title_item_layout" />
+        tools:visibility="visible" />
 
     <include
         android:id="@+id/group_licensors"
+        layout="@layout/custom_title_item_layout"
         android:visibility="gone"
-        tools:visibility="visible"
-        layout="@layout/custom_title_item_layout" />
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/divider_third"
         style="@style/CustomHorizontalDividerView"
-        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_4sdp"
-        android:layout_marginHorizontal="@dimen/_16sdp" />
+        android:layout_marginBottom="@dimen/_8sdp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

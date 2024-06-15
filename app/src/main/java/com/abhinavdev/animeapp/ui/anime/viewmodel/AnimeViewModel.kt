@@ -23,6 +23,7 @@ import com.abhinavdev.animeapp.remote.models.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.MalAnimeType
 import com.abhinavdev.animeapp.remote.models.enums.SortOrder
+import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeNode
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import kotlinx.coroutines.async
@@ -49,6 +50,17 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     fun getAnimeRecommendations(animeId: Int) = viewModelScope.launch {
         _animeRecommendationResponse.fetchData(getApplication()) {
             repository.getAnimeRecommendations(animeId)
+        }
+    }
+
+    private val _animeDetailsResponse =
+        MutableLiveData<Event<Resource<MalAnimeNode>>>()
+    val animeDetailsResponse: LiveData<Event<Resource<MalAnimeNode>>> =
+        _animeDetailsResponse
+
+    fun getAnimeDetails(animeId: Int) = viewModelScope.launch {
+        _animeDetailsResponse.fetchData(getApplication()) {
+            malRepository.getAnimeDetails(animeId)
         }
     }
 

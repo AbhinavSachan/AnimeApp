@@ -2,6 +2,7 @@ package com.abhinavdev.animeapp.remote.kit
 
 import androidx.annotation.IntRange
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
+import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeNode
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
@@ -44,6 +45,12 @@ interface MalApiService {
     /**
      * fields = "my_list_status{priority,comments},alternative_titles,media_type,mean"
      */
+    @GET(Const.Mal.ANIME + "/{anime_id}")
+    suspend fun getAnimeDetails(
+        @Path("anime_id") animeId: Int,
+        @Query("fields") fields: String,
+    ): Response<MalAnimeNode>
+
     @GET(Const.Mal.USERS + "/@me/" + Const.Mal.ANIME_LIST)
     suspend fun getMyAnimeList(
         @Query("status") status: String,

@@ -95,7 +95,7 @@ object Const {
             const val UNKNOWN_CHAR = "─"
             const val BIG_DOT_CHAR = "•"
             const val MAL_IMAGE_PLACEHOLDER = "https://cdn.myanimelist.net/img/sp/icon/apple-touch-icon-256.png"
-            const val HAS_FIXED_SIZE = false
+            const val HAS_FIXED_SIZE = true
         }
     }
 
@@ -110,6 +110,7 @@ object Const {
     interface Links {
         companion object {
             const val APP_DEEP_LINK = "oauth://animeapp.abhinavdev.com/"
+            const val YOUTUBE_QUERY_LINK = "https://www.youtube.com/results?search_query="
         }
     }
 

@@ -37,7 +37,7 @@ android {
 
     buildTypes {
         debug {
-            isDebuggable = true
+            isDebuggable = false
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(

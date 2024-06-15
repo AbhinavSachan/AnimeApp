@@ -138,5 +138,7 @@
     <string name="msg_restart_now">Restart Now</string>
     <string name="action_add_to_list">Add To List</string>
     <string name="action_watch_now">Watch Now</string>
+    <string name="msg_opening_themes">Opening Themes</string>
+    <string name="msg_ending_themes">Ending Themes</string>
 
 </resources>

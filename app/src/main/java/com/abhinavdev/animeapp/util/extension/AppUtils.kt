@@ -505,6 +505,12 @@ fun Context.openCustomTab(url: String) {
         }
 }
 
+fun Context.openAction(uri: String) {
+    Intent(Intent.ACTION_VIEW, Uri.parse(uri)).apply {
+        startActivity(this)
+    }
+}
+
 /** Open external link by default browser or intent chooser */
 fun Context.openLink(url: String) {
     val uri = Uri.parse(url)

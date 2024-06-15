@@ -8,6 +8,7 @@ import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
+import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeNode
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
@@ -33,6 +34,10 @@ interface MalRepository {
     suspend fun deleteAnimeFromList(
         animeId: Int
     ): Response<Any>
+
+    suspend fun getAnimeDetails(
+        animeId: Int
+    ): Response<MalAnimeNode>
 
     suspend fun getMyAnimeList(
         status: MalAnimeStatus,

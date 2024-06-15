@@ -67,6 +67,7 @@ data class AnimeData(
 ) : BaseModelWithMal() {
     val duration get() = ogDuration?.let { parseDuration(it) }
     val synopsis get() = ogSynopsis?.let { removeWrittenByMalRewrite(it) }
+
     companion object {
         fun parseDuration(input: String): EpisodeDuration? {
             if (input.equals("Unknown", ignoreCase = true)) {
@@ -114,7 +115,28 @@ data class AnimeData(
         }
 
         fun removeWrittenByMalRewrite(text: String): String {
-            return text.replace("\n\n[Written by MAL Rewrite]", "",true)
+            return text.replace("\n\n[Written by MAL Rewrite]", "", true)
+        }
+
+        fun processThemeData(item:String): String {
+            // Remove quotes from the string
+            var newItem = item.replace("\"", "")
+
+            // Check for serial number and replace it with (ep X)
+            val regex = Regex("""(\d+:|S\d+:)""")
+            newItem = newItem.replace(regex, "")
+
+            // Check for (eps X-Y) or similar at the end and move it to the front
+            val epsRegex = Regex("""\s*\((eps|Special Broadcast)\s+([^)]+)\)\s*$""")
+            val epsMatch = epsRegex.find(newItem)
+
+            if (epsMatch != null) {
+                val eps = epsMatch.groupValues[2]
+                newItem = newItem.replace(epsRegex, "").trim()
+                newItem = "(ep $eps) $newItem"
+            }
+
+            return newItem
         }
     }
 }

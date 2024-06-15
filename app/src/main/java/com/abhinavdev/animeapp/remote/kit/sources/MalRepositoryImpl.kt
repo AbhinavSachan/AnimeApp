@@ -10,6 +10,7 @@ import com.abhinavdev.animeapp.remote.models.enums.MalMangaSortType
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaStatus
 import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.malmodels.AnimeListStatus
+import com.abhinavdev.animeapp.remote.models.malmodels.MalAnimeNode
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyAnimeListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMyMangaListResponse
 import com.abhinavdev.animeapp.remote.models.malmodels.MalProfileResponse
@@ -20,6 +21,7 @@ class MalRepositoryImpl : MalRepository {
     private val apiService = ApiClient.getMalApiService()
 
     private val fields = "my_list_status{priority,comments},alternative_titles,media_type,mean,nsfw,num_episodes,start_season,num_chapters,start_date,num_volumes,end_date,status,synopsis"
+    private val animeDetailFields = "my_list_status{start_date,finish_date,num_times_rewatched,is_rewatching,rewatch_value,priority,tags,comments}"
 
     override suspend fun updateAnimeListStatus(
         animeId: Int,
@@ -59,6 +61,10 @@ class MalRepositoryImpl : MalRepository {
         status: MalAnimeStatus, sort: MalAnimeSortType, limit: Int, offset: Int
     ): Response<MalMyAnimeListResponse> {
         return apiService.getMyAnimeList(status.search, sort.search, limit, offset, fields)
+    }
+
+    override suspend fun getAnimeDetails(animeId: Int): Response<MalAnimeNode> {
+        return apiService.getAnimeDetails(animeId,animeDetailFields)
     }
 
     override suspend fun updateMangaListStatus(

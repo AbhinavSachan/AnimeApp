@@ -280,16 +280,62 @@
                         app:layout_constraintStart_toStartOf="@id/guide_start"
                         app:layout_constraintTop_toBottomOf="@id/tv_more_heading" />
 
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_opening_theme_heading"
+                        style="@style/TextStyleFont600"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:text="@string/msg_opening_themes"
+                        android:textSize="@dimen/text_size_16"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/group_more_info"
+                        tools:visibility="visible" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_opening_themes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="@dimen/safe_zone_main_page"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@id/tv_opening_theme_heading"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/row_theme_songs"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_ending_theme_heading"
+                        style="@style/TextStyleFont600"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:text="@string/msg_ending_themes"
+                        android:textSize="@dimen/text_size_16"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@id/guide_start"
+                        app:layout_constraintTop_toBottomOf="@id/rv_opening_themes"
+                        tools:visibility="visible" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_ending_themes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="@dimen/safe_zone_main_page"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toBottomOf="@id/tv_ending_theme_heading"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/row_theme_songs"
+                        tools:visibility="visible" />
+
                     <com.flyco.tablayout.SegmentTabLayout
                         android:id="@+id/segment_tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_11sdp"
                         android:background="@drawable/bg_white_bor_accent_rounded"
                         app:layout_constrainedWidth="true"
                         app:layout_constraintEnd_toEndOf="@id/guide_end"
                         app:layout_constraintStart_toStartOf="@id/guide_start"
-                        app:layout_constraintTop_toBottomOf="@id/group_more_info"
+                        app:layout_constraintTop_toBottomOf="@id/rv_ending_themes"
                         app:tl_bar_stroke_width="0dp"
                         app:tl_indicator_anim_enable="true"
                         app:tl_indicator_color="@color/accent"

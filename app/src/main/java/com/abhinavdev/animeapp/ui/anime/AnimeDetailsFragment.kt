@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentAnimeDetailsBinding
+import com.abhinavdev.animeapp.databinding.InflationLoaderLayoutBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.anime.AnimeFullResponse
@@ -29,6 +30,7 @@ import com.abhinavdev.animeapp.remote.models.common.ReviewData
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeRecommendationAdapter
+import com.abhinavdev.animeapp.ui.anime.adapters.ThemeSongAdapter
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.adapters.GenreAdapter
 import com.abhinavdev.animeapp.ui.common.adapters.ReviewAdapter
@@ -49,6 +51,7 @@ import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.getAiredDate
 import com.abhinavdev.animeapp.util.extension.getDisplaySize
 import com.abhinavdev.animeapp.util.extension.hide
+import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.openShareSheet
@@ -62,8 +65,6 @@ import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.flyco.tablayout.listener.OnTabSelectListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 
 class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
@@ -94,7 +95,11 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
     private var shouldScrollToTop: Boolean = false
 
     private var selectedTabPosition = 0
-    private val coroutine = CoroutineScope(Dispatchers.IO)
+
+    private var openingAdapter: ThemeSongAdapter? = null
+    private var openingSongs = arrayListOf<String>()
+    private var endingAdapter: ThemeSongAdapter? = null
+    private var endingSongs = arrayListOf<String>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -120,13 +125,14 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAnimeDetailsBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        init()
+        val loaderBinding = InflationLoaderLayoutBinding.inflate(inflater)
+        layoutInflater.inflateLayoutAsync(R.layout.fragment_anime_details, container) {
+            _binding = FragmentAnimeDetailsBinding.bind(it)
+            (loaderBinding.root as? ViewGroup)?.addView(binding.root)
+            loaderBinding.lottieLoader.hide()
+            init()
+        }
+        return loaderBinding.root
     }
 
     private fun init() {
@@ -136,6 +142,9 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
         setObservers()
         getData(false)
         getRecommendedAnime()
+        if (SettingsHelper.getIsAuthenticated()) {
+            getAnimeStatus()
+        }
     }
 
     private fun initComponents() {
@@ -213,6 +222,20 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
         binding.rvGenre.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvGenre.adapter = genreAdapter
+
+        //opening songs
+        openingAdapter = ThemeSongAdapter(openingSongs)
+        openingAdapter?.setHasStableIds(true)
+        binding.rvOpeningThemes.layoutManager = LinearLayoutManager(context)
+        binding.rvOpeningThemes.adapter = openingAdapter
+        binding.rvOpeningThemes.setHasFixedSize(true)
+
+        //ending songs
+        endingAdapter = ThemeSongAdapter(endingSongs)
+        endingAdapter?.setHasStableIds(true)
+        binding.rvEndingThemes.layoutManager = LinearLayoutManager(context)
+        binding.rvEndingThemes.adapter = endingAdapter
+        binding.rvEndingThemes.setHasFixedSize(true)
 
         recommendationAdapter = AnimeRecommendationAdapter(recommendationList, this)
         recommendationAdapter?.setHasStableIds(true)
@@ -318,11 +341,13 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
-                        response.data?.let {
-                            setData(it)
+                        if (response.data != null) {
+                            setData(response.data)
+                            hideErrorLayout()
+                        } else {
+                            showErrorLayout()
                         }
                         isLoaderVisible(false)
-                        hideErrorLayout()
                     }
 
                     is Resource.Error -> {
@@ -343,6 +368,29 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                     is Resource.Success -> {
                         response.data?.data?.let {
                             setRecommendedData(it)
+                        }
+                        isRecommendedLoading(false)
+                        showEmptyRecommendedLayout(false)
+                    }
+
+                    is Resource.Error -> {
+                        isRecommendedLoading(false)
+                        showEmptyRecommendedLayout(true)
+                        response.message?.let { message -> toast(message) }
+                    }
+
+                    is Resource.Loading -> {
+                        isRecommendedLoading(true)
+                    }
+                }
+            }
+        }
+        viewModel.animeDetailsResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.let {
+                            //check for status
                         }
                         isRecommendedLoading(false)
                         showEmptyRecommendedLayout(false)
@@ -496,9 +544,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
             val members = anime.members?.formatOrNull().placeholder()
             val favourites = anime.favorites?.formatOrNull().placeholder()
             val fetchedGenreList = getGenreLocalList(anime)
+            val openingThemeSongs = anime.opEdTheme?.openings
+            val endingThemeSongs = anime.opEdTheme?.endings
             val airingDate = anime.airedOn.getAiredDate(context)
-            val showType =
-                AnimeType.valueOfOrDefault(anime.type?.search).showName /*its to prevent from showing null*/
+            val showType = AnimeType.valueOfOrDefault(anime.type?.search).showName
             val status = anime.status?.showName
             val isAiring = anime.airing ?: false
             val broadcastDate = anime.broadcast?.convertBroadcastToLocalTime().placeholder()
@@ -513,6 +562,28 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                 genreList.clear()
                 genreList.addAll(fetchedGenreList)
                 genreAdapter?.notifyDataSetChanged()
+
+                if(!openingThemeSongs.isNullOrEmpty()){
+                    openingSongs.clear()
+                    openingSongs.addAll(openingThemeSongs)
+                    openingAdapter?.notifyDataSetChanged()
+                    tvOpeningThemeHeading.show()
+                    rvOpeningThemes.show()
+                }else{
+                    tvOpeningThemeHeading.hide()
+                    rvOpeningThemes.hide()
+                }
+
+                if(!endingThemeSongs.isNullOrEmpty()){
+                    endingSongs.clear()
+                    endingSongs.addAll(endingThemeSongs)
+                    endingAdapter?.notifyDataSetChanged()
+                    tvEndingThemeHeading.show()
+                    rvEndingThemes.show()
+                }else{
+                    tvEndingThemeHeading.hide()
+                    rvEndingThemes.hide()
+                }
 
                 rvGenre.showOrHide(fetchedGenreList.isNotEmpty())
 
@@ -804,6 +875,10 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
 
     private fun getRecommendedAnime() {
         viewModel.getAnimeRecommendations(animeId)
+    }
+
+    private fun getAnimeStatus() {
+        viewModel.getAnimeDetails(animeId)
     }
 
     private fun getAnimeReviews() {
