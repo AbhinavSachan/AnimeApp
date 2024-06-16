@@ -28,12 +28,10 @@ import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
 import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
-import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.removeItemDecorations
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
@@ -175,12 +173,10 @@ class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickL
     private fun toggleAdapterType(gridOrList: AdapterType) {
         when (gridOrList) {
             AdapterType.GRID -> {
-                binding.rvList.addItemDecoration(GridSpacing(2, 16, false))
                 binding.rvList.layoutManager = GridLayoutManager(context, 2)
             }
 
             AdapterType.LIST -> {
-                binding.rvList.removeItemDecorations()
                 binding.rvList.layoutManager = LinearLayoutManager(context)
             }
         }

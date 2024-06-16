@@ -32,13 +32,11 @@ import com.abhinavdev.animeapp.ui.more.misc.ListOptionsType
 import com.abhinavdev.animeapp.ui.more.viewmodels.MoreViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
-import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
-import com.abhinavdev.animeapp.util.extension.removeItemDecorations
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
@@ -151,7 +149,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
                 ViewUtil.setTopPadding(root, insets.top)
             }
         }
-        val rvBPadding = binding.rvList.paddingBottom
+        val rvBPadding = applyDimen(R.dimen.recycler_view_bottom_padding_for_programmatically)
         val bottomBarHeight = applyDimen(R.dimen.cbn_height)
         val salt = applyDimen(R.dimen.bottom_bar_height_salt)
         ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
@@ -182,12 +180,10 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     private fun toggleAdapterType(gridOrList: AdapterType) {
         when (gridOrList) {
             GRID -> {
-                binding.rvList.addItemDecoration(GridSpacing(2, 16, false))
                 binding.rvList.layoutManager = GridLayoutManager(context, 2)
             }
 
             LIST -> {
-                binding.rvList.removeItemDecorations()
                 binding.rvList.layoutManager = LinearLayoutManager(context)
             }
         }

@@ -5,6 +5,8 @@
     style="@style/BGPrimaryStrokeAccentCardStyle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_147sdp"
+    android:layout_marginStart="@dimen/_4sdp"
+    android:layout_marginEnd="@dimen/_4sdp"
     android:layout_marginBottom="@dimen/_8sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

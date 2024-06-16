@@ -40,7 +40,6 @@ import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
 import com.abhinavdev.animeapp.ui.common.ui.FullScreenImageActivity
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
-import com.abhinavdev.animeapp.util.adapter.GridSpacing
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.NumExtensions.formatOrNull
@@ -240,7 +239,6 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
         recommendationAdapter = AnimeRecommendationAdapter(recommendationList, this)
         recommendationAdapter?.setHasStableIds(true)
         binding.groupRecommended.rvRecommended.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
-        binding.groupRecommended.rvRecommended.addItemDecoration(GridSpacing(2, 16, false))
         binding.groupRecommended.rvRecommended.layoutManager = GridLayoutManager(context, 2)
         binding.groupRecommended.rvRecommended.adapter = recommendationAdapter
 

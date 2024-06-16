@@ -16,9 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingStart="@dimen/safe_zone_main_page"
+        android:paddingStart="@dimen/_11sdp"
         android:paddingTop="@dimen/_6sdp"
-        android:paddingEnd="@dimen/safe_zone_main_page"
+        android:paddingEnd="@dimen/_11sdp"
         android:paddingBottom="@dimen/_11sdp"
         app:layout_constraintTop_toBottomOf="@id/loader" />
 

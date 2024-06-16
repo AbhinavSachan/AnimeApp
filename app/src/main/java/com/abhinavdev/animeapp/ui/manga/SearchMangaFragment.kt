@@ -93,7 +93,7 @@ class SearchMangaFragment : BaseFragment(), View.OnClickListener {
                 ViewUtil.setTopPadding(root, insets.top)
             }
         }
-        val rvBPadding = binding.rvList.paddingBottom
+        val rvBPadding = applyDimen(R.dimen.recycler_view_bottom_padding_for_programmatically)
         val bottomBarHeight = applyDimen(R.dimen.cbn_height)
         val salt = applyDimen(R.dimen.bottom_bar_height_salt)
         ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
