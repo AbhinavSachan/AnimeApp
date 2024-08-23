@@ -22,7 +22,7 @@ import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.LIST
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
@@ -40,13 +40,14 @@ import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 import com.abhinavdev.animeapp.util.extension.toast
+import com.abhinavdev.animeapp.util.ui.LoginUtil.showLoginDialog
 import com.abhinavdev.animeapp.util.ui.PaginationViewHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class MyAnimeListFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
     private var _binding: FragmentMyAnimeListBinding? = null
     private val binding get() = _binding!!
@@ -135,6 +136,10 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             groupStatus.tvItem.text = status.showName
             groupSort.tvItem.text = sort.showName
         }
+        with(binding.emptyLayout) {
+            btnEmptyAction.showOrHide(!SettingsHelper.getIsAuthenticated())
+            btnEmptyAction.text = getString(R.string.msg_login)
+        }
         with(binding.toolbar) {
             ivBack.hide()
             tvTitle.text = getString(R.string.msg_my_anime_list)
@@ -193,8 +198,22 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         isLoaderVisible(false)
     }
 
+    override fun onResume() {
+        super.onResume()
+        //set layout when while being in fragment value changes
+        PrefUtils.setBooleanObserver(Const.PrefKeys.IS_AUTHENTICATED_KEY) {
+            getList(false)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        PrefUtils.removeObserver()
+    }
+
     private fun setListeners() {
         binding.toolbar.ivExtra.setOnClickListener(this)
+        binding.emptyLayout.btnEmptyAction.setOnClickListener(this)
         binding.groupStatus.llItem.setOnClickListener(this)
         binding.groupSort.llItem.setOnClickListener(this)
         binding.swipeRefresh.setOnRefreshListener {
@@ -207,6 +226,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
     override fun onClick(v: View?) {
         when (v) {
             binding.toolbar.ivExtra -> toggleViewType()
+            binding.emptyLayout.btnEmptyAction -> context?.showLoginDialog()
             binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
             binding.groupSort.llItem -> openOptionDialog(sortList, ListOptionsType.SORT)
         }
@@ -338,10 +358,20 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
 
     private fun getList(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
-        viewModel.getMyAnimeList(status, sort, limit, offset)
+        if (SettingsHelper.getIsAuthenticated()) {
+            viewModel.getMyAnimeList(status, sort, limit, offset)
+        } else {
+            with(binding.emptyLayout) {
+                tvEmptyTitle.text = getString(R.string.msg_not_authenticated)
+                tvEmptyDesc.text = getString(R.string.msg_not_authenticated_des)
+                ivEmptyIcon.setImageResource(R.drawable.bg_not_logged_in)
+            }
+            binding.rvList.showOrHide(false)
+            binding.emptyLayout.root.showOrHide(true)
+        }
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
         val animeId = animeList[position].node?.id
         if (animeId != null) {
             parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))
@@ -404,6 +434,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
             offset -= limit
         }
     }
+
     companion object {
         @JvmStatic
         fun newInstance() = MyAnimeListFragment()

@@ -70,9 +70,20 @@ object Const {
             const val EXTRA_STRING = "extra_string"
             const val EXTRA_INT = "extra_int"
             const val EXTRA_ID = "extra_id"
+            const val EXTRA_QUERY = "extra_query"
             const val EXTRA_TYPE = "extra_type"
             const val EXTRA_FILTER = "extra_filter"
             const val EXTRA_AGE_RATING = "extra_age_rating"
+            const val RESULT_CODE = "result_code"
+            const val EXTRA_IS_ANIME = "extra_is_anime"
+            const val EXTRA_IS_APPROVED = "extra_is_approved"
+            const val EXTRA_STATUS = "extra_status"
+            const val EXTRA_ORDER_BY = "extra_order_by"
+            const val EXTRA_SORT = "extra_sort"
+            const val EXTRA_END_DATE = "extra_end_date"
+            const val EXTRA_START_DATE = "extra_start_date"
+            const val EXTRA_CLEAR_ALL = "extra_clear_all"
+            const val EXTRA_WITH_RESULT = "extra_with_result"
         }
     }
 

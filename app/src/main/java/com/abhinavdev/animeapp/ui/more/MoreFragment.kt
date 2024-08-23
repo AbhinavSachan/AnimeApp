@@ -29,6 +29,7 @@ import com.abhinavdev.animeapp.util.appsettings.AppTheme
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
+import com.abhinavdev.animeapp.util.extension.applyColor
 import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.clickable
 import com.abhinavdev.animeapp.util.extension.hide
@@ -132,16 +133,6 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             tvDescription.text = getString(R.string.msg_mal_profile_decription)
             ivStartIcon.setImageResource(R.drawable.ic_profile)
         }
-        with(binding.groupMyAnime) {
-            tvTitle.text = getString(R.string.msg_my_anime_list)
-            tvDescription.text = getString(R.string.msg_my_anime_description)
-            ivStartIcon.setImageResource(R.drawable.ic_anime_list)
-        }
-        with(binding.groupMyManga) {
-            tvTitle.text = getString(R.string.msg_my_manga_list)
-            tvDescription.text = getString(R.string.msg_my_manga_description)
-            ivStartIcon.setImageResource(R.drawable.ic_manga_list)
-        }
         with(binding.groupAppTheme) {
             tvTitle.text = getString(R.string.msg_app_theme)
             tvDescription.text = getString(R.string.msg_theme_description)
@@ -166,12 +157,20 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             ivStartIcon.setImageResource(R.drawable.ic_sfw)
             switchItem.setChecked(enableSfw)
         }
+        with(binding.groupLogout) {
+            tvTitle.setTextColor(applyColor(R.color.fontTextRed))
+            ivStartIcon.setColorFilter(applyColor(R.color.fontTextRed))
+            ivEnd.setColorFilter(applyColor(R.color.fontTextRed))
+
+            tvTitle.text = getString(R.string.msg_logout)
+            tvDescription.text = getString(R.string.msg_logout_des)
+            ivStartIcon.setImageResource(R.drawable.ic_logout)
+        }
     }
 
     private fun setAuthLayout(authenticated: Boolean) {
         with(binding) {
-            llLogout.showOrHide(authenticated)
-            viewLogout.showOrHide(authenticated)
+            groupLogout.llItem.showOrHide(authenticated)
             flLoginLayer.showOrHide(!authenticated)
         }
     }
@@ -195,21 +194,17 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
 
     private fun setListeners() {
         binding.groupMyProfile.llItem.setOnClickListener(this)
-        binding.groupMyAnime.llItem.setOnClickListener(this)
-        binding.groupMyManga.llItem.setOnClickListener(this)
         binding.groupAppTheme.llItem.setOnClickListener(this)
         binding.groupTitleType.llItem.setOnClickListener(this)
         binding.groupAppLanguage.llItem.setOnClickListener(this)
         binding.groupSfw.llItem.setOnClickListener(this)
-        binding.llLogout.setOnClickListener(this)
+        binding.groupLogout.llItem.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
             binding.groupMyProfile.llItem -> parentActivity?.navigateToFragment(ProfileFragment.newInstance())
-            binding.groupMyAnime.llItem -> parentActivity?.navigateToFragment(MyAnimeListFragment.newInstance())
-            binding.groupMyManga.llItem -> parentActivity?.navigateToFragment(MyMangaListFragment.newInstance())
             binding.groupAppTheme.llItem -> openOptionDialog(
                 themeList, SettingsItemSelectionType.THEME
             )
@@ -223,7 +218,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             )
 
             binding.groupSfw.llItem -> onSfwClick()
-            binding.llLogout -> onLogoutClick()
+            binding.groupLogout.llItem -> onLogoutClick()
             binding.btnLogin -> context?.showLoginDialog()
         }
     }

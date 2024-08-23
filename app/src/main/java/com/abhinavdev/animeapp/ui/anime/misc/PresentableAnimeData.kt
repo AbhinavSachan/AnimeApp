@@ -22,7 +22,7 @@ class PresentableAnimeData(val position: Int, val item: AnimeData) {
     }
 
     fun getType(): String {
-        return AnimeType.valueOfOrDefault(item.type?.search).showName
+        return AnimeType.valueOfOrDefaultForShow(item.type?.search).showName
     }
 
     fun getRank(): String {

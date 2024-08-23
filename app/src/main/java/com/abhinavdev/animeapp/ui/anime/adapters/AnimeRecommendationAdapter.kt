@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
 import com.abhinavdev.animeapp.remote.models.common.RecommendationsData
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.extension.getSizeOfView
@@ -16,7 +16,7 @@ import com.abhinavdev.animeapp.util.extension.loadImage
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class AnimeRecommendationAdapter(
-    private val list: List<RecommendationsData>, private val listener: CustomClickListener
+    private val list: List<RecommendationsData>, private val listener: OnAdapterItemClickListener
 ) : RecyclerView.Adapter<AnimeRecommendationAdapter.GridViewHolder>() {
 
     private lateinit var context: Context

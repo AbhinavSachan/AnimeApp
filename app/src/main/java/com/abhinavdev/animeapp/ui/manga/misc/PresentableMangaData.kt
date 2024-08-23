@@ -25,7 +25,7 @@ class PresentableMangaData(val position: Int, val item: MangaData) {
     }
 
     fun getType(): String {
-        return MangaType.valueOfOrDefault(item.type?.search).showName
+        return MangaType.valueOfOrDefaultForShow(item.type?.search).showName
     }
 
     fun getRating(): String? {

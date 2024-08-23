@@ -12,7 +12,7 @@ import com.abhinavdev.animeapp.databinding.FragmentGenreBinding
 import com.abhinavdev.animeapp.remote.models.enums.Genre
 import com.abhinavdev.animeapp.remote.models.enums.MediaType
 import com.abhinavdev.animeapp.ui.common.adapters.GenreCategoryAdapter
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.adapter.GridSpacing
@@ -21,7 +21,7 @@ import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.hide
 
-class GenreFragment : BaseFragment(), View.OnClickListener, CustomClickListener {
+class GenreFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener {
     private var _binding: FragmentGenreBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -108,7 +108,7 @@ class GenreFragment : BaseFragment(), View.OnClickListener, CustomClickListener 
         }
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
 
     }
 

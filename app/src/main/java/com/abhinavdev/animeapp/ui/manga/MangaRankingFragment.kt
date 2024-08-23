@@ -17,7 +17,7 @@ import com.abhinavdev.animeapp.remote.models.enums.MalMangaType
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.manga.adapters.MalMangaVerticalAdapter
@@ -41,7 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MangaRankingFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class MangaRankingFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
     private var _binding: FragmentMangaRankingBinding? = null
     private val binding get() = _binding!!
@@ -318,7 +318,7 @@ class MangaRankingFragment : BaseFragment(), View.OnClickListener, CustomClickLi
         viewModel.getMangaRanking(mangaType, offset, limit)
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
 
     }
 

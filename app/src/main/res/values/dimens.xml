@@ -46,4 +46,6 @@
     <dimen name="cbn_layout_height">84dp</dimen>
     <dimen name="cbn_bottom_curve_offset">12dp</dimen>
     <dimen name="cbn_fab_top_offset">8dp</dimen>
+
+    <dimen name="margin_45sdp">@dimen/_45sdp</dimen>
 </resources>

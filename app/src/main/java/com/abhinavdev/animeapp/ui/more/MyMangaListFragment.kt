@@ -20,7 +20,7 @@ import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.GRID
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType.LIST
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.manga.adapters.MalMangaVerticalAdapter
@@ -45,7 +45,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class MyMangaListFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
     private var _binding: FragmentMyMangaListBinding? = null
     private val binding get() = _binding!!
@@ -341,7 +341,7 @@ class MyMangaListFragment : BaseFragment(), View.OnClickListener, CustomClickLis
         viewModel.getMyMangaList(status, sort, limit, offset)
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
 
     }
 

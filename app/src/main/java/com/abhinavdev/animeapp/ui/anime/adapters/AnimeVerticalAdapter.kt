@@ -9,7 +9,7 @@ import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.PresentableAnimeData
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.extension.getSizeOfView
@@ -21,7 +21,7 @@ import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class AnimeVerticalAdapter(
-    private val list: List<AnimeData>, private val listener: CustomClickListener
+    private val list: List<AnimeData>, private val listener: OnAdapterItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var adapterType: AdapterType = AdapterType.GRID

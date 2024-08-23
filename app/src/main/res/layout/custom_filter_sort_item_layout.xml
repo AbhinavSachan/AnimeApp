@@ -7,8 +7,8 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_item_label"
-        style="@style/TextStyleFont500"
-        android:layout_width="wrap_content"
+        style="@style/TextStyleFont600"
+        android:textColor="@color/fontTextSecondary"
         android:textSize="@dimen/text_size_14"
         tools:text="Filter label" />
 
@@ -16,7 +16,7 @@
         android:id="@+id/ll_item"
         style="@style/CustomDropdownLL"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/_2sdp">
+        android:layout_marginTop="@dimen/_6sdp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_item"

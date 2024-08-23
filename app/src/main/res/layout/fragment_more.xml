@@ -16,9 +16,9 @@
         android:id="@+id/nested_scroll_view"
         style="@style/BaseNestedScrollViewAttributes"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="0dp">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -35,14 +35,6 @@
                     android:id="@+id/group_my_profile"
                     layout="@layout/custom_more_click_item_layout" />
 
-                <include
-                    android:id="@+id/group_my_anime"
-                    layout="@layout/custom_more_click_item_layout" />
-
-                <include
-                    android:id="@+id/group_my_manga"
-                    layout="@layout/custom_more_click_item_layout" />
-
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -53,7 +45,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/ll_authenticated_features"
                 app:layout_constraintEnd_toEndOf="@id/ll_authenticated_features"
@@ -61,12 +53,18 @@
                 app:layout_constraintTop_toTopOf="@id/ll_authenticated_features"
                 tools:visibility="visible">
 
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/ic_lock"
+                    app:contentPadding="@dimen/_4sdp"
+                    app:tint="@color/white" />
+
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/TextStyleFont500"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_6sdp"
-                    android:gravity="center"
+                    android:layout_marginStart="@dimen/_8sdp"
                     android:text="@string/msg_login_to_access_des"
                     android:textColor="@color/fontTextWhite"
                     android:textSize="@dimen/text_size_13" />
@@ -74,6 +72,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_login"
                     style="@style/CustomAccentButton"
+                    android:paddingTop="@dimen/_2sdp"
+                    android:paddingBottom="@dimen/_2sdp"
                     android:text="@string/msg_login" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -101,37 +101,9 @@
                     android:id="@+id/group_sfw"
                     layout="@layout/custom_more_switch_item_layout" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ll_logout"
-                    style="@style/MoreMainLLStyle">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        style="@style/MoreImageView"
-                        android:src="@drawable/ic_logout"
-                        app:tint="@color/fontTextRed" />
-
-                    <androidx.appcompat.widget.LinearLayoutCompat style="@style/MoreInnerLLStyle">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            style="@style/MoreTitleTextView"
-                            android:text="@string/msg_logout"
-                            android:textColor="@color/fontTextRed" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            style="@style/MoreDescriptionTextView"
-                            android:text="@string/msg_logout_description" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        style="@style/MoreEndImageView"
-                        android:src="@drawable/ic_forward"
-                        app:tint="@color/fontTextRed" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <View
-                    android:id="@+id/view_logout"
-                    style="@style/CustomHorizontalDividerView" />
+                <include
+                    android:id="@+id/group_logout"
+                    layout="@layout/custom_more_click_item_layout" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

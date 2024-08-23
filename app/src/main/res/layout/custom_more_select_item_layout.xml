@@ -34,6 +34,7 @@
             tools:text="Hint" />
 
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_end"
             style="@style/MoreEndImageView"
             android:src="@drawable/ic_forward" />
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -9,7 +9,7 @@ import com.abhinavdev.animeapp.databinding.RowGridListItemBinding
 import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMangaData
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -24,7 +24,7 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class MangaVerticalAdapter(
     private val list: List<MangaData>,
-    private val listener: CustomClickListener
+    private val listener: OnAdapterItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var adapterType: AdapterType = AdapterType.GRID

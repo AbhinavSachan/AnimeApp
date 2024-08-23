@@ -586,7 +586,7 @@ fun Context.openShareSheet(url: String) {
 fun Context.copyToClipBoard(text: String) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
     clipboard?.setPrimaryClip(ClipData.newPlainText("title", text))
-    toast(getString(R.string.copied))
+    toast(getString(R.string.msg_copied))
 }
 
 fun Window.hideStatusBar(hide:Boolean){

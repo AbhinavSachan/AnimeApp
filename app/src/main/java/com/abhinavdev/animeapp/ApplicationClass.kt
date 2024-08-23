@@ -24,13 +24,13 @@ class ApplicationClass : Application() {
     override fun onCreate() {
         sInstance = this
         val theme = SettingsHelper.getAppTheme()
+        //for splash screen to also be the same color as rest of the app
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             setApplicationTheme(theme)
         }
         setTheme(theme)
         super.onCreate()
 
-        ApiClient.addLoggingInterceptor = BuildConfig.DEBUG
         ApiClient.init()
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }

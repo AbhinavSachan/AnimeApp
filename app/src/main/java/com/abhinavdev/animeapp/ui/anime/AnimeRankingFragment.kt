@@ -19,7 +19,7 @@ import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
@@ -41,7 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AnimeRankingFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class AnimeRankingFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
     private var _binding: FragmentAnimeRankingBinding? = null
     private val binding get() = _binding!!
@@ -317,7 +317,7 @@ class AnimeRankingFragment : BaseFragment(), View.OnClickListener, CustomClickLi
         viewModel.getAnimeRanking(animeType, offset, limit)
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
         val animeId = animeList[position].node?.id
         if (animeId != null) {
             parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))

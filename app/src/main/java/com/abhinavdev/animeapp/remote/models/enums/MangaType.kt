@@ -41,7 +41,8 @@ enum class MangaType(
     OEL("oel", "OEL");
 
     companion object {
-        fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: UNKNOWN
+        fun valueOfOrDefault(value: String?) = entries.find { it.search == value } ?: ALL
+        fun valueOfOrDefaultForShow(value: String?) = entries.find { it.search == value } ?: UNKNOWN
 
         val list = entries.filter { it != UNKNOWN }
     }

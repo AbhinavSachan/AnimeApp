@@ -47,8 +47,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.ceil
 
 
@@ -473,4 +481,66 @@ fun View.setHeightInRatioToWidth(ratioWidth: Int, ratioHeight: Int) {
     val layoutParams = this.layoutParams
     layoutParams.height = (layoutParams.width * ratioHeight) / ratioWidth
     this.layoutParams = layoutParams
+}
+
+fun AppCompatActivity.showDatePicker(
+    startDate: String? = "", selectedDate: Long? = null, onDateSelected: (Long) -> Unit
+) {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    val constraints = if (!startDate.isNullOrEmpty()) {
+        val calendarStartDate: Long = dateFormat.parse(startDate)?.time ?: 0
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = calendarStartDate
+
+        val lastDate = Calendar.getInstance()
+        lastDate.time = cal.time
+        lastDate.add(Calendar.YEAR, 10)
+
+        val dateValidatorMin = DateValidatorPointForward.from(cal.timeInMillis)
+
+        CalendarConstraints.Builder().setValidator(dateValidatorMin).setStart(cal.timeInMillis)
+            .setEnd(lastDate.timeInMillis).build()
+    } else {
+        null
+    }
+
+    val datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select a date")
+        .setSelection(selectedDate).setCalendarConstraints(constraints).build()
+
+    datePicker.addOnPositiveButtonClickListener { selection ->
+        onDateSelected(selection)
+    }
+
+    val tag = "MATERIAL_DATE_PICKER"
+    val fm = this.supportFragmentManager
+    val fragment = fm.findFragmentByTag(tag)
+    if (fragment == null) {
+        datePicker.show(fm, tag)
+    }
+}
+
+fun AppCompatActivity.showTimePicker(
+    selectedTime: Long? = null, onTimeSelected: (Long) -> Unit
+) {
+    val cal = Calendar.getInstance()
+    if (selectedTime != null) {
+        cal.timeInMillis = selectedTime
+    }
+    val picker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H)
+        .setHour(cal.get(Calendar.HOUR_OF_DAY)).setMinute(cal.get(Calendar.MINUTE))
+        .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK).build()
+
+    picker.addOnPositiveButtonClickListener {
+        cal.set(Calendar.HOUR_OF_DAY, picker.hour)
+        cal.set(Calendar.MINUTE, picker.minute)
+        onTimeSelected(cal.timeInMillis)
+    }
+
+
+    val tag = "MATERIAL_TIME_PICKER"
+    val fm = this.supportFragmentManager
+    val fragment = fm.findFragmentByTag(tag)
+    if (fragment == null) {
+        picker.show(fm, tag)
+    }
 }

@@ -9,6 +9,10 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentSearchBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
+import com.abhinavdev.animeapp.remote.models.enums.MangaOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.MangaStatus
+import com.abhinavdev.animeapp.remote.models.enums.MangaType
+import com.abhinavdev.animeapp.remote.models.enums.SortOrder
 import com.abhinavdev.animeapp.remote.models.manga.MangaSearchResponse
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.main.MainActivity
@@ -159,9 +163,27 @@ class SearchMangaFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
-    private fun getSearchResult(fromSwipe: Boolean){
+    private fun getSearchResult(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
-        viewModel.getMangaBySearch(page = page, limit = limit)
+        viewModel.getMangaBySearch(
+            page = page,
+            limit = limit,
+            unapproved = false,
+            query = "",
+            type = MangaType.ALL,
+            score = null,
+            minScore = null,
+            maxScore = null,
+            status = MangaStatus.ALL,
+            genres = "",
+            genresExclude = "",
+            orderBy = MangaOrderBy.POPULARITY,
+            sort = SortOrder.DESCENDING,
+            letter = "",
+            magazines = "",
+            startDate = "",
+            endDate = ""
+        )
     }
 
     private fun commonFetchListAfterOptionChange() {

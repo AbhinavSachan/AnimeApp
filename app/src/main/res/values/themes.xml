@@ -48,4 +48,13 @@
         <item name="postSplashScreenTheme">@style/Theme.Main</item>
     </style>
 
+    <!-- Transparent Activity Theme -->
+    <style name="TransparentTheme" parent="BaseAppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/blackA30</item>
+        <item name="android:navigationBarColor">@color/primary</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
 </resources>

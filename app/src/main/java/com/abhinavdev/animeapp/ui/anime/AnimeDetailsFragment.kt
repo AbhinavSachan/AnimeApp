@@ -34,7 +34,7 @@ import com.abhinavdev.animeapp.ui.anime.adapters.ThemeSongAdapter
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.adapters.GenreAdapter
 import com.abhinavdev.animeapp.ui.common.adapters.ReviewAdapter
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
 import com.abhinavdev.animeapp.ui.common.ui.FullScreenImageActivity
@@ -53,6 +53,7 @@ import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.inflateLayoutAsync
 import com.abhinavdev.animeapp.util.extension.isHidden
 import com.abhinavdev.animeapp.util.extension.loadImage
+import com.abhinavdev.animeapp.util.extension.log
 import com.abhinavdev.animeapp.util.extension.openShareSheet
 import com.abhinavdev.animeapp.util.extension.placeholder
 import com.abhinavdev.animeapp.util.extension.setHeightAsPercentageOfGivenHeight
@@ -66,7 +67,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.flyco.tablayout.listener.OnTabSelectListener
 
 
-class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback, GenreAdapter.Callback {
     private var _binding: FragmentAnimeDetailsBinding? = null
     private val binding get() = _binding!!
@@ -390,18 +391,13 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                         response.data?.let {
                             //check for status
                         }
-                        isRecommendedLoading(false)
-                        showEmptyRecommendedLayout(false)
                     }
 
                     is Resource.Error -> {
-                        isRecommendedLoading(false)
-                        showEmptyRecommendedLayout(true)
                         response.message?.let { message -> toast(message) }
                     }
 
                     is Resource.Loading -> {
-                        isRecommendedLoading(true)
                     }
                 }
             }
@@ -477,7 +473,9 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
     }
 
     private fun showEmptyReviewLayout(isError: Boolean) {
+        log { "review empty fun run " }
         val isListEmpty = reviewList.isEmpty()
+        log { "is empty $isListEmpty" }
         with(binding.groupReviews.emptyLayout) {
             if (isListEmpty) {
                 val imageRes = if (isError) {
@@ -489,15 +487,13 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                     tvEmptyDesc.text = getString(R.string.msg_empty_review_list_des)
                     R.drawable.bg_empty_review_list
                 }
-                val bottomPadding = resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._45sdp)
+                val bottomPadding = resources.getDimensionPixelSize(R.dimen.margin_45sdp)
                 ViewUtil.setBottomPadding(tvEmptyDesc, bottomPadding)
                 ivEmptyIcon.setImageResource(imageRes)
             }
         }
-        binding.groupRecommended.emptyLayout.root.post {
-            binding.groupRecommended.rvRecommended.showOrHide(!isListEmpty)
-            binding.groupRecommended.emptyLayout.root.showOrHide(isListEmpty)
-        }
+        binding.groupReviews.rvRecommended.showOrHide(!isListEmpty)
+        binding.groupReviews.emptyLayout.root.showOrHide(isListEmpty)
     }
 
     private fun showEmptyRecommendedLayout(isError: Boolean) {
@@ -513,15 +509,13 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
                     tvEmptyDesc.text = getString(R.string.msg_empty_recommendations_list_des)
                     R.drawable.bg_empty_recommendation_list
                 }
-                val bottomPadding = resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._45sdp)
+                val bottomPadding = resources.getDimensionPixelSize(R.dimen.margin_45sdp)
                 ViewUtil.setBottomPadding(tvEmptyDesc, bottomPadding)
                 ivEmptyIcon.setImageResource(imageRes)
             }
         }
-        binding.groupRecommended.emptyLayout.root.post {
-            binding.groupRecommended.rvRecommended.showOrHide(!isListEmpty)
-            binding.groupRecommended.emptyLayout.root.showOrHide(isListEmpty)
-        }
+        binding.groupRecommended.rvRecommended.showOrHide(!isListEmpty)
+        binding.groupRecommended.emptyLayout.root.showOrHide(isListEmpty)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -545,7 +539,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
             val openingThemeSongs = anime.opEdTheme?.openings
             val endingThemeSongs = anime.opEdTheme?.endings
             val airingDate = anime.airedOn.getAiredDate(context)
-            val showType = AnimeType.valueOfOrDefault(anime.type?.search).showName
+            val showType = AnimeType.valueOfOrDefaultForShow(anime.type?.search).showName
             val status = anime.status?.showName
             val isAiring = anime.airing ?: false
             val broadcastDate = anime.broadcast?.convertBroadcastToLocalTime().placeholder()
@@ -893,7 +887,7 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, CustomClickLi
         //handle review clicks
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
         //handle recommendations list item click
         val animeId = recommendationList[position].entry?.malId
         if (animeId != null) {

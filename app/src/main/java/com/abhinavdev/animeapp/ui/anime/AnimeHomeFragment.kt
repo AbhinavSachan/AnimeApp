@@ -115,10 +115,8 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         with(binding.toolbar) {
             ivExtra.show()
             ivExtraTwo.show()
-            ivExtraThree.show()
             ivExtra.setImageResource(R.drawable.ic_refresh)
             ivExtraTwo.setImageResource(R.drawable.ic_random)
-            ivExtraThree.setImageResource(R.drawable.ic_search)
 
             ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
                 ViewUtil.setTopPadding(root, insets.top)
@@ -214,7 +212,6 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     private fun setListeners() {
         binding.toolbar.ivExtra.setOnClickListener(this)
         binding.toolbar.ivExtraTwo.setOnClickListener(this)
-        binding.toolbar.ivExtraThree.setOnClickListener(this)
         binding.groupTopRanked.tvViewAll.setOnClickListener(this)
         binding.groupRecommended.tvViewAll.setOnClickListener(this)
         binding.groupPopular.tvViewAll.setOnClickListener(this)
@@ -226,7 +223,6 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
         when (v) {
             binding.toolbar.ivExtra -> onRefreshClick()
             binding.toolbar.ivExtraTwo -> onRandomClick()
-            binding.toolbar.ivExtraThree -> onSearchClick()
             binding.groupTopRanked.tvViewAll -> onTopRankedClick()
             binding.groupRecommended.tvViewAll -> onTopRecommendedClick()
             binding.groupPopular.tvViewAll -> openJikanFragment(AnimeFilter.BY_POPULARITY)
@@ -243,10 +239,6 @@ class AnimeHomeFragment : BaseFragment(), View.OnClickListener, OnClickMultiType
     }
 
     private fun onRandomClick() {
-
-    }
-
-    private fun onSearchClick() {
 
     }
 

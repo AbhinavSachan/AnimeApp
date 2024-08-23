@@ -17,7 +17,7 @@ import com.abhinavdev.animeapp.remote.models.enums.MangaFilter
 import com.abhinavdev.animeapp.remote.models.enums.MangaType
 import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.manga.adapters.MangaVerticalAdapter
@@ -41,7 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
     private var _binding: FragmentJikanTopMangaBinding? = null
     private val binding get() = _binding!!
@@ -339,7 +339,7 @@ class JikanTopMangaFragment : BaseFragment(), View.OnClickListener, CustomClickL
         viewModel.getTopManga(mangaType, mangaFilter, page, limit)
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
 
     }
 

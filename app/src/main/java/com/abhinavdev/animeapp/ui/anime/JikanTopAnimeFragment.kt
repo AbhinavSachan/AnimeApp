@@ -20,7 +20,7 @@ import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
@@ -42,7 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickListener,
+class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
     private var _binding: FragmentJikanTopAnimeBinding? = null
     private val binding get() = _binding!!
@@ -356,7 +356,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, CustomClickL
         viewModel.getTopAnime(animeType, animeFilter, ageRating, sfw, page, limit)
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
         val animeId = animeList[position].malId
         parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))
     }

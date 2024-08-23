@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.databinding.RowGenreCategoryBinding
 import com.abhinavdev.animeapp.remote.models.enums.Genre
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.extension.getSizeOfView
 
-class GenreCategoryAdapter(val list: List<Genre>, val listener: CustomClickListener) :
+class GenreCategoryAdapter(val list: List<Genre>, val listener: OnAdapterItemClickListener) :
     RecyclerView.Adapter<GenreCategoryAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =

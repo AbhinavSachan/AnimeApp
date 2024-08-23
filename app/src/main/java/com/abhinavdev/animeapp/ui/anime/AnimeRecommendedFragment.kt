@@ -17,7 +17,7 @@ import com.abhinavdev.animeapp.ui.anime.adapters.MalAnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -33,7 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomClickListener {
+class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener {
     private var _binding: FragmentAnimeRecommendedBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
@@ -271,7 +271,7 @@ class AnimeRecommendedFragment : BaseFragment(), View.OnClickListener, CustomCli
         viewModel.getRecommendedAnime(offset, limit)
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, type: String?) {
         val animeId = animeList[position].node?.id
         if (animeId != null) {
             parentActivity?.navigateToFragment(AnimeDetailsFragment.newInstance(animeId))

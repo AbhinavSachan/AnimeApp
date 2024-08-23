@@ -23,48 +23,40 @@ object ApiClient {
     private const val MAX_RETRIES = 3
     private const val RETRY_DELAY_MS = 1000L
 
-    var addLoggingInterceptor = false
-
     fun init() {
         val gson = createGson()
 
+        val rateLimiter = RateLimitInterceptor()
+        val authInterceptor = AuthInterceptor()
+        val okhttpInterceptor = OkHttpProfilerInterceptor()
+
         jikanApiService = createApiService(
             Const.BaseUrls.JIKAN, createOkHttpClient(
-                addRateLimitInterceptor = true,
-                addAuthInterceptor = false,
-                addLoggingInterceptor = addLoggingInterceptor
+                rateLimiter,
+                okhttpInterceptor
             ), gson, JikanApiService::class.java
         )
         oAuthApiService = createApiService(
             Const.BaseUrls.O_AUTH, createOkHttpClient(
-                addRateLimitInterceptor = false,
-                addAuthInterceptor = false,
-                addLoggingInterceptor = addLoggingInterceptor
+                okhttpInterceptor
             ), gson, OAuthApiService::class.java
         )
         malApiService = createApiService(
             Const.BaseUrls.MAL, createOkHttpClient(
-                addRateLimitInterceptor = false,
-                addAuthInterceptor = true,
-                addLoggingInterceptor = addLoggingInterceptor
+                authInterceptor,
+                okhttpInterceptor
             ), gson, MalApiService::class.java
         )
     }
 
-    private fun createOkHttpClient(
-        addRateLimitInterceptor: Boolean,
-        addAuthInterceptor: Boolean,
-        addLoggingInterceptor: Boolean,
-    ): OkHttpClient {
+    private fun createOkHttpClient(vararg interceptors: Interceptor): OkHttpClient {
         val httpBuilder = OkHttpClient.Builder()
 
         httpBuilder.connectTimeout(Const.TimeOut.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(Const.TimeOut.WRITE_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(Const.TimeOut.READ_TIMEOUT, TimeUnit.SECONDS)
 
-        if (addRateLimitInterceptor) httpBuilder.addInterceptor(RateLimitInterceptor())
-        if (addAuthInterceptor) httpBuilder.addInterceptor(AuthInterceptor())
-        if (addLoggingInterceptor) httpBuilder.addInterceptor(OkHttpProfilerInterceptor())
+        interceptors.forEach { httpBuilder.addInterceptor(it) }
 
         return httpBuilder.build()
     }

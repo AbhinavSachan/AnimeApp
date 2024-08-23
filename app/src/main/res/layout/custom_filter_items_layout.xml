@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_filter_heading"
+        style="@style/TextStyleFont600"
+        android:textSize="@dimen/text_size_14"
+        android:layout_marginStart="@dimen/safe_zone_main_page"
+        android:textColor="@color/fontTextSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Type" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_filter_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:paddingStart="@dimen/safe_zone_main_page"
+        android:paddingTop="@dimen/_6sdp"
+        android:paddingEnd="@dimen/safe_zone_main_page"
+        android:paddingBottom="@dimen/_6sdp"
+        app:layout_constraintTop_toBottomOf="@id/tv_filter_heading"
+        tools:itemCount="4"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/row_selectable_item"
+        tools:orientation="horizontal" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

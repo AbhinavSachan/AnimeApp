@@ -10,7 +10,7 @@ import com.abhinavdev.animeapp.databinding.RowVerticalListItemBinding
 import com.abhinavdev.animeapp.remote.models.malmodels.MalMangaData
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.misc.MultiContentAdapterType
-import com.abhinavdev.animeapp.ui.common.listeners.CustomClickListener
+import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.manga.misc.PresentableMalMangaData
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -25,7 +25,7 @@ import com.abhinavdev.animeapp.util.extension.showOrHide
 
 class MalMangaVerticalAdapter(
     private val list: List<MalMangaData>,
-    private val listener: CustomClickListener,
+    private val listener: OnAdapterItemClickListener,
     private val pageType: MultiContentAdapterType
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
