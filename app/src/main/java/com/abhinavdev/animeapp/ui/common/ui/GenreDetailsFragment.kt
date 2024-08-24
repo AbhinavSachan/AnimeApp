@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.anime
+package com.abhinavdev.animeapp.ui.common.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,17 +6,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.DialogOptionsBinding
-import com.abhinavdev.animeapp.databinding.FragmentJikanTopAnimeBinding
+import com.abhinavdev.animeapp.databinding.FragmentGenreDetailsBinding
 import com.abhinavdev.animeapp.remote.kit.Resource
 import com.abhinavdev.animeapp.remote.models.anime.AnimeData
 import com.abhinavdev.animeapp.remote.models.enums.AgeRating
-import com.abhinavdev.animeapp.remote.models.enums.AnimeFilter
+import com.abhinavdev.animeapp.remote.models.enums.AnimeOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
+import com.abhinavdev.animeapp.remote.models.enums.Genre
+import com.abhinavdev.animeapp.remote.models.enums.SortOrder
+import com.abhinavdev.animeapp.ui.anime.AnimeDetailsFragment
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
@@ -31,7 +36,7 @@ import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
-import com.abhinavdev.animeapp.util.extension.createViewModel
+import com.abhinavdev.animeapp.util.extension.applyDimen
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
@@ -42,38 +47,36 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
+class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickListener,
     OnClickMultiTypeCallback {
-    private var _binding: FragmentJikanTopAnimeBinding? = null
+    private var _binding: FragmentGenreDetailsBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
-    private lateinit var viewModel: AnimeViewModel
 
-    private var isFromSwipe = false
-    private var shouldScrollToTop = false
+    private val viewModel by viewModels<AnimeViewModel>()
+
+    private var genreList = listOf<ItemSelectionModelBase>()
 
     private var gridOrList: AdapterType = AdapterType.GRID
-
-    private var animeType: AnimeType = AnimeType.ALL
-    private var animeFilter: AnimeFilter = AnimeFilter.NONE
-    private var ageRating: AgeRating = AgeRating.NONE
-    private var page: Int = 1
-    private var limit: Int = SettingsHelper.getJikanListLimit()
-    private var lastPage = 1
-    private val isFirstPage get() = page == 1
 
     private val animeList: ArrayList<AnimeData> = arrayListOf()
     private var adapter: AnimeVerticalAdapter? = null
 
-    private var typeList: List<ItemSelectionModelBase> = arrayListOf()
-    private var statusList: List<ItemSelectionModelBase> = arrayListOf()
-    private var ageRatingList: List<ItemSelectionModelBase> = arrayListOf()
+    private var isFromSwipe = false
+
+    private var page = 1
+    private var limit = SettingsHelper.getJikanListLimit()
+    private val isFirstPage get() = page == 1
+    private var lastPage = 1
+    private var paginationHelper: PaginationViewHelper? = null
+    private var pickPageDialog: BottomSheetDialog? = null
+    private var shouldScrollToTop: Boolean = false
+
+    private var selectedGenre = Genre.ALL
+    private var isAnime = false
 
     private var optionAdapter: ItemSelectionAdapter<ListOptionsType>? = null
     private var optionBottomSheetDialog: BottomSheetDialog? = null
-
-    private var paginationHelper: PaginationViewHelper? = null
-    private var pickPageDialog: BottomSheetDialog? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -92,19 +95,30 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = createViewModel(AnimeViewModel::class.java)
+        gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
+        isAnime = arguments?.getBoolean(Const.BundleExtras.EXTRA_IS_ANIME, false) ?: false
+        val id = arguments?.getInt(Const.BundleExtras.EXTRA_ID)
+        selectedGenre = if (isAnime) Genre.valueOfOrDefaultAnime(id) else Genre.valueOfOrDefaultManga(id)
 
-        arguments?.let {
-            animeFilter = AnimeFilter.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_FILTER))
-            animeType = AnimeType.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_TYPE))
-            ageRating= AgeRating.valueOfOrDefault(it.getString(Const.BundleExtras.EXTRA_AGE_RATING))
+        val sfw = SettingsHelper.getSfwEnabled()
+        genreList = if (isAnime) {
+            Genre.listAnime(sfw).map {
+                ItemSelectionModelBase(it.animeId.toString(), it.showName).apply {
+                    isSelected = selectedGenre == it
+                }
+            }
+        } else {
+            Genre.listManga(sfw).map {
+                ItemSelectionModelBase(it.mangaId.toString(), it.showName).apply {
+                    isSelected = selectedGenre == it
+                }
+            }
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentJikanTopAnimeBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentGenreDetailsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -123,48 +137,26 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
 
     private fun initComponents() {
         paginationHelper = context?.let { PaginationViewHelper(binding.groupPagination, it) }
-        gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
-        typeList = AnimeType.list.map {
-            ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = animeType == it
-            }
-        }
-        statusList = AnimeFilter.list.map {
-            ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = animeFilter == it
-            }
-        }
-        ageRatingList = AgeRating.list(SettingsHelper.getSfwEnabled()).map {
-            ItemSelectionModelBase(it.search, it.showName).apply {
-                isSelected = ageRating == it
-            }
-        }
-
         with(binding.toolbar) {
-            tvTitle.text = getString(R.string.msg_top_anime)
+            ivBack.hide()
+            tvTitle.text = getString(R.string.msg_genres_details)
             val viewIcon = when (gridOrList) {
                 AdapterType.GRID -> R.drawable.ic_list_view
                 AdapterType.LIST -> R.drawable.ic_grid_view
             }
             ivExtra.show()
             ivExtra.setImageResource(viewIcon)
-
         }
-
-        val padding = binding.rvList.paddingBottom
+        val bottomBarHeight = applyDimen(R.dimen.cbn_height)
+        val salt = applyDimen(R.dimen.bottom_bar_height_salt)
         ViewUtil.setOnApplyUiInsetsListener(binding.root) { insets ->
             ViewUtil.setTopPadding(binding.toolbar.root, insets.top)
-            ViewUtil.setBottomPadding(binding.rvList, padding + insets.bottom)
+            ViewUtil.setBottomPadding(binding.rvList, insets.bottom + bottomBarHeight + salt)
         }
-
         with(binding) {
-            groupType.tvItemLabel.text = getString(R.string.msg_filter_by_type)
-            groupStatus.tvItemLabel.text = getString(R.string.msg_filter_by_status)
-            groupAgeRating.tvItemLabel.text = getString(R.string.msg_filter_by_age)
+            groupGenre.tvItemLabel.text = getString(R.string.msg_filter_by_genre)
 
-            groupType.tvItem.text = animeType.showName
-            groupStatus.tvItem.text = animeFilter.showName
-            groupAgeRating.tvItem.text = ageRating.showName
+            groupGenre.tvItem.text = selectedGenre.showName
         }
     }
 
@@ -200,9 +192,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
     private fun setListeners() {
         binding.toolbar.ivBack.setOnClickListener(this)
         binding.toolbar.ivExtra.setOnClickListener(this)
-        binding.groupType.llItem.setOnClickListener(this)
-        binding.groupStatus.llItem.setOnClickListener(this)
-        binding.groupAgeRating.llItem.setOnClickListener(this)
+        binding.groupGenre.llItem.setOnClickListener(this)
         binding.swipeRefresh.setOnRefreshListener {
             getList(true)
         }
@@ -215,9 +205,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
         when (v) {
             binding.toolbar.ivBack -> parentActivity?.onBackPressedDispatcher?.onBackPressed()
             binding.toolbar.ivExtra -> toggleViewType()
-            binding.groupType.llItem -> openOptionDialog(typeList, ListOptionsType.TYPE)
-            binding.groupStatus.llItem -> openOptionDialog(statusList, ListOptionsType.STATUS)
-            binding.groupAgeRating.llItem -> openOptionDialog(ageRatingList, ListOptionsType.AGE)
+            binding.groupGenre.llItem -> openOptionDialog(genreList, ListOptionsType.TYPE)
         }
     }
 
@@ -258,7 +246,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
                 else -> 0
             }
             tvTitle.text = getString(title)
-            optionAdapter = ItemSelectionAdapter(list, this@JikanTopAnimeFragment, type)
+            optionAdapter = ItemSelectionAdapter(list, this@GenreDetailsFragment, type)
             rvItems.setHasFixedSize(true)
             rvItems.layoutManager = LinearLayoutManager(context)
             rvItems.adapter = optionAdapter
@@ -269,7 +257,7 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
     }
 
     private fun setObservers() {
-        viewModel.topAnimeResponse.observe(viewLifecycleOwner) { event ->
+        viewModel.searchAnimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 when (response) {
                     is Resource.Success -> {
@@ -350,8 +338,27 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
 
     private fun getList(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
-        val sfw = SettingsHelper.getSfwEnabled()
-        viewModel.getTopAnime(animeType, animeFilter, ageRating, sfw, page, limit)
+        val genreIds = if (isAnime) selectedGenre.animeId.toString() else selectedGenre.mangaId.toString()
+        viewModel.getAnimeBySearch(
+            page = page,
+            limit = limit,
+            unapproved = false,
+            query = "",
+            type = AnimeType.ALL,
+            score = null,
+            minScore = null,
+            maxScore = null,
+            status = AnimeStatus.ALL,
+            rating = AgeRating.NONE,
+            genres = genreIds,
+            genresExclude = "",
+            orderBy = AnimeOrderBy.POPULARITY,
+            sort = SortOrder.ASCENDING,
+            letter = "",
+            producers = "",
+            startDate = "",
+            endDate = ""
+        )
     }
 
     override fun onItemClick(position: Int, type: String?) {
@@ -360,32 +367,11 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
     }
 
     override fun <T> onItemClick(position: Int, type: T) {
-        when (type as ListOptionsType) {
-            ListOptionsType.TYPE -> {
-                typeList.setOptionSelected(position) {
-                    binding.groupType.tvItem.text = it.name
-                    animeType = AnimeType.valueOfOrDefault(it.id)
-                    runPostOptionClick()
-                }
-            }
-
-            ListOptionsType.STATUS -> {
-                statusList.setOptionSelected(position) {
-                    binding.groupStatus.tvItem.text = it.name
-                    animeFilter = AnimeFilter.valueOfOrDefault(it.id)
-                    runPostOptionClick()
-                }
-            }
-
-            ListOptionsType.AGE -> {
-                ageRatingList.setOptionSelected(position) {
-                    binding.groupAgeRating.tvItem.text = it.name
-                    ageRating = AgeRating.valueOfOrDefault(it.id)
-                    runPostOptionClick()
-                }
-            }
-
-            else -> {}
+        genreList.setOptionSelected(position) {
+            binding.groupGenre.tvItem.text = it.name
+            val id = it.id.toIntOrNull()
+            selectedGenre = if (isAnime) Genre.valueOfOrDefaultAnime(id) else Genre.valueOfOrDefaultManga(id)
+            runPostOptionClick()
         }
     }
 
@@ -427,13 +413,10 @@ class JikanTopAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterIte
 
     companion object {
         @JvmStatic
-        fun newInstance(
-            filter: AnimeFilter = AnimeFilter.NONE, animeType: AnimeType = AnimeType.ALL, ageRating: AgeRating = AgeRating.NONE
-        ) = JikanTopAnimeFragment().apply {
+        fun newInstance(isAnime: Boolean, genre: Genre = Genre.ALL) = GenreDetailsFragment().apply {
             arguments = Bundle().apply {
-                putString(Const.BundleExtras.EXTRA_FILTER, filter.search)
-                putString(Const.BundleExtras.EXTRA_TYPE, animeType.search)
-                putString(Const.BundleExtras.EXTRA_AGE_RATING, ageRating.search)
+                putBoolean(Const.BundleExtras.EXTRA_IS_ANIME, isAnime)
+                putInt(Const.BundleExtras.EXTRA_ID, if (isAnime) genre.animeId else genre.mangaId)
             }
         }
     }

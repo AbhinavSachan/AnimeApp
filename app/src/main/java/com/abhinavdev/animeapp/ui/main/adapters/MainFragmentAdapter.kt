@@ -3,15 +3,14 @@ package com.abhinavdev.animeapp.ui.main.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.abhinavdev.animeapp.remote.models.enums.MediaType
 import com.abhinavdev.animeapp.ui.anime.AnimeHomeFragment
+import com.abhinavdev.animeapp.ui.anime.SearchAnimeFragment
 import com.abhinavdev.animeapp.ui.common.ui.GenreFragment
 import com.abhinavdev.animeapp.ui.manga.MangaHomeFragment
+import com.abhinavdev.animeapp.ui.manga.SearchMangaFragment
 import com.abhinavdev.animeapp.ui.more.MoreFragment
 import com.abhinavdev.animeapp.ui.more.MyAnimeListFragment
 import com.abhinavdev.animeapp.ui.more.MyMangaListFragment
-import com.abhinavdev.animeapp.ui.anime.SearchAnimeFragment
-import com.abhinavdev.animeapp.ui.manga.SearchMangaFragment
 import com.abhinavdev.animeapp.util.appsettings.AppMediaType
 
 class MainFragmentAdapter(
@@ -45,7 +44,7 @@ class MainFragmentAdapter(
                     MangaHomeFragment.newInstance()
                 }
             }
-            PageType.GENRE -> GenreFragment.newInstance(MediaType.valueOfOrDefault(mediaType.search))
+            PageType.GENRE -> GenreFragment.newInstance(mediaType == AppMediaType.ANIME)
             PageType.SEARCH -> {
                 if (mediaType == AppMediaType.ANIME){
                     SearchAnimeFragment.newInstance()

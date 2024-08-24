@@ -184,7 +184,7 @@
             android:background="@color/accent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.abhinavdev.animeapp.ui.common.ui.VerticalTextView
+        <com.abhinavdev.animeapp.ui.common.ui.components.VerticalTextView
             android:id="@+id/vtv_anime_name"
             style="@style/TextStyleFont800"
             android:layout_width="0dp"

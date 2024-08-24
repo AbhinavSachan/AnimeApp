@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.common.ui
+package com.abhinavdev.animeapp.ui.common.ui.components
 
 import android.annotation.SuppressLint
 import android.content.Context

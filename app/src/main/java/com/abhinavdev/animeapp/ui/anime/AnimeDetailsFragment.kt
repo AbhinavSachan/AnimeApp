@@ -37,7 +37,7 @@ import com.abhinavdev.animeapp.ui.common.adapters.ReviewAdapter
 import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
-import com.abhinavdev.animeapp.ui.common.ui.FullScreenImageActivity
+import com.abhinavdev.animeapp.ui.common.ui.components.FullScreenImageActivity
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.appsettings.AppTitleType

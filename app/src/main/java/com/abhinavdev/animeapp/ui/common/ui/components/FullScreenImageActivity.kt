@@ -1,4 +1,4 @@
-package com.abhinavdev.animeapp.ui.common.ui
+package com.abhinavdev.animeapp.ui.common.ui.components
 
 import android.app.Activity
 import android.content.Intent

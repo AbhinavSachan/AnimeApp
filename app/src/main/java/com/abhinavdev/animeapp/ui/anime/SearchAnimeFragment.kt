@@ -25,7 +25,7 @@ import com.abhinavdev.animeapp.ui.anime.adapters.AnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
 import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
-import com.abhinavdev.animeapp.ui.common.ui.FilterDialogActivity
+import com.abhinavdev.animeapp.ui.common.ui.components.FilterDialogActivity
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
@@ -130,20 +130,15 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterItemC
 
             ivExtraTwo.show()
             ivExtraTwo.setImageResource(R.drawable.ic_filter)
-
-            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
-                ViewUtil.setTopPadding(root, insets.top)
-            }
         }
         val rvBPadding = applyDimen(R.dimen.recycler_view_bottom_padding_for_programmatically)
         val bottomBarHeight = applyDimen(R.dimen.cbn_height)
         val salt = applyDimen(R.dimen.bottom_bar_height_salt)
-        ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
+        ViewUtil.setOnApplyUiInsetsListener(binding.root) { insets ->
+            ViewUtil.setTopPadding(binding.toolbar.root, insets.top)
             ViewUtil.setBottomPadding(
                 binding.rvList, insets.bottom + rvBPadding + bottomBarHeight + salt
             )
-        }
-        ViewUtil.setOnApplyUiInsetsListener(binding.groupPagination.clPagination) { insets ->
             ViewUtil.setBottomPadding(
                 binding.groupPagination.clPagination, insets.bottom + bottomBarHeight + salt
             )

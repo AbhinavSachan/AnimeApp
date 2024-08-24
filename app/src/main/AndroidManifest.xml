@@ -37,14 +37,14 @@
         tools:ignore="DiscouragedApi,LockedOrientationActivity"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".ui.common.ui.FilterDialogActivity"
+            android:name=".ui.common.ui.components.FilterDialogActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
-            android:name=".ui.common.ui.FullScreenImageActivity"
+            android:name=".ui.common.ui.components.FullScreenImageActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"

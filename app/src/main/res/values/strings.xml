@@ -156,5 +156,7 @@
     <string name="msg_search_bar_des">Search by - \'Death Note\' or \'d\'</string>
     <string name="msg_not_authenticated">Not Authenticated</string>
     <string name="msg_not_authenticated_des">Please login to access this feature.</string>
+    <string name="msg_genres_details">Genre Details</string>
+    <string name="msg_filter_by_genre">Filter By Genre</string>
 
 </resources>

@@ -10,7 +10,6 @@ import com.abhinavdev.animeapp.R
 import com.abhinavdev.animeapp.core.BaseFragment
 import com.abhinavdev.animeapp.databinding.FragmentGenreBinding
 import com.abhinavdev.animeapp.remote.models.enums.Genre
-import com.abhinavdev.animeapp.remote.models.enums.MediaType
 import com.abhinavdev.animeapp.ui.common.adapters.GenreCategoryAdapter
 import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.main.MainActivity
@@ -28,7 +27,7 @@ class GenreFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickLi
 
     private var adapter: GenreCategoryAdapter? = null
     private var genreList = listOf<Genre>()
-    private var mediaType = MediaType.ANIME
+    private var isAnime = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,26 +65,17 @@ class GenreFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickLi
 
     private fun initComponents() {
         val sfw = SettingsHelper.getSfwEnabled()
-        mediaType = MediaType.valueOfOrDefault(arguments?.getString(Const.BundleExtras.EXTRA_TYPE))
-        genreList = when (mediaType) {
-            MediaType.ANIME -> Genre.listAnime(sfw)
-            MediaType.MANGA -> Genre.listManga(sfw)
-            else -> Genre.listAnime(sfw)
-        }
+        isAnime = arguments?.getBoolean(Const.BundleExtras.EXTRA_IS_ANIME, false) ?: false
+        genreList = if (isAnime) Genre.listAnime(sfw) else Genre.listManga(sfw)
         with(binding.toolbar) {
             ivBack.hide()
             tvTitle.text = getString(R.string.msg_genres)
-
-            ViewUtil.setOnApplyUiInsetsListener(root) { insets ->
-                ViewUtil.setTopPadding(root, insets.top)
-            }
         }
         val bottomBarHeight = applyDimen(R.dimen.cbn_height)
         val salt = applyDimen(R.dimen.bottom_bar_height_salt)
-        ViewUtil.setOnApplyUiInsetsListener(binding.rvList) { insets ->
-            ViewUtil.setBottomPadding(
-                binding.rvList, insets.bottom + bottomBarHeight + salt
-            )
+        ViewUtil.setOnApplyUiInsetsListener(binding.root) { insets ->
+            ViewUtil.setTopPadding(binding.toolbar.root, insets.top)
+            ViewUtil.setBottomPadding(binding.rvList, insets.bottom + bottomBarHeight + salt)
         }
     }
 
@@ -109,7 +99,8 @@ class GenreFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickLi
     }
 
     override fun onItemClick(position: Int, type: String?) {
-
+        val genre = genreList[position]
+        parentActivity?.navigateToFragment(GenreDetailsFragment.newInstance(isAnime,genre))
     }
 
     private fun setObservers() {
@@ -118,9 +109,9 @@ class GenreFragment : BaseFragment(), View.OnClickListener, OnAdapterItemClickLi
 
     companion object {
         @JvmStatic
-        fun newInstance(type: MediaType) = GenreFragment().apply {
+        fun newInstance(isAnime: Boolean) = GenreFragment().apply {
             arguments = Bundle().apply {
-                putString(Const.BundleExtras.EXTRA_TYPE, type.search)
+                putBoolean(Const.BundleExtras.EXTRA_IS_ANIME, isAnime)
             }
         }
     }

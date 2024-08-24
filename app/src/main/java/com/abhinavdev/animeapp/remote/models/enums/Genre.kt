@@ -254,8 +254,8 @@ enum class Genre(
     VILLAINESS(-1, 81, "Villainess", true, R.drawable.genre_villianess);
 
     companion object {
-        fun valueOfOrDefaultAnime(value: Int?) = entries.find { it.animeId == value }
-        fun valueOfOrDefaultManga(value: Int?) = entries.find { it.mangaId == value }
+        fun valueOfOrDefaultAnime(value: Int?) = entries.find { it.animeId == value } ?:ALL
+        fun valueOfOrDefaultManga(value: Int?) = entries.find { it.mangaId == value }?:ALL
 
         fun listAnime(sfw: Boolean) =
             entries.filter { it.animeId != -1 && (!sfw || it.sfw) }.sortedBy { it.showName }
