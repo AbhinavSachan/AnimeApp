@@ -32,7 +32,7 @@ class ApplicationClass : Application() {
         super.onCreate()
 
         ApiClient.init()
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
     }
 
     override fun attachBaseContext(base: Context) {

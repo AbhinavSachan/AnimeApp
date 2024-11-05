@@ -123,10 +123,13 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
         //setting clickable from xml is not working
         //if switch is non clickable then user where ever clicks only linearlayout will be triggered
         binding.groupSfw.switchItem.clickable(false)
+        binding.groupMangaMode.switchItem.clickable(false)
+
         val theme = SettingsHelper.getAppTheme().stringRes
         val language = SettingsHelper.getAppLanguage().showName
         val titleType = SettingsHelper.getPreferredTitleType().showName
         val enableSfw = SettingsHelper.getSfwEnabled()
+        val enableMangaMode = !SettingsHelper.getIsAnime()
 
         with(binding.groupMyProfile) {
             tvTitle.text = getString(R.string.msg_my_profile)
@@ -156,6 +159,12 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             tvDescription.text = getString(R.string.msg_sfw_description)
             ivStartIcon.setImageResource(R.drawable.ic_sfw)
             switchItem.setChecked(enableSfw)
+        }
+        with(binding.groupMangaMode) {
+            tvTitle.text = getString(R.string.msg_manga_mode)
+            tvDescription.text = getString(R.string.msg_manga_mode_description)
+            ivStartIcon.setImageResource(R.drawable.ic_manga_mode)
+            switchItem.setChecked(enableMangaMode)
         }
         with(binding.groupLogout) {
             tvTitle.setTextColor(applyColor(R.color.fontTextRed))
@@ -198,6 +207,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
         binding.groupTitleType.llItem.setOnClickListener(this)
         binding.groupAppLanguage.llItem.setOnClickListener(this)
         binding.groupSfw.llItem.setOnClickListener(this)
+        binding.groupMangaMode.llItem.setOnClickListener(this)
         binding.groupLogout.llItem.setOnClickListener(this)
         binding.btnLogin.setOnClickListener(this)
     }
@@ -218,6 +228,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             )
 
             binding.groupSfw.llItem -> onSfwClick()
+            binding.groupMangaMode.llItem -> onMangaModeClick()
             binding.groupLogout.llItem -> onLogoutClick()
             binding.btnLogin -> context?.showLoginDialog()
         }
@@ -267,6 +278,13 @@ class MoreFragment : BaseFragment(), View.OnClickListener, OnClickMultiTypeCallb
             },2100)
         }
         PrefUtils.setBoolean(Const.PrefKeys.SFW_ENABLE_KEY, !isChecked)
+    }
+
+    private fun onMangaModeClick() {
+        val isChecked = binding.groupMangaMode.switchItem.isChecked
+        binding.groupMangaMode.switchItem.setChecked(!isChecked, true)
+        PrefUtils.setBoolean(Const.PrefKeys.IS_ANIME_KEY, isChecked)
+        showRestartSnackBar { context?.let { it1 -> restartApp(it1) } }
     }
 
     private fun onLogoutClick() {

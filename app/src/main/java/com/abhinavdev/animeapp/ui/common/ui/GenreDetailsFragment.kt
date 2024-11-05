@@ -20,7 +20,11 @@ import com.abhinavdev.animeapp.remote.models.enums.AnimeOrderBy
 import com.abhinavdev.animeapp.remote.models.enums.AnimeStatus
 import com.abhinavdev.animeapp.remote.models.enums.AnimeType
 import com.abhinavdev.animeapp.remote.models.enums.Genre
+import com.abhinavdev.animeapp.remote.models.enums.MangaOrderBy
+import com.abhinavdev.animeapp.remote.models.enums.MangaStatus
+import com.abhinavdev.animeapp.remote.models.enums.MangaType
 import com.abhinavdev.animeapp.remote.models.enums.SortOrder
+import com.abhinavdev.animeapp.remote.models.manga.MangaData
 import com.abhinavdev.animeapp.ui.anime.AnimeDetailsFragment
 import com.abhinavdev.animeapp.ui.anime.adapters.AnimeVerticalAdapter
 import com.abhinavdev.animeapp.ui.anime.misc.AdapterType
@@ -28,6 +32,8 @@ import com.abhinavdev.animeapp.ui.anime.viewmodel.AnimeViewModel
 import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.main.MainActivity
+import com.abhinavdev.animeapp.ui.manga.adapters.MangaVerticalAdapter
+import com.abhinavdev.animeapp.ui.manga.viewmodel.MangaViewModel
 import com.abhinavdev.animeapp.ui.models.ItemSelectionModelBase
 import com.abhinavdev.animeapp.ui.more.adapters.ItemSelectionAdapter
 import com.abhinavdev.animeapp.ui.more.adapters.setOptionSelected
@@ -54,6 +60,7 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
     private var parentActivity: MainActivity? = null
 
     private val viewModel by viewModels<AnimeViewModel>()
+    private val mangaViewModel by viewModels<MangaViewModel>()
 
     private var genreList = listOf<ItemSelectionModelBase>()
 
@@ -61,6 +68,9 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
 
     private val animeList: ArrayList<AnimeData> = arrayListOf()
     private var adapter: AnimeVerticalAdapter? = null
+
+    private val mangaList: ArrayList<MangaData> = arrayListOf()
+    private var mangaAdapter: MangaVerticalAdapter? = null
 
     private var isFromSwipe = false
 
@@ -98,7 +108,8 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
         gridOrList = AdapterType.valueOfOrDefault(PrefUtils.getInt(Const.PrefKeys.GRID_OR_LIST_KEY))
         isAnime = arguments?.getBoolean(Const.BundleExtras.EXTRA_IS_ANIME, false) ?: false
         val id = arguments?.getInt(Const.BundleExtras.EXTRA_ID)
-        selectedGenre = if (isAnime) Genre.valueOfOrDefaultAnime(id) else Genre.valueOfOrDefaultManga(id)
+        selectedGenre =
+            if (isAnime) Genre.valueOfOrDefaultAnime(id) else Genre.valueOfOrDefaultManga(id)
 
         val sfw = SettingsHelper.getSfwEnabled()
         genreList = if (isAnime) {
@@ -115,6 +126,7 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
             }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -166,11 +178,19 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
     }
 
     private fun setAdapters() {
-        adapter = AnimeVerticalAdapter(animeList, this)
-        adapter?.setHasStableIds(true)
-        toggleAdapterType(gridOrList)
-        binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
-        binding.rvList.adapter = adapter
+        if (isAnime) {
+            adapter = AnimeVerticalAdapter(animeList, this)
+            adapter?.setHasStableIds(true)
+            toggleAdapterType(gridOrList)
+            binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
+            binding.rvList.adapter = adapter
+        } else {
+            mangaAdapter = MangaVerticalAdapter(mangaList, this)
+            adapter?.setHasStableIds(true)
+            toggleAdapterType(gridOrList)
+            binding.rvList.setHasFixedSize(Const.Other.HAS_FIXED_SIZE)
+            binding.rvList.adapter = mangaAdapter
+        }
     }
 
     private fun toggleAdapterType(gridOrList: AdapterType) {
@@ -291,6 +311,40 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
                 }
             }
         }
+        mangaViewModel.searchMangaResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.data?.let {
+                            setMangaData(it)
+                        }
+                        isLoaderVisible(false)
+                        val hasNext = response.data?.pagination?.hasNextPage ?: false
+                        lastPage = response.data?.pagination?.lastVisiblePage ?: 1
+                        updatePageNo()
+                        paginationHelper?.setEditButtonVisible(true)
+                        //if this is not the first page then enable previous button
+                        paginationHelper?.setPreviousButtonEnabled(!isFirstPage)
+                        //if api has next page then enable next button
+                        paginationHelper?.setNextButtonEnabled(hasNext)
+                        //if first page then check if list is empty
+                        if (isFirstPage) {
+                            showEmptyLayout(false)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        isLoaderVisible(false)
+                        showEmptyLayout(true)
+                        response.message?.let { message -> toast(message) }
+                    }
+
+                    is Resource.Loading -> {
+                        isLoaderVisible(true)
+                    }
+                }
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -298,6 +352,17 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
         animeList.clear()
         animeList.addAll(data)
         adapter?.notifyDataSetChanged()
+        if (shouldScrollToTop) {
+            scrollToTopOrPosition()
+            shouldScrollToTop = false
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setMangaData(data: ArrayList<MangaData>) {
+        mangaList.clear()
+        mangaList.addAll(data)
+        mangaAdapter?.notifyDataSetChanged()
         if (shouldScrollToTop) {
             scrollToTopOrPosition()
             shouldScrollToTop = false
@@ -317,7 +382,7 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
     }
 
     private fun showEmptyLayout(isError: Boolean) {
-        val isListEmpty = animeList.isEmpty()
+        val isListEmpty = if (isAnime) animeList.isEmpty() else mangaList.isEmpty()
         with(binding.emptyLayout) {
             if (isListEmpty) {
                 val imageRes = if (isError) {
@@ -338,27 +403,51 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
 
     private fun getList(fromSwipe: Boolean) {
         isFromSwipe = fromSwipe
-        val genreIds = if (isAnime) selectedGenre.animeId.toString() else selectedGenre.mangaId.toString()
-        viewModel.getAnimeBySearch(
-            page = page,
-            limit = limit,
-            unapproved = false,
-            query = "",
-            type = AnimeType.ALL,
-            score = null,
-            minScore = null,
-            maxScore = null,
-            status = AnimeStatus.ALL,
-            rating = AgeRating.NONE,
-            genres = genreIds,
-            genresExclude = "",
-            orderBy = AnimeOrderBy.POPULARITY,
-            sort = SortOrder.ASCENDING,
-            letter = "",
-            producers = "",
-            startDate = "",
-            endDate = ""
-        )
+        val genreIds =
+            if (isAnime) selectedGenre.animeId.toString() else selectedGenre.mangaId.toString()
+
+        if (isAnime) {
+            viewModel.getAnimeBySearch(
+                page = page,
+                limit = limit,
+                unapproved = false,
+                query = "",
+                type = AnimeType.ALL,
+                score = null,
+                minScore = null,
+                maxScore = null,
+                status = AnimeStatus.ALL,
+                rating = AgeRating.NONE,
+                genres = genreIds,
+                genresExclude = "",
+                orderBy = AnimeOrderBy.POPULARITY,
+                sort = SortOrder.ASCENDING,
+                letter = "",
+                producers = "",
+                startDate = "",
+                endDate = ""
+            )
+        } else {
+            mangaViewModel.getMangaBySearch(
+                page = page,
+                limit = limit,
+                unapproved = false,
+                query = "",
+                type = MangaType.ALL,
+                score = null,
+                minScore = null,
+                maxScore = null,
+                status = MangaStatus.ALL,
+                genres = genreIds,
+                genresExclude = "",
+                orderBy = MangaOrderBy.POPULARITY,
+                sort = SortOrder.ASCENDING,
+                letter = "",
+                magazines = "",
+                startDate = "",
+                endDate = ""
+            )
+        }
     }
 
     override fun onItemClick(position: Int, type: String?) {
@@ -370,7 +459,8 @@ class GenreDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
         genreList.setOptionSelected(position) {
             binding.groupGenre.tvItem.text = it.name
             val id = it.id.toIntOrNull()
-            selectedGenre = if (isAnime) Genre.valueOfOrDefaultAnime(id) else Genre.valueOfOrDefaultManga(id)
+            selectedGenre =
+                if (isAnime) Genre.valueOfOrDefaultAnime(id) else Genre.valueOfOrDefaultManga(id)
             runPostOptionClick()
         }
     }

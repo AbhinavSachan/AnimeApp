@@ -158,5 +158,7 @@
     <string name="msg_not_authenticated_des">Please login to access this feature.</string>
     <string name="msg_genres_details">Genre Details</string>
     <string name="msg_filter_by_genre">Filter By Genre</string>
+    <string name="msg_manga_mode">Manga Mode</string>
+    <string name="msg_manga_mode_description">Switches all content from anime to manga.</string>
 
 </resources>

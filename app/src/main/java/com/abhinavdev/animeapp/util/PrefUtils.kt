@@ -17,7 +17,7 @@ object PrefUtils {
 
     private var listener: SharedPreferences.OnSharedPreferenceChangeListener? = null
 
-    fun setString(key: String?, value: String?) {
+    fun setString(key: String, value: String?) {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
@@ -25,7 +25,7 @@ object PrefUtils {
         editor.apply()
     }
 
-    fun getString(key: String?, default: String = DEFAULT_STRING_VALUE): String {
+    fun getString(key: String, default: String = DEFAULT_STRING_VALUE): String {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return prefs.getString(key, default) ?: default
@@ -41,7 +41,7 @@ object PrefUtils {
             .registerOnSharedPreferenceChangeListener(listener)
     }
 
-    fun setStringWithContext(context: Context, key: String?, value: String?) {
+    fun setStringWithContext(context: Context, key: String, value: String?) {
         val prefs = context.getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString(key, value)
@@ -49,13 +49,13 @@ object PrefUtils {
     }
 
     fun getStringWithContext(
-        context: Context, key: String?, default: String = DEFAULT_STRING_VALUE
+        context: Context, key: String, default: String = DEFAULT_STRING_VALUE
     ): String {
         val prefs = context.getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return prefs.getString(key, default) ?: default
     }
 
-    fun setBoolean(key: String?, value: Boolean) {
+    fun setBoolean(key: String, value: Boolean) {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
@@ -63,7 +63,7 @@ object PrefUtils {
         editor.apply()
     }
 
-    fun getBoolean(key: String?, default: Boolean = false): Boolean {
+    fun getBoolean(key: String, default: Boolean = false): Boolean {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return prefs.getBoolean(key, default)
@@ -79,7 +79,7 @@ object PrefUtils {
             .registerOnSharedPreferenceChangeListener(listener)
     }
 
-    fun setLong(key: String?, value: Long) {
+    fun setLong(key: String, value: Long) {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
@@ -87,7 +87,7 @@ object PrefUtils {
         editor.apply()
     }
 
-    fun getLong(key: String?, default: Int = DEFAULT_NUMERIC_VALUE): Long {
+    fun getLong(key: String, default: Int = DEFAULT_NUMERIC_VALUE): Long {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return prefs.getLong(key, default.toLong())
@@ -103,7 +103,7 @@ object PrefUtils {
             .registerOnSharedPreferenceChangeListener(listener)
     }
 
-    fun setInt(key: String?, value: Int) {
+    fun setInt(key: String, value: Int) {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
@@ -111,7 +111,7 @@ object PrefUtils {
         editor.apply()
     }
 
-    fun getInt(key: String?, default: Int = DEFAULT_NUMERIC_VALUE): Int {
+    fun getInt(key: String, default: Int = DEFAULT_NUMERIC_VALUE): Int {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return prefs.getInt(key, default)
@@ -127,7 +127,7 @@ object PrefUtils {
             .registerOnSharedPreferenceChangeListener(listener)
     }
 
-    fun setFloat(key: String?, value: Float) {
+    fun setFloat(key: String, value: Float) {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
@@ -135,7 +135,7 @@ object PrefUtils {
         editor.apply()
     }
 
-    fun getFloat(key: String?, default: Int = DEFAULT_NUMERIC_VALUE): Float {
+    fun getFloat(key: String, default: Int = DEFAULT_NUMERIC_VALUE): Float {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         return prefs.getFloat(key, default.toFloat())
@@ -154,7 +154,7 @@ object PrefUtils {
     /**
      * to set pojo object in preferences. will store json string of it.
      */
-    fun setObject(key: String?, value: Any) {
+    fun setObject(key: String, value: Any) {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val editor = prefs.edit()
@@ -166,7 +166,7 @@ object PrefUtils {
      * to get pojo object from json stored in preferences.
      * returns null if key doesn't exist in preferences
      */
-    fun <T> getObject(key: String?, pojoClass: Class<T>?): T? {
+    fun <T> getObject(key: String, pojoClass: Class<T>?): T? {
         val prefs =
             ApplicationClass.getInstance().getSharedPreferences(DEFAULT_PREFS, Context.MODE_PRIVATE)
         val jsonString = prefs.getString(key, null) ?: return null

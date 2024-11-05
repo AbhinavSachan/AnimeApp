@@ -351,6 +351,7 @@ class MyAnimeListFragment : BaseFragment(), View.OnClickListener, OnAdapterItemC
                 }
                 ivEmptyIcon.setImageResource(imageRes)
             }
+            btnEmptyAction.hide()
         }
         binding.rvList.showOrHide(!isListEmpty)
         binding.emptyLayout.root.showOrHide(isListEmpty)

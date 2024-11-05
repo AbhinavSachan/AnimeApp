@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.abhinavdev.animeapp.R
@@ -32,7 +33,6 @@ import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.applyDimen
-import com.abhinavdev.animeapp.util.extension.createViewModel
 import com.abhinavdev.animeapp.util.extension.hide
 import com.abhinavdev.animeapp.util.extension.show
 import com.abhinavdev.animeapp.util.extension.showOrHide
@@ -47,7 +47,7 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterItemC
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var parentActivity: MainActivity? = null
-    private lateinit var viewModel: AnimeViewModel
+    private val viewModel by viewModels<AnimeViewModel>()
 
     private var gridOrList: AdapterType = AdapterType.GRID
 
@@ -88,11 +88,6 @@ class SearchAnimeFragment : BaseFragment(), View.OnClickListener, OnAdapterItemC
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = createViewModel(AnimeViewModel::class.java)
     }
 
     override fun onCreateView(

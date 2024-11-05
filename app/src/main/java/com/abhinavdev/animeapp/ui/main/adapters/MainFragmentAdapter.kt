@@ -11,10 +11,9 @@ import com.abhinavdev.animeapp.ui.manga.SearchMangaFragment
 import com.abhinavdev.animeapp.ui.more.MoreFragment
 import com.abhinavdev.animeapp.ui.more.MyAnimeListFragment
 import com.abhinavdev.animeapp.ui.more.MyMangaListFragment
-import com.abhinavdev.animeapp.util.appsettings.AppMediaType
 
 class MainFragmentAdapter(
-    activity: FragmentActivity, private val list: List<PageType>, private val mediaType: AppMediaType
+    activity: FragmentActivity, private val list: List<PageType>, private val isAnime: Boolean
 ) : FragmentStateAdapter(activity) {
 
     enum class PageType(val position: Int) {
@@ -35,25 +34,24 @@ class MainFragmentAdapter(
 
     override fun createFragment(position: Int): Fragment {
         val type = list[position]
-
         val fragment = when (type) {
             PageType.HOME -> {
-                if (mediaType == AppMediaType.ANIME){
+                if (isAnime){
                     AnimeHomeFragment.newInstance()
                 }else{
                     MangaHomeFragment.newInstance()
                 }
             }
-            PageType.GENRE -> GenreFragment.newInstance(mediaType == AppMediaType.ANIME)
+            PageType.GENRE -> GenreFragment.newInstance(isAnime)
             PageType.SEARCH -> {
-                if (mediaType == AppMediaType.ANIME){
+                if (isAnime){
                     SearchAnimeFragment.newInstance()
                 }else{
                     SearchMangaFragment.newInstance()
                 }
             }
             PageType.MY_LIST -> {
-                if (mediaType == AppMediaType.ANIME){
+                if (isAnime){
                     MyAnimeListFragment.newInstance()
                 }else{
                     MyMangaListFragment.newInstance()

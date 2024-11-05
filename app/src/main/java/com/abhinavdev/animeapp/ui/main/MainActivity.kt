@@ -18,7 +18,6 @@ import com.abhinavdev.animeapp.ui.main.viewmodels.MainViewModel
 import com.abhinavdev.animeapp.util.Const
 import com.abhinavdev.animeapp.util.PrefUtils
 import com.abhinavdev.animeapp.util.adapter.FadeTransformation
-import com.abhinavdev.animeapp.util.appsettings.AppMediaType
 import com.abhinavdev.animeapp.util.appsettings.SettingsHelper
 import com.abhinavdev.animeapp.util.extension.ViewUtil
 import com.abhinavdev.animeapp.util.extension.createViewModel
@@ -136,22 +135,19 @@ class MainActivity : BaseActivity() {
         log("life test") { "recreated" }
         init()
     }
+
     private fun initComponents() {
-        val mediaType = SettingsHelper.getAppMediaType()
+        val isAnime = SettingsHelper.getIsAnime()
 
         val homeInactiveIcon: Int
         val homeActiveIcon: Int
 
-        when (mediaType) {
-            AppMediaType.ANIME -> {
-                homeInactiveIcon = R.drawable.ic_anime_inactive
-                homeActiveIcon = R.drawable.ic_anime_active
-            }
-
-            AppMediaType.MANGA -> {
-                homeInactiveIcon = R.drawable.ic_manga_inactive
-                homeActiveIcon = R.drawable.ic_manga_active
-            }
+        if (isAnime) {
+            homeInactiveIcon = R.drawable.ic_anime_inactive
+            homeActiveIcon = R.drawable.ic_anime_active
+        } else {
+            homeInactiveIcon = R.drawable.ic_manga_inactive
+            homeActiveIcon = R.drawable.ic_manga_active
         }
 
         val menuItems = arrayOf(
@@ -179,8 +175,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setAdapters() {
-        fragmentAdapter =
-            MainFragmentAdapter(this, rootFragmentTypes, SettingsHelper.getAppMediaType())
+        fragmentAdapter = MainFragmentAdapter(this, rootFragmentTypes, SettingsHelper.getIsAnime())
         binding.viewPager.adapter = fragmentAdapter
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.setPageTransformer(FadeTransformation())

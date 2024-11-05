@@ -37,6 +37,7 @@ import com.abhinavdev.animeapp.ui.common.adapters.ReviewAdapter
 import com.abhinavdev.animeapp.ui.common.listeners.OnAdapterItemClickListener
 import com.abhinavdev.animeapp.ui.common.listeners.OnClickMultiTypeCallback
 import com.abhinavdev.animeapp.ui.common.models.LocalGenreModel
+import com.abhinavdev.animeapp.ui.common.ui.GenreDetailsFragment
 import com.abhinavdev.animeapp.ui.common.ui.components.FullScreenImageActivity
 import com.abhinavdev.animeapp.ui.main.MainActivity
 import com.abhinavdev.animeapp.util.Const
@@ -152,6 +153,9 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
         setupTopImage()
         setupEmptyLayout()
 
+        binding.btnWatchNow.hide()
+        binding.btnAddToList.hide()
+
         val tabList = arrayOf(getString(R.string.msg_recommended), getString(R.string.msg_reviews))
         binding.segmentTabLayout.setTabData(tabList)
         paginationHelper =
@@ -193,14 +197,12 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
             resources.getDimensionPixelSize(R.dimen.recycler_view_bottom_padding)
         ViewUtil.setOnApplyUiInsetsListener(binding.groupReviews.rvRecommended) { insets ->
             ViewUtil.setBottomPadding(
-                binding.groupReviews.rvRecommended,
-                insets.bottom + paddingRecyclerView
+                binding.groupReviews.rvRecommended, insets.bottom + paddingRecyclerView
             )
         }
         ViewUtil.setOnApplyUiInsetsListener(binding.groupRecommended.rvRecommended) { insets ->
             ViewUtil.setBottomPadding(
-                binding.groupRecommended.rvRecommended,
-                insets.bottom + paddingBottom
+                binding.groupRecommended.rvRecommended, insets.bottom + paddingBottom
             )
         }
 
@@ -555,24 +557,24 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
                 genreList.addAll(fetchedGenreList)
                 genreAdapter?.notifyDataSetChanged()
 
-                if(!openingThemeSongs.isNullOrEmpty()){
+                if (!openingThemeSongs.isNullOrEmpty()) {
                     openingSongs.clear()
                     openingSongs.addAll(openingThemeSongs)
                     openingAdapter?.notifyDataSetChanged()
                     tvOpeningThemeHeading.show()
                     rvOpeningThemes.show()
-                }else{
+                } else {
                     tvOpeningThemeHeading.hide()
                     rvOpeningThemes.hide()
                 }
 
-                if(!endingThemeSongs.isNullOrEmpty()){
+                if (!endingThemeSongs.isNullOrEmpty()) {
                     endingSongs.clear()
                     endingSongs.addAll(endingThemeSongs)
                     endingAdapter?.notifyDataSetChanged()
                     tvEndingThemeHeading.show()
                     rvEndingThemes.show()
-                }else{
+                } else {
                     tvEndingThemeHeading.hide()
                     rvEndingThemes.hide()
                 }
@@ -880,7 +882,11 @@ class AnimeDetailsFragment : BaseFragment(), View.OnClickListener, OnAdapterItem
     }
 
     override fun onGenreClick(position: Int) {
-
+        parentActivity?.navigateToFragment(
+            GenreDetailsFragment.newInstance(
+                true, Genre.valueOfOrDefaultAnime(genreList[position].id)
+            )
+        )
     }
 
     override fun <T> onItemClick(position: Int, type: T) {

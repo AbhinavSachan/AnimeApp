@@ -102,6 +102,10 @@
                     layout="@layout/custom_more_switch_item_layout" />
 
                 <include
+                    android:id="@+id/group_manga_mode"
+                    layout="@layout/custom_more_switch_item_layout" />
+
+                <include
                     android:id="@+id/group_logout"
                     layout="@layout/custom_more_click_item_layout" />
 

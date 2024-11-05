@@ -50,8 +50,8 @@ object SettingsHelper {
         return AppTitleType.valueOfOrDefault(PrefUtils.getString(Const.PrefKeys.PREFERRED_TITLE_TYPE_KEY))
     }
 
-    fun getAppMediaType(): AppMediaType {
-        return AppMediaType.valueOfOrDefault(PrefUtils.getString(Const.PrefKeys.APP_MEDIA_TYPE_KEY))
+    fun getIsAnime(): Boolean {
+        return PrefUtils.getBoolean(Const.PrefKeys.IS_ANIME_KEY,true)
     }
 
     fun getAppTheme(context: Context? = null): AppTheme {

@@ -360,6 +360,7 @@ class FilterDialogActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         onBackPressedCloseSheet()
